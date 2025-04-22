@@ -3,3 +3,5 @@ interface Recipe_Ingredient {
     Ingredient_Name : string;
     Ingredient_Quantity: number;
 }
+
+export default Recipe_Ingredient;

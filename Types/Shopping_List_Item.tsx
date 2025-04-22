@@ -7,3 +7,5 @@ interface Shopping_List_Item {
     Recipe_Name: string | null;
     Item_Recipe_Plan_Ingredient: number | null; 
 }
+
+export default Shopping_List_Item;

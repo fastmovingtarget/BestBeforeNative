@@ -1,3 +1,5 @@
+import Recipe_Ingredient from './Recipe_Ingredient';
+
 interface Recipe {
     Recipe_ID: number;
     Recipe_Name: string;
