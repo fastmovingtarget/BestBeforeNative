@@ -4,6 +4,7 @@ import Ingredient from '../../Types/Ingredient'; // Adjust the import path as ne
 import fetchMock from 'jest-fetch-mock';
 fetchMock.enableMocks();
 
+// Mocking the fetch function
 beforeEach(() => {
     fetch.resetMocks();
 })
@@ -56,5 +57,7 @@ describe('getIngredientsData', () => {
             { id: 1, name: 'Ingredient 1' },
             { id: 2, name: 'Ingredient 2' },
         ]);
+        expect(mockSetIngredients.mock.calls[0][0]).toHaveLength(2); // Check if the length of the array is 2
+        
     })
 })
