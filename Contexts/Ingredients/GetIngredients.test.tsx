@@ -60,4 +60,20 @@ describe('getIngredientsData', () => {
         expect(mockSetIngredients.mock.calls[0][0]).toHaveLength(2); // Check if the length of the array is 2
         
     })
+    test('should handle fetch error', async () => {
+        const mockSetIngredients = jest.fn();
+        const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
+        const userID = 1;
+        const ingredients = [] as Ingredient[]; // Assuming ingredients is an array of Ingredient type
+        fetch.mockResponseOnce(JSON.stringify({}), { status: 500 });
+
+        await getIngredientsData(
+            mockServerProps,
+            userID,
+            ingredients,
+            mockSetIngredients,
+        );
+
+        expect(mockSetIngredients).not.toHaveBeenCalled(); // Check if setIngredients was not called
+    });
 })

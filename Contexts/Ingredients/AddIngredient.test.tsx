@@ -61,3 +61,45 @@ test('should fetch ingredients data and update state', async () => {
         },
     ]);
 })
+test("should not update state if fetch fails", async () => {
+    /*Arrange *******************************************************************/
+    const mockSetIngredients = jest.fn();
+    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
+    const ingredients : Ingredient[] = [
+        {
+            Ingredient_ID: 1,
+            Ingredient_Name: 'Ingredient 1',
+            Ingredient_Date: new Date(),
+            Ingredient_Quantity: 1,
+        },
+        {
+            Ingredient_ID: 2,
+            Ingredient_Name: 'Ingredient 2',
+            Ingredient_Date: new Date(),
+            Ingredient_Quantity: 2,
+        },
+    ]; 
+
+    const ingredient : Ingredient = {
+        Ingredient_Name: 'Ingredient 1',
+        Ingredient_Date: new Date(),
+        Ingredient_Quantity: 1,
+    };
+
+    fetch.mockResponseOnce(
+        "",
+        {status: 500, statusText: "Internal Server Error"}
+    );
+
+    /*Act **********************************************************************/
+    await addIngredientData(
+        mockServerProps,
+        ingredients,
+        mockSetIngredients,
+        ingredient
+    );
+
+    /*Assert *******************************************************************/
+
+    expect(mockSetIngredients).not.toHaveBeenCalled();
+});
