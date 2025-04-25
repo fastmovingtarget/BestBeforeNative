@@ -1,4 +1,8 @@
 import React, {useContext, createContext, useState, useEffect} from "react";
+import Ingredient from "../Types/Ingredient";
+import Recipe from "../Types/Recipe";
+import Recipe_Plan from "../Types/Recipe_Plan";
+import Shopping_List_Item from "../Types/Shopping_List_Item";
 
 const DataContext = createContext({});
 

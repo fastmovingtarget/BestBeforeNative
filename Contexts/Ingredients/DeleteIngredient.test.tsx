@@ -39,18 +39,9 @@ test('should fetch ingredients data and update state', async () => {
         },
     ]; 
 
-    const ingredient : Ingredient = {
-        Ingredient_Name: 'Ingredient 1',
-        Ingredient_Date: new Date(),
-        Ingredient_Quantity: 1,
-    };
-
-    fetch.mockResponseOnce(JSON.stringify(
-            {
-                ...ingredient,
-                Ingredient_ID: 1,
-            },
-        )
+    fetch.mockResponseOnce(
+        "",
+        {status: 204, statusText: "Ingredient Deleted"}
     );
 
     /*Act **********************************************************************/
@@ -85,27 +76,6 @@ test("should not update state if fetch fails", async () => {
             Ingredient_Quantity: 2,
         },
     ]; 
-    //output ingredients
-    const ingredients_out : Ingredient[] = [
-        {
-            Ingredient_ID: 1,
-            Ingredient_Name: 'Ingredient 1',
-            Ingredient_Date: new Date(),
-            Ingredient_Quantity: 1,
-        },
-        {
-            Ingredient_ID: 2,
-            Ingredient_Name: 'Ingredient 2',
-            Ingredient_Date: new Date(),
-            Ingredient_Quantity: 2,
-        },
-    ]; 
-
-    const ingredient : Ingredient = {
-        Ingredient_Name: 'Ingredient 1',
-        Ingredient_Date: new Date(),
-        Ingredient_Quantity: 1,
-    };
 
     fetch.mockResponseOnce(
         "",
@@ -122,5 +92,5 @@ test("should not update state if fetch fails", async () => {
 
     /*Assert *******************************************************************/
 
-    expect(mockSetIngredients).not.toHaveBeenCalledWith(ingredients_out);
+    expect(mockSetIngredients).not.toHaveBeenCalled();
 })

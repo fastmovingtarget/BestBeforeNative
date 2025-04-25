@@ -21,7 +21,6 @@ export const updateIngredientData = async (
         }
     ).then((rawData) => {
         if(!rawData.ok) {
-            console.log("Error fetching ingredients data: ", rawData.statusText);
             return;
         }
         rawData.json().then((data) => {//the data returned should be the ingredient that was added including the id

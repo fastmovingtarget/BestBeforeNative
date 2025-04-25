@@ -18,7 +18,6 @@ export const deleteIngredientData = async (
         }
     ).then((rawData) => {
         if(!rawData.ok) {
-            console.log("Error fetching ingredients data: ", rawData.statusText);
             return;
         }
         setIngredients(ingredients.filter((ingredient) => ingredient.Ingredient_ID !== ingredientID));//remove the deleted ingredient from the list

@@ -8,3 +8,7 @@ fetchMock.enableMocks();
 beforeEach(() => {
     fetch.resetMocks();
 })
+
+test("placeholder", () => {
+    expect(true).toBe(true);
+})

@@ -8,3 +8,5 @@ interface Recipe {
     Recipe_Instructions: string;
     Recipe_Ingredients: Recipe_Ingredient[];
 }
+
+export default Recipe;
