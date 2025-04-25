@@ -26,7 +26,13 @@ export const getRecipePlansData = async (
             setRecipePlans(
                 [
                     ...recipePlans,
-                    ...data
+                    ...data.map((recipePlan : Recipe_Plan) => {
+                        if(recipePlan.Plan_Date) 
+                            return {
+                                ...recipePlan,
+                                Plan_Date: new Date(recipePlan.Plan_Date),//date comes in as a string and doesn't get properly parsed within .json()
+                            };
+                    })
                 ]
             );
         })
