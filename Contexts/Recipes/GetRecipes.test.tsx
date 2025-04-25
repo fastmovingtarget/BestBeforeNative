@@ -9,11 +9,70 @@ beforeEach(() => {
     fetch.resetMocks();
 })
 
+test('should fetch recipes and add to empty recipes array', async () => {
+    const mockSetRecipes = jest.fn();
+    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
+    const userID = 1;
+    const fetchedRecipes : Recipe[] = [
+        {
+            Recipe_ID: 1,
+            Recipe_Name: 'Added Recipe 1',
+            Recipe_Difficulty: 1,
+            Recipe_Time: 11,
+            Recipe_Instructions: 'Instructions for Added Recipe 1',
+            Recipe_Ingredients: [{
+                Recipe_Ingredient_ID: 11,
+                Ingredient_Name: 'Added Recipe 1 Ingredient 1',
+                Ingredient_Quantity: 2,
+            },
+            {
+                Recipe_Ingredient_ID: 12,
+                Ingredient_Name: 'Added Recipe 1 Ingredient 2',
+                Ingredient_Quantity: 2,
+            }],
+        },
+        {
+            Recipe_ID: 2,
+            Recipe_Name: 'Added Recipe 2',
+            Recipe_Difficulty: 2,
+            Recipe_Time: 22,
+            Recipe_Instructions: 'Instructions for Added Recipe 2',
+            Recipe_Ingredients: [{
+                Recipe_Ingredient_ID: 121,
+                Ingredient_Name: 'Added Recipe 2 Ingredient 1',
+                Ingredient_Quantity: 2,
+            },
+            {
+                Recipe_Ingredient_ID: 122,
+                Ingredient_Name: 'Added Recipe 2 Ingredient 2',
+                Ingredient_Quantity: 2,
+            }],
+        }
+    ]; // Assuming recipes is an array of Recipe type
+
+    //if I instance the dates seperately in the call and response, I get different timestamps 'cos the test takes time, so I'll just make 'em here
+    fetch.mockResponseOnce(JSON.stringify(fetchedRecipes));
+
+    await getRecipesData(
+        mockServerProps,
+        userID,
+        [] as Recipe[],
+        mockSetRecipes,
+        100,
+        300
+    );
+
+    expect(mockSetRecipes).toHaveBeenCalledWith([
+        ...fetchedRecipes,
+    ]);
+    
+})
+
 test('should fetch recipes with amount high and low and update state', async () => {
     const mockSetRecipes = jest.fn();
     const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
     const userID = 1;
-    const addedRecipes : Recipe[] = [
+    const fetchedRecipes : Recipe[] = [
         {
             Recipe_ID: 1,
             Recipe_Name: 'Added Recipe 1',
@@ -88,7 +147,7 @@ test('should fetch recipes with amount high and low and update state', async () 
     ]
 
     //if I instance the dates seperately in the call and response, I get different timestamps 'cos the test takes time, so I'll just make 'em here
-    fetch.mockResponseOnce(JSON.stringify(addedRecipes));
+    fetch.mockResponseOnce(JSON.stringify(fetchedRecipes));
 
     await getRecipesData(
         mockServerProps,
@@ -101,7 +160,7 @@ test('should fetch recipes with amount high and low and update state', async () 
 
     expect(mockSetRecipes).toHaveBeenCalledWith([
         ...existingRecipes,
-        ...addedRecipes,
+        ...fetchedRecipes,
     ]);
     
 })
