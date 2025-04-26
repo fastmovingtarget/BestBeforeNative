@@ -1,5 +1,5 @@
 interface Ingredient {
-    Ingredient_ID?: number | null;
+    Ingredient_ID?: number;
     Ingredient_Name: string | null;
     Ingredient_Date?: Date | null;
     Ingredient_Quantity?: number | null;
