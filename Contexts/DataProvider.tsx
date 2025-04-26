@@ -4,13 +4,23 @@ import Recipe from "../Types/Recipe";
 import Recipe_Plan from "../Types/Recipe_Plan";
 import Shopping_List_Item from "../Types/Shopping_List_Item";
 import { getIngredientsData } from "./Ingredients/GetIngredients";
+import { deleteIngredientData } from "./Ingredients/DeleteIngredient";
 import { getRecipesData } from "./Recipes/GetRecipes";
 import { getRecipePlansData } from "./RecipePlans/GetRecipePlans";
 import { getShoppingListData } from "./ShoppingList/GetShoppingList";
 
-const DataContext = createContext({});
+const DataContext = createContext({
+    ingredients: [] as Ingredient[],
+    deleteIngredient: (ingredientID: number) => {},
+    recipes: [] as Recipe[],
+    setRecipes: (recipes: Recipe[]) => {},
+    recipePlans: [] as Recipe_Plan[],
+    setRecipePlans: (recipePlans: Recipe_Plan[]) => {},
+    shoppingList: [] as Shopping_List_Item[],
+    setShoppingList: (shoppingList: Shopping_List_Item[]) => {},
+});
 
-const DataProvider = ({children}:{children:React.ReactNode}) => {
+export const DataProvider = ({children}:{children:React.ReactNode}) => {
 
     const [ingredients, setIngredients] = useState<Ingredient[]>([])
     const [recipes, setRecipes] = useState<Recipe[]>([])
@@ -60,11 +70,15 @@ const DataProvider = ({children}:{children:React.ReactNode}) => {
         )
     }, [shoppingList])
 
+    const ingredientsData = {
+        ingredients,
+        deleteIngredient: (ingredientID: number) => deleteIngredientData(databaseProps, ingredients, setIngredients, ingredientID)
+    }
 
     return (
         <DataContext.Provider 
             value={{
-                ingredients, setIngredients, 
+                ...ingredientsData, 
                 recipes, setRecipes, 
                 recipePlans, setRecipePlans,
                 shoppingList, setShoppingList
