@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Pressable } from "react-native";
 import Ingredient from "@/Types/Ingredient";
 import { useData } from "@/Contexts/DataProvider";
 
-export default function IngredientItem({ ingredient, onEdit } : { ingredient: Ingredient, onEdit: (ingredientID?: number) => void }) {
+export default function IngredientComponent({ ingredient, onEdit } : { ingredient: Ingredient, onEdit: (ingredientID?: number) => void }) {
     const { deleteIngredient } = useData();
 
     return (
