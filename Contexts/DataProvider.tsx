@@ -5,6 +5,8 @@ import Recipe_Plan from "../Types/Recipe_Plan";
 import Shopping_List_Item from "../Types/Shopping_List_Item";
 import { getIngredientsData } from "./Ingredients/GetIngredients";
 import { deleteIngredientData } from "./Ingredients/DeleteIngredient";
+import { addIngredientData } from "./Ingredients/AddIngredient";
+import { updateIngredientData } from "./Ingredients/UpdateIngredient";
 import { getRecipesData } from "./Recipes/GetRecipes";
 import { getRecipePlansData } from "./RecipePlans/GetRecipePlans";
 import { getShoppingListData } from "./ShoppingList/GetShoppingList";
@@ -12,6 +14,8 @@ import { getShoppingListData } from "./ShoppingList/GetShoppingList";
 const DataContext = createContext({
     ingredients: [] as Ingredient[],
     deleteIngredient: (ingredientID: number) => {},
+    addIngredient: (ingredient: Ingredient) => {},
+    updateIngredient: (ingredient: Ingredient) => {},
     recipes: [] as Recipe[],
     setRecipes: (recipes: Recipe[]) => {},
     recipePlans: [] as Recipe_Plan[],
@@ -72,7 +76,9 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
 
     const ingredientsData = {
         ingredients,
-        deleteIngredient: (ingredientID: number) => deleteIngredientData(databaseProps, ingredients, setIngredients, ingredientID)
+        deleteIngredient: (ingredientID: number) => deleteIngredientData(databaseProps, ingredients, setIngredients, ingredientID),
+        addIngredient: (ingredient: Ingredient) => addIngredientData(databaseProps, ingredients, setIngredients, ingredient),
+        updateIngredient: (ingredient: Ingredient) => updateIngredientData(databaseProps, ingredients, setIngredients, ingredient),
     }
 
     return (
