@@ -3,6 +3,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { DateTimePickerAndroid, DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import IngredientForm from './IngredientForm';
 import {useData} from '@/Contexts/DataProvider';
+import { TextInput } from 'react-native';
+import Ingredient from '@/Types/Ingredient';
 
 const mockdataContext = {
   deleteIngredient: jest.fn(),
@@ -100,7 +102,7 @@ describe('IngredientForm input registers correct change', () => {
     
             expect(nameInput).toBeTruthy();
     
-            await user.type(nameInput, 'Test Ingredient 1');
+            await user.type(nameInput, 'Test Ingredient 1', {submitEditing: true});
     
             expect(nameInput).toHaveDisplayValue('Test Ingredient 1');
         });
@@ -138,7 +140,7 @@ describe('IngredientForm input registers correct change', () => {
     
             await user.type(quantityInput, '1');
     
-            expect(quantityInput).toHaveDisplayValue('1');
+            expect(quantityInput).toHaveDisplayValue('01');
         });
     })
     describe('when given an ingredient', () => {
@@ -187,56 +189,136 @@ describe('IngredientForm input registers correct change', () => {
     })
 })
 describe("When Submit button is pressed", () => {
-    test("and there is no ingredient, data context Add Ingredient is called", async () => {
-        const user = userEvent.setup();
-        const {getByText, getByLabelText} = render(
-            <IngredientForm/>,
-        );
+    describe("and there is no ingredient, data context Add Ingredient is called", () => {
+        test("With initial values when unchanged", async () => {
+            const user = userEvent.setup();
+            const {getByText, getByLabelText} = render(
+                <IngredientForm/>,
+            );
 
-        const submitButton = getByText(/Submit/i);
+            const submitButton = getByText(/Submit/i);
 
-        expect(getByLabelText(/name-input/i)).toBeTruthy();
-        expect(getByLabelText(/quantity-input/i)).toBeTruthy();
-        expect(getByLabelText(/date-input/i)).toBeTruthy();
+            expect(getByLabelText(/name-input/i)).toBeTruthy();
+            expect(getByLabelText(/quantity-input/i)).toBeTruthy();
+            expect(getByLabelText(/date-input/i)).toBeTruthy();
 
-        expect(submitButton).toBeTruthy();
+            expect(submitButton).toBeTruthy();
 
-        await user.press(submitButton);
+            await user.press(submitButton);
 
-        expect(mockdataContext.addIngredient).toHaveBeenCalledTimes(1);
-        expect(mockdataContext.updateIngredient).toHaveBeenCalledTimes(0);
-        expect(mockdataContext.addIngredient).toHaveBeenCalledWith({
-            Ingredient_Name: '',
-            Ingredient_Quantity: 0,
-            Ingredient_Date: new Date(),
-        });
+            expect(mockdataContext.addIngredient).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.updateIngredient).toHaveBeenCalledTimes(0);
+        })
+        test("With changed values when changed", async () => {
+            const user = userEvent.setup();
+            const {getByText, getByLabelText} = render(
+                <IngredientForm/>,
+            );
+
+            const testIngredient : Ingredient = {
+                Ingredient_Name: 'Test Ingredient 1',
+                Ingredient_Quantity: 1,
+                Ingredient_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
+            };
+
+            const submitButton = getByText(/Submit/i);
+
+            const nameInput = getByLabelText(/name-input/i);
+            const quantityInput = getByLabelText(/quantity-input/i);
+            const dateInput = getByLabelText(/date-input/i);
+
+            await user.type(nameInput, 'Test Ingredient 1', {submitEditing: true});
+            await user.type(quantityInput, '1', {submitEditing: true});
+            fireEvent(dateInput, 'onChange', {
+                type: 'set',
+                nativeEvent: {
+                    timestamp: testIngredient.Ingredient_Date?.getTime(),
+                    utcOffset: 0,
+                }}, dateInput);
+
+            expect(submitButton).toBeTruthy();
+
+            await user.press(submitButton);
+
+            expect(mockdataContext.addIngredient).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.updateIngredient).toHaveBeenCalledTimes(0);
+
+            expect(mockdataContext.addIngredient).toHaveBeenCalledWith(testIngredient);
+        })
+
     })
-    test("and there is an ingredient, data context Add Ingredient is called", async () => {
-        const user = userEvent.setup();
+    describe("and there is an ingredient, data context Update Ingredient is called", () => {
+        test("With initial values when unchanged", async () => {
+            const user = userEvent.setup();
 
-        const testIngredient = {
-            Ingredient_ID: 1,
-            Ingredient_Name: 'Test Ingredient',
-            Ingredient_Quantity: 1,
-            Ingredient_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
-        };
+            const testIngredient = {
+                Ingredient_ID: 1,
+                Ingredient_Name: 'Test Ingredient',
+                Ingredient_Quantity: 1,
+                Ingredient_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
+            };
 
-        const {getByText, getByLabelText} = render(
-            <IngredientForm ingredient={testIngredient} />,
-        );
+            const {getByText, getByLabelText} = render(
+                <IngredientForm ingredient={testIngredient} />,
+            );
 
-        const submitButton = getByText(/Submit/i);
+            const submitButton = getByText(/Submit/i);
 
-        expect(getByLabelText(/name-input/i)).toBeTruthy();
-        expect(getByLabelText(/quantity-input/i)).toBeTruthy();
-        expect(getByLabelText(/date-input/i)).toBeTruthy();
+            expect(getByLabelText(/name-input/i)).toBeTruthy();
+            expect(getByLabelText(/quantity-input/i)).toBeTruthy();
+            expect(getByLabelText(/date-input/i)).toBeTruthy();
 
-        expect(submitButton).toBeTruthy();
+            expect(submitButton).toBeTruthy();
 
-        await user.press(submitButton);
+            await user.press(submitButton);
 
-        expect(mockdataContext.addIngredient).toHaveBeenCalledTimes(0);
-        expect(mockdataContext.updateIngredient).toHaveBeenCalledTimes(1);
-        expect(mockdataContext.updateIngredient).toHaveBeenCalledWith(testIngredient);
+            expect(mockdataContext.addIngredient).toHaveBeenCalledTimes(0);
+            expect(mockdataContext.updateIngredient).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.updateIngredient).toHaveBeenCalledWith(testIngredient);
+        })
+        test("With changed values when changed", async () => { 
+            const user = userEvent.setup();
+            const testIngredient = {
+                Ingredient_ID: 1,
+                Ingredient_Name: 'Test Ingredient 1',
+                Ingredient_Quantity: 1,
+                Ingredient_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
+            };
+
+            const {getByText, getByLabelText} = render(
+                <IngredientForm ingredient={testIngredient}/>,
+            );
+
+            const expectedIngredient : Ingredient = {
+                Ingredient_ID: 1,
+                Ingredient_Name: 'Test Ingredient 1 Input Test',
+                Ingredient_Quantity: 12,
+                Ingredient_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 4), // 1 week from now
+            };
+
+            const submitButton = getByText(/Submit/i);
+
+            const nameInput = getByLabelText(/name-input/i);
+            const quantityInput = getByLabelText(/quantity-input/i);
+            const dateInput = getByLabelText(/date-input/i);
+
+            await user.type(nameInput, ' Input Test', {submitEditing: true});
+            await user.type(quantityInput, '2', {submitEditing: true});
+            fireEvent(dateInput, 'onChange', {
+                type: 'set',
+                nativeEvent: {
+                    timestamp: expectedIngredient.Ingredient_Date?.getTime(),
+                    utcOffset: 0,
+                }}, dateInput);
+
+            expect(submitButton).toBeTruthy();
+
+            await user.press(submitButton);
+
+            expect(mockdataContext.addIngredient).toHaveBeenCalledTimes(0);
+            expect(mockdataContext.updateIngredient).toHaveBeenCalledTimes(1);
+
+            expect(mockdataContext.updateIngredient).toHaveBeenCalledWith(expectedIngredient);
+        })
     })
 })

@@ -17,8 +17,8 @@ export default function IngredientForm({ingredient, onCancel} : {ingredient?: In
         <View>
             <Text>Ingredient: 
                 <TextInput
-                    value={formIngredient.Ingredient_Name || ""}
-                    onChangeText={(text) => setFormIngredient({...formIngredient, Ingredient_Name: text})}
+                    defaultValue={formIngredient.Ingredient_Name || ""}
+                    onSubmitEditing={(event) => setFormIngredient({...formIngredient, Ingredient_Name: event.nativeEvent.text})}
                     aria-label="name-input"
                 />
             </Text>
@@ -34,9 +34,9 @@ export default function IngredientForm({ingredient, onCancel} : {ingredient?: In
             </Text>
             <Text>Quantity: 
                 <TextInput
-                    value={formIngredient.Ingredient_Quantity?.toString()}
+                    defaultValue={formIngredient.Ingredient_Quantity?.toString()}
                     inputMode='numeric'
-                    onChangeText={(text) => setFormIngredient({...formIngredient, Ingredient_Quantity: parseInt(text)})}
+                    onSubmitEditing={(event) => setFormIngredient({...formIngredient, Ingredient_Quantity: parseInt(event.nativeEvent.text)})}
                     aria-label="quantity-input"
                 />
             </Text>
