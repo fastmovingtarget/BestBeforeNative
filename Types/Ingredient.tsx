@@ -11,4 +11,11 @@ interface Ingredient {
     Recipe_Ingredient_ID?: number | null;
 }
 
+export interface IngredientSearchOptions {
+    searchText?: string;
+    sortBy?: "Ingredient_Name" | "Ingredient_Date" | "Ingredient_Quantity";
+    sortOrder?: "asc" | "desc";
+    amount?: number;
+}
+
 export default Ingredient;

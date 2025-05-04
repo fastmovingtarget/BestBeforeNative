@@ -1,5 +1,5 @@
 import React, {useContext, createContext, useState, useEffect} from "react";
-import Ingredient from "../Types/Ingredient";
+import Ingredient, {IngredientSearchOptions} from "../Types/Ingredient";
 import Recipe from "../Types/Recipe";
 import Recipe_Plan from "../Types/Recipe_Plan";
 import Shopping_List_Item from "../Types/Shopping_List_Item";
@@ -16,6 +16,8 @@ const DataContext = createContext({
     deleteIngredient: (ingredientID: number) => {},
     addIngredient: (ingredient: Ingredient) => {},
     updateIngredient: (ingredient: Ingredient) => {},
+    ingredientsSearchOptions: {} as IngredientSearchOptions,
+    setIngredientsSearchOptions: (options: IngredientSearchOptions) => {},
     recipes: [] as Recipe[],
     setRecipes: (recipes: Recipe[]) => {},
     recipePlans: [] as Recipe_Plan[],
@@ -27,6 +29,7 @@ const DataContext = createContext({
 export const DataProvider = ({children}:{children:React.ReactNode}) => {
 
     const [ingredients, setIngredients] = useState<Ingredient[]>([])
+    const [ingredientsSearchOptions, setIngredientsSearchOptions] = useState<IngredientSearchOptions>({})
     const [recipes, setRecipes] = useState<Recipe[]>([])
     const [recipePlans, setRecipePlans] = useState<Recipe_Plan[]>([])
     const [shoppingList, setShoppingList] = useState<Shopping_List_Item[]>([])
@@ -45,7 +48,7 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
             ingredients,
             setIngredients,
         )
-    }, [ingredients])
+    }, [ingredients, ingredientsSearchOptions])
     
     useEffect(() => {
         getRecipesData(
@@ -79,6 +82,8 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
         deleteIngredient: (ingredientID: number) => deleteIngredientData(databaseProps, ingredients, setIngredients, ingredientID),
         addIngredient: (ingredient: Ingredient) => addIngredientData(databaseProps, ingredients, setIngredients, ingredient),
         updateIngredient: (ingredient: Ingredient) => updateIngredientData(databaseProps, ingredients, setIngredients, ingredient),
+        ingredientsSearchOptions,
+        setIngredientsSearchOptions: (options: IngredientSearchOptions) => setIngredientsSearchOptions((oldOptions) => {return {...oldOptions, ...options}}),
     }
 
     return (

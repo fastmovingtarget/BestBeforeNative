@@ -1,17 +1,21 @@
 import React from "react";
-import Ingredient from "../../Types/Ingredient";
+import Ingredient, {IngredientSearchOptions} from "../../Types/Ingredient";
 
 export const getIngredientsData = async (
     serverProps : {DatabaseServer:string, DatabasePort:string},
     userID : number, 
     ingredients : Ingredient[],
     setIngredients : React.Dispatch<React.SetStateAction<Ingredient[]>>, 
-    startIndex = 0,
-    amount = 200
+    searchOptions : IngredientSearchOptions = {},
 ) => {
 
+    const optionsString = Object.entries(searchOptions).map(([key, value]) => {//map the key and uri encoded value pairs to a string joined by &
+        if (value === undefined) return ""; // Skip undefined values
+        return `${key}=${encodeURIComponent(value)}`;
+    }).join("&");
+
     await fetch(
-        `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/ingredients/${userID}?startIndex=${startIndex}&amount=${amount}`, 
+        `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/ingredients/${userID}?${optionsString}`, 
         {
             method: "GET",
             headers: {

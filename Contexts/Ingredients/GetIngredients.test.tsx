@@ -1,6 +1,6 @@
 import { render, screen, act } from '@testing-library/react';
 import { getIngredientsData } from './GetIngredients';
-import Ingredient from '../../Types/Ingredient'; // Adjust the import path as necessary
+import Ingredient, {IngredientSearchOptions} from '../../Types/Ingredient'; // Adjust the import path as necessary
 import fetchMock from 'jest-fetch-mock';
 fetchMock.enableMocks();
 
@@ -102,58 +102,6 @@ describe('getIngredientsData', () => {
             },
         ]);
     }),
-    test('should fetch ingredients with amount high and low and update state', async () => {
-        const mockSetIngredients = jest.fn();
-        const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
-        const userID = 1;
-        const ingredients = [] as Ingredient[]; // Assuming ingredients is an array of Ingredient type
-
-        const now = new Date();
-        const tomorrow = new Date(now.getUTCMilliseconds() + 86400000); // 1 day later
-
-        //if I instance the dates seperately in the call and response, I get different timestamps 'cos the test takes time, so I'll just make 'em here
-        fetch.mockResponseOnce(JSON.stringify([
-            {
-                Ingredient_ID: 1,
-                Ingredient_Name: 'Ingredient 1',
-                Ingredient_Date: now,
-                Ingredient_Quantity: 1,
-            },
-            {
-                Ingredient_ID: 2,
-                Ingredient_Name: 'Ingredient 2',
-                Ingredient_Date: tomorrow,
-                Ingredient_Quantity: 2,
-            },
-        ])
-        );
-
-        await getIngredientsData(
-            mockServerProps,
-            userID,
-            ingredients,
-            mockSetIngredients,
-            100,
-            300
-        );
-
-        expect(mockSetIngredients).toHaveBeenCalledWith([
-            {
-                Ingredient_ID: 1,
-                Ingredient_Name: 'Ingredient 1',
-                Ingredient_Date: now,
-                Ingredient_Quantity: 1,
-            },
-            {
-                Ingredient_ID: 2,
-                Ingredient_Name: 'Ingredient 2',
-                Ingredient_Date: tomorrow,
-                Ingredient_Quantity: 2,
-            },
-        ]);
-        expect(mockSetIngredients.mock.calls[0][0]).toHaveLength(2); // Check if the length of the array is 2
-        
-    })
     test('should handle fetch error', async () => {
         const mockSetIngredients = jest.fn();
         const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
@@ -170,4 +118,111 @@ describe('getIngredientsData', () => {
 
         expect(mockSetIngredients).not.toHaveBeenCalled(); // Check if setIngredients was not called
     });
+    describe("Should be called with options", () => {
+        test('search string', async () => {
+            const mockSetIngredients = jest.fn();
+            const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
+            const userID = 1;
+            const ingredients = [] as Ingredient[]; // Assuming ingredients is an array of Ingredient type
+    
+            const now = new Date();
+            const tomorrow = new Date(now.getUTCMilliseconds() + 86400000); // 1 day later
+
+            const searchOptions : IngredientSearchOptions = {
+                searchText: 'Ingredient 1',
+            }
+    
+            //if I instance the dates seperately in the call and response, I get different timestamps 'cos the test takes time, so I'll just make 'em here
+            fetch.mockResponseOnce(JSON.stringify([
+                {
+                    Ingredient_ID: 1,
+                    Ingredient_Name: 'Ingredient 1',
+                    Ingredient_Date: now,
+                    Ingredient_Quantity: 1,
+                }
+            ])
+            );
+    
+            await getIngredientsData(
+                mockServerProps,
+                userID,
+                ingredients,
+                mockSetIngredients,
+                searchOptions
+            );
+    
+            expect(mockSetIngredients).toHaveBeenCalledWith([
+                {
+                    Ingredient_ID: 1,
+                    Ingredient_Name: 'Ingredient 1',
+                    Ingredient_Date: now,
+                    Ingredient_Quantity: 1,
+                }
+            ]);
+
+            expect(fetch).toHaveBeenCalledWith(
+                `http://${mockServerProps.DatabaseServer}:${mockServerProps.DatabasePort}/ingredients/${userID}?searchText=Ingredient%201`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+
+            expect(mockSetIngredients.mock.calls[0][0]).toHaveLength(1); // Check if the length of the array is 2  
+        })
+        test('search called with all options', async () => {
+            const mockSetIngredients = jest.fn();
+            const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
+            const userID = 1;
+            const ingredients = [] as Ingredient[]; // Assuming ingredients is an array of Ingredient type
+    
+            const now = new Date();
+            const tomorrow = new Date(now.getUTCMilliseconds() + 86400000); // 1 day later
+
+            const searchOptions : IngredientSearchOptions = {
+                searchText: 'Ingredient 1',
+                sortBy: 'Ingredient_Name',
+                sortOrder: 'asc',
+                amount: 100,
+            }
+    
+            //if I instance the dates seperately in the call and response, I get different timestamps 'cos the test takes time, so I'll just make 'em here
+            fetch.mockResponseOnce(JSON.stringify([
+                {
+                    Ingredient_ID: 1,
+                    Ingredient_Name: 'Ingredient 1',
+                    Ingredient_Date: now,
+                    Ingredient_Quantity: 1,
+                }
+            ])
+            );
+    
+            await getIngredientsData(
+                mockServerProps,
+                userID,
+                ingredients,
+                mockSetIngredients,
+                searchOptions
+            );
+    
+            expect(mockSetIngredients).toHaveBeenCalledWith([
+                {
+                    Ingredient_ID: 1,
+                    Ingredient_Name: 'Ingredient 1',
+                    Ingredient_Date: now,
+                    Ingredient_Quantity: 1,
+                }
+            ]);
+
+            expect(fetch).toHaveBeenCalledWith(
+                `http://${mockServerProps.DatabaseServer}:${mockServerProps.DatabasePort}/ingredients/${userID}?searchText=Ingredient%201&sortBy=Ingredient_Name&sortOrder=asc&amount=100`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+
+            expect(mockSetIngredients.mock.calls[0][0]).toHaveLength(1); // Check if the length of the array is 2  
+        })
+    })
 })
