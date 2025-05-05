@@ -90,7 +90,7 @@ beforeEach(() => {
 describe('IngredientsList renders correctly', () => {
     test('when given all basic ingredient data', () => {
         const {getByText} = render(
-            <IngredientsList />
+            <IngredientsList onEdit={() => {}} />
         );
 
         expect(getByText(/Test Ingredient 1/i)).toBeTruthy();
@@ -104,11 +104,12 @@ describe('IngredientsList renders correctly', () => {
         expect(getByText(/Eat By 03\/10\/2023/i)).toBeTruthy();
     })
 })
+
 test('IngredientComponent is replaced by FormComponent when Edit is clicked', async () => {
   const user = userEvent.setup();
 
   const {getAllByText, getByText} = render(
-      <IngredientsList />
+    <IngredientsList onEdit={() => {}} />
   );
 
   const editButton = getAllByText(/Edit/i)[1]; // Get the second edit button (for Test Ingredient 2)
@@ -118,11 +119,26 @@ test('IngredientComponent is replaced by FormComponent when Edit is clicked', as
   expect(getByText(/Form For : Test Ingredient 2/i)).toBeTruthy(); // Check if the ingredient name is still there
 })
 
+test('onEdit is called when edit button is clicked', async () => {
+  const user = userEvent.setup();
+  const mockOnEdit = jest.fn(); // Mock function to track calls
+
+  const {getAllByText, getByText} = render(
+    <IngredientsList onEdit={mockOnEdit} />
+  );
+
+  const editButton = getAllByText(/Edit/i)[1]; // Get the second edit button (for Test Ingredient 2)
+
+  await user.press(editButton); // Simulate the press event
+
+  expect(mockOnEdit).toHaveBeenCalled(); // Check if the onEdit function was called
+})
+
 test('IngredientComponent is replaced by FormComponent when Edit is clicked and then goes back to IngredientComponent when cancelled', async () => {
   const user = userEvent.setup();
 
   const {getAllByText, getByText} = render(
-      <IngredientsList />
+    <IngredientsList onEdit={() => {}} />
   );
 
   const editButton = getAllByText(/Edit/i)[1]; // Get the second edit button (for Test Ingredient 2)
