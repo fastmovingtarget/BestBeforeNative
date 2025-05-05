@@ -14,6 +14,8 @@ export const getIngredientsData = async (
         return `${key}=${encodeURIComponent(value)}`;
     }).join("&");
 
+    console.log(`http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/ingredients/${userID}?${optionsString}`)
+
     await fetch(
         `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/ingredients/${userID}?${optionsString}`, 
         {
@@ -43,4 +45,5 @@ export const getIngredientsData = async (
             );
         })
     });
+    console.log("no longer waiting for fetch")
 }

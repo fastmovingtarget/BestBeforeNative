@@ -11,6 +11,7 @@ export default function IngredientForm({ingredient, onCancel, isFormVisible = fa
         Ingredient_Quantity: 0,
         Ingredient_Date: new Date(),
     });
+    const [pickerVisible, setPickerVisible] = useState(false);
     const {addIngredient, updateIngredient} = useData();
 
     const cancelHandler = () => {
@@ -19,6 +20,15 @@ export default function IngredientForm({ingredient, onCancel, isFormVisible = fa
             Ingredient_Quantity: 0,
             Ingredient_Date: new Date(),
         })
+        if (onCancel) {
+            onCancel();
+        }
+    }
+
+    const submitHandler = () => {() => 
+        formIngredient.Ingredient_ID ? 
+            updateIngredient(formIngredient) : 
+            addIngredient(formIngredient)
         if (onCancel) {
             onCancel();
         }
@@ -33,15 +43,15 @@ export default function IngredientForm({ingredient, onCancel, isFormVisible = fa
                     aria-label="name-input"
                 />
             </Text>
-            <Text>Use By: 
-                <DateTimePicker
+            <Text onPress={() => setPickerVisible(!pickerVisible)}>Use By: {formIngredient.Ingredient_Date?.toLocaleDateString("en-UK", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                {pickerVisible ? <DateTimePicker
                     value={formIngredient.Ingredient_Date || new Date()}
                     minimumDate={new Date()}
                     mode="date"
                     display="default"
-                    onChange={(event, date) => setFormIngredient({...formIngredient, Ingredient_Date: date})}
+                    onChange={(event, date) => {setFormIngredient({...formIngredient, Ingredient_Date: date}); setPickerVisible(false)}}
                     aria-label="date-input"
-                />
+                /> : null}
             </Text>
             <Text>Quantity: 
                 <TextInput
@@ -54,10 +64,7 @@ export default function IngredientForm({ingredient, onCancel, isFormVisible = fa
             <Pressable onPress={cancelHandler}>
                 <Text>Cancel</Text>
             </Pressable>
-            <Pressable onPress={() => 
-                formIngredient.Ingredient_ID ? 
-                updateIngredient(formIngredient) : 
-                addIngredient(formIngredient)}>
+            <Pressable onPress={submitHandler}>
                 <Text>Submit</Text>
             </Pressable>
         </View>

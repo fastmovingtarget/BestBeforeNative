@@ -35,8 +35,8 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
     const [shoppingList, setShoppingList] = useState<Shopping_List_Item[]>([])
 
     const databaseProps = {
-        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "localhost",
-        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "8080",
+        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.183",
+        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     }
 
     const userID = 1;
