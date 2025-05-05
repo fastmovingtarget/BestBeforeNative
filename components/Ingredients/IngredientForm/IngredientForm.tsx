@@ -4,7 +4,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Ingredient from "@/Types/Ingredient";
 import { useData } from "@/Contexts/DataProvider";
 
-export default function IngredientForm({ingredient, onCancel} : {ingredient?: Ingredient, onCancel?: () => void}) {
+export default function IngredientForm({ingredient, onCancel, isFormVisible = false} : {ingredient?: Ingredient, onCancel?: () => void, isFormVisible?: boolean}) {
 
     const [formIngredient, setFormIngredient] = useState<Ingredient>( ingredient || {
         Ingredient_Name: "",
@@ -13,8 +13,19 @@ export default function IngredientForm({ingredient, onCancel} : {ingredient?: In
     });
     const {addIngredient, updateIngredient} = useData();
 
+    const cancelHandler = () => {
+        setFormIngredient(ingredient || {
+            Ingredient_Name: "",
+            Ingredient_Quantity: 0,
+            Ingredient_Date: new Date(),
+        })
+        if (onCancel) {
+            onCancel();
+        }
+    }
+
     return (
-        <View>
+        <View aria-label="formContainer" style={isFormVisible ? styles.formVisible : styles.formInvisible}>
             <Text>Ingredient: 
                 <TextInput
                     defaultValue={formIngredient.Ingredient_Name || ""}
@@ -40,7 +51,7 @@ export default function IngredientForm({ingredient, onCancel} : {ingredient?: In
                     aria-label="quantity-input"
                 />
             </Text>
-            <Pressable onPress={() => onCancel ? onCancel() : null}>
+            <Pressable onPress={cancelHandler}>
                 <Text>Cancel</Text>
             </Pressable>
             <Pressable onPress={() => 
@@ -52,3 +63,16 @@ export default function IngredientForm({ingredient, onCancel} : {ingredient?: In
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    formVisible: {
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "white",
+        padding: 10,
+        borderRadius: 5,
+    },
+    formInvisible: {
+        display: "none",
+    },
+});

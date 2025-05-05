@@ -44,7 +44,7 @@ describe('Ingredient renders correctly', () => {
     const user = userEvent.setup();
 
     const {getByText, getByLabelText} = render(
-      <IngredientForm/>,
+      <IngredientForm isFormVisible={true}/>,
     );
 
     expect(getByText(/Ingredient:/i)).toBeTruthy();
@@ -72,6 +72,7 @@ describe('Ingredient renders correctly', () => {
             Ingredient_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
         }} 
         onCancel={onCancelMock}
+        isFormVisible={true}
       />,
     );
 
@@ -95,7 +96,7 @@ describe('IngredientForm input registers correct change', () => {
             const user = userEvent.setup();
     
             const {getByLabelText} = render(
-                <IngredientForm/>,
+                <IngredientForm isFormVisible={true}/>,
             );
     
             const nameInput = getByLabelText(/name-input/i);
@@ -111,7 +112,7 @@ describe('IngredientForm input registers correct change', () => {
             const testDate = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7); // 1 week from now
     
             const {getByLabelText} = render(
-                <IngredientForm/>,
+                <IngredientForm isFormVisible={true}/>,
             );
     
             const dateInput = getByLabelText(/date-input/i);
@@ -131,7 +132,7 @@ describe('IngredientForm input registers correct change', () => {
             const user = userEvent.setup();
     
             const {getByLabelText} = render(
-                <IngredientForm/>,
+                <IngredientForm isFormVisible={true}/>,
             );
     
             const quantityInput = getByLabelText(/quantity-input/i);
@@ -154,6 +155,7 @@ describe('IngredientForm input registers correct change', () => {
                     Ingredient_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
                 }} 
                 onCancel={onCancelMock}
+                isFormVisible={true}
                 />,
             );
     
@@ -175,6 +177,7 @@ describe('IngredientForm input registers correct change', () => {
                     Ingredient_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
                 }} 
                 onCancel={onCancelMock}
+                isFormVisible={true}
                 />,
             );
     
@@ -193,7 +196,7 @@ describe("When Submit button is pressed", () => {
         test("With initial values when unchanged", async () => {
             const user = userEvent.setup();
             const {getByText, getByLabelText} = render(
-                <IngredientForm/>,
+                <IngredientForm isFormVisible={true}/>,
             );
 
             const submitButton = getByText(/Submit/i);
@@ -212,7 +215,7 @@ describe("When Submit button is pressed", () => {
         test("With changed values when changed", async () => {
             const user = userEvent.setup();
             const {getByText, getByLabelText} = render(
-                <IngredientForm/>,
+                <IngredientForm isFormVisible={true}/>,
             );
 
             const testIngredient : Ingredient = {
@@ -259,7 +262,7 @@ describe("When Submit button is pressed", () => {
             };
 
             const {getByText, getByLabelText} = render(
-                <IngredientForm ingredient={testIngredient} />,
+                <IngredientForm ingredient={testIngredient} isFormVisible={true} />,
             );
 
             const submitButton = getByText(/Submit/i);
@@ -286,7 +289,7 @@ describe("When Submit button is pressed", () => {
             };
 
             const {getByText, getByLabelText} = render(
-                <IngredientForm ingredient={testIngredient}/>,
+                <IngredientForm ingredient={testIngredient} isFormVisible={true}/>,
             );
 
             const expectedIngredient : Ingredient = {
@@ -320,5 +323,24 @@ describe("When Submit button is pressed", () => {
 
             expect(mockdataContext.updateIngredient).toHaveBeenCalledWith(expectedIngredient);
         })
+    })
+})
+describe("Form Visibility is", () => {
+    test("Visble when isFormVisible is true", () => {
+        const {getByText, getByLabelText} = render(
+            <IngredientForm isFormVisible={true}/>,
+        );
+
+        const form = getByLabelText("formContainer");
+        expect(form).toHaveProperty("props.style.display", "flex");
+    })
+    test("Invisible when isFormVisible is false", () => {
+        const {queryByLabelText} = render(
+            <IngredientForm isFormVisible={false}/>,
+        );
+
+        const form = queryByLabelText("formContainer");
+        expect(form).toBeNull();
+        
     })
 })
