@@ -4,7 +4,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Ingredient from "@/Types/Ingredient";
 import { useData } from "@/Contexts/DataProvider";
 
-export default function IngredientForm({ingredient, onCancel, isFormVisible = false} : {ingredient?: Ingredient, onCancel?: () => void, isFormVisible?: boolean}) {
+export default function IngredientForm({ingredient, onCancel, isFormVisible = false, key = "undefined"} : {key? : string, ingredient?: Ingredient, onCancel?: () => void, isFormVisible?: boolean}) {
+
+    console.log("IngredientForm", ingredient);
 
     const [formIngredient, setFormIngredient] = useState<Ingredient>( ingredient || {
         Ingredient_Name: "",
@@ -25,7 +27,7 @@ export default function IngredientForm({ingredient, onCancel, isFormVisible = fa
         }
     }
 
-    const submitHandler = () => {() => 
+    const submitHandler = () => {
         formIngredient.Ingredient_ID ? 
             updateIngredient(formIngredient) : 
             addIngredient(formIngredient)
@@ -35,7 +37,7 @@ export default function IngredientForm({ingredient, onCancel, isFormVisible = fa
     }
 
     return (
-        <View aria-label="formContainer" style={isFormVisible ? styles.formVisible : styles.formInvisible}>
+        <View aria-label="formContainer" style={isFormVisible ? styles.formVisible : styles.formInvisible} key={key || "0"}>
             <Text>Ingredient: 
                 <TextInput
                     defaultValue={formIngredient.Ingredient_Name || ""}
