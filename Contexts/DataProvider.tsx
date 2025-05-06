@@ -30,6 +30,7 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
 
     const [ingredients, setIngredients] = useState<Ingredient[]>([])
     const [ingredientsSearchOptions, setIngredientsSearchOptions] = useState<IngredientSearchOptions>({})
+    const [ingredientsDataState, setIngredientsDataState] = useState<"loading" | "failed" | "successful" | "changed">("changed")
     const [recipes, setRecipes] = useState<Recipe[]>([])
     const [recipePlans, setRecipePlans] = useState<Recipe_Plan[]>([])
     const [shoppingList, setShoppingList] = useState<Shopping_List_Item[]>([])
@@ -42,15 +43,21 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
     const userID = 1;
 
     useEffect(() => {
-        getIngredientsData(
-            databaseProps,
-            userID,
-            ingredients,
-            setIngredients,
-        )
+        if(ingredientsDataState === "changed"){
+            console.log("IngredientsDataState 1: ", ingredientsDataState)
+            setIngredientsDataState("loading")
+            getIngredientsData(
+                databaseProps,
+                userID,
+                ingredients,
+                setIngredients,
+            ).then((result) => {
+                setIngredientsDataState(result)
+            })
+        }
     }, [ingredients, ingredientsSearchOptions])
     
-    useEffect(() => {
+    /*useEffect(() => {
         getRecipesData(
             databaseProps,
             userID,
@@ -75,15 +82,15 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
             shoppingList,
             setShoppingList,
         )
-    }, [shoppingList])
+    }, [shoppingList])*/
 
     const ingredientsData = {
         ingredients,
         deleteIngredient: (ingredientID: number) => deleteIngredientData(databaseProps, ingredients, setIngredients, ingredientID),
-        addIngredient: (ingredient: Ingredient) => addIngredientData(databaseProps, ingredients, setIngredients, ingredient),
-        updateIngredient: (ingredient: Ingredient) => updateIngredientData(databaseProps, ingredients, setIngredients, ingredient),
+        addIngredient: (ingredient: Ingredient) => {addIngredientData(databaseProps, ingredients, setIngredients, ingredient); setIngredientsDataState("changed")},
+        updateIngredient: (ingredient: Ingredient) => {updateIngredientData(databaseProps, ingredients, setIngredients, ingredient); setIngredientsDataState("changed")},
         ingredientsSearchOptions,
-        setIngredientsSearchOptions: (options: IngredientSearchOptions) => setIngredientsSearchOptions((oldOptions) => {return {...oldOptions, ...options}}),
+        setIngredientsSearchOptions: (options: IngredientSearchOptions) => {setIngredientsSearchOptions((oldOptions) => {return {...oldOptions, ...options}}); setIngredientsDataState("changed")},
     }
 
     return (
