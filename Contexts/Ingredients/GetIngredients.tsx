@@ -9,12 +9,12 @@ export const getIngredientsData = async (
     searchOptions : IngredientSearchOptions = {},
 ) => {
 
+    let returnCode : "failed" | "successful" = "failed"; // Initialize returnCode to "failed"
+
     const optionsString = Object.entries(searchOptions).map(([key, value]) => {//map the key and uri encoded value pairs to a string joined by &
         if (value === undefined) return ""; // Skip undefined values
         return `${key}=${encodeURIComponent(value)}`;
     }).join("&");
-
-    console.log(`http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/ingredients/${userID}?${optionsString}`)
 
     await fetch(
         `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/ingredients/${userID}?${optionsString}`, 
@@ -26,24 +26,22 @@ export const getIngredientsData = async (
         }
     ).then((rawData) => {
         if(rawData.status !== 200) {
-            return;
+            returnCode = "failed";
         }
         rawData.json().then((data) => {
             setIngredients(
-                [
-                    ...ingredients,
-                    ...data.map((element: Ingredient) => {
-                        if(element.Ingredient_Date) 
-                            return {
-                                ...element,
-                                Ingredient_Date: new Date(element.Ingredient_Date),//date comes in as a string and doesn't get properly parsed within .json()
-                            };
-                        
-                        return element
-                    }),
-                ]
+                data.map((element: Ingredient) => {
+                    if(element.Ingredient_Date) 
+                        return {
+                            ...element,
+                            Ingredient_Date: new Date(element.Ingredient_Date),//date comes in as a string and doesn't get properly parsed within .json()
+                        };
+                    
+                    return element
+                }),
             );
+            returnCode = "successful";
         })
     });
-    console.log("no longer waiting for fetch")
+    return returnCode;
 }
