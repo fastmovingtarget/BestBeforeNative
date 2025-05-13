@@ -2,11 +2,14 @@ import React, {useState} from 'react'
 import { StyleSheet, Text, View, Pressable, TextInput } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ingredient from "@/Types/Ingredient";
+import ComponentView from '@/components/ComponentView';
+import ButtonView from '@/components/ButtonView';
+import FormFieldContainer from '@/components/FormFieldContainer';
+import LabelText from '@/components/LabelText';
+import FormTextInput from '@/components/FormTextInput';
 import { useData } from "@/Contexts/DataProvider";
 
-export default function IngredientForm({ingredient, onCancel, isFormVisible = false, key = "undefined"} : {key? : string, ingredient?: Ingredient, onCancel?: () => void, isFormVisible?: boolean}) {
-
-    console.log("IngredientForm", ingredient);
+export default function IngredientForm({ingredient, onCancel, isFormVisible = false} : {ingredient?: Ingredient, onCancel?: () => void, isFormVisible?: boolean}) {
 
     const [formIngredient, setFormIngredient] = useState<Ingredient>( ingredient || {
         Ingredient_Name: "",
@@ -37,15 +40,27 @@ export default function IngredientForm({ingredient, onCancel, isFormVisible = fa
     }
 
     return (
-        <View aria-label="formContainer" style={isFormVisible ? styles.formVisible : styles.formInvisible} key={key || "0"}>
-            <Text>Ingredient: 
-                <TextInput
+        <ComponentView aria-label="formContainer" style={isFormVisible ? styles.formVisible : styles.formInvisible} >
+            <FormFieldContainer  >
+                <LabelText >Ingredient: </LabelText> 
+                <FormTextInput
                     defaultValue={formIngredient.Ingredient_Name || ""}
+                    inputMode='text'
                     onSubmitEditing={(event) => setFormIngredient({...formIngredient, Ingredient_Name: event.nativeEvent.text})}
                     aria-label="name-input"
                 />
-            </Text>
-            <Text onPress={() => setPickerVisible(!pickerVisible)}>Use By: {formIngredient.Ingredient_Date?.toLocaleDateString("en-UK", { year: "numeric", month: "2-digit", day: "2-digit" })}
+            </FormFieldContainer>
+                
+            <FormFieldContainer  >
+                <LabelText aria-label="date-input-label" >Use By: </LabelText>
+                <ButtonView
+                    onPress={() => setPickerVisible(!pickerVisible)}
+                    style={{width: "70%", padding:0}}
+                >
+                    <LabelText aria-label="date-input-button">
+                        {formIngredient.Ingredient_Date?.toLocaleDateString("en-UK", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                    </LabelText>
+                </ButtonView>
                 {pickerVisible ? <DateTimePicker
                     value={formIngredient.Ingredient_Date || new Date()}
                     minimumDate={new Date()}
@@ -54,22 +69,26 @@ export default function IngredientForm({ingredient, onCancel, isFormVisible = fa
                     onChange={(event, date) => {setFormIngredient({...formIngredient, Ingredient_Date: date}); setPickerVisible(false)}}
                     aria-label="date-input"
                 /> : null}
-            </Text>
-            <Text>Quantity: 
-                <TextInput
-                    defaultValue={formIngredient.Ingredient_Quantity?.toString()}
+            </FormFieldContainer>
+            <FormFieldContainer  >
+                <LabelText >Quantity: </LabelText>
+                <FormTextInput
+                    defaultValue={formIngredient.Ingredient_Quantity?.toString() || ""}
                     inputMode='numeric'
                     onSubmitEditing={(event) => setFormIngredient({...formIngredient, Ingredient_Quantity: parseInt(event.nativeEvent.text)})}
                     aria-label="quantity-input"
                 />
-            </Text>
-            <Pressable onPress={cancelHandler}>
-                <Text>Cancel</Text>
-            </Pressable>
-            <Pressable onPress={submitHandler}>
-                <Text>Submit</Text>
-            </Pressable>
-        </View>
+            </FormFieldContainer>
+            <FormFieldContainer style={{justifyContent:"space-around"}} >
+                <ButtonView onPress={cancelHandler}>
+                    <LabelText >Cancel</LabelText>
+                </ButtonView>
+                <ButtonView onPress={submitHandler}>
+                    <LabelText >Submit</LabelText>
+                </ButtonView>
+            </FormFieldContainer>
+
+        </ComponentView>
     )
 }
 
@@ -77,7 +96,6 @@ const styles = StyleSheet.create({
     formVisible: {
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "white",
         padding: 10,
         borderRadius: 5,
     },

@@ -53,12 +53,10 @@ describe('Ingredient renders correctly', () => {
 
     expect(getByLabelText(/name-input/i)).toBeTruthy();
     expect(getByLabelText(/quantity-input/i)).toBeTruthy();
-    expect(getByLabelText(/date-input/i)).toBeTruthy();
+    expect(getByLabelText(/date-input-button/i)).toBeTruthy();
 
     expect(getByLabelText(/name-input/i)).toHaveDisplayValue('');
     expect(getByLabelText(/quantity-input/i)).toHaveDisplayValue('0');
-    //we can't check that the date picker has the correct date via display value so will have to check visually when implemented
-    expect(mockDateTimePicker.mock.calls[0][0].value.toLocaleDateString()).toEqual(new Date().toLocaleDateString());//careful running these tests at midnight as the date will change
   });
   it('when given an ingredient', () => {
     const mockDateTimePicker = DateTimePicker as jest.Mock;
@@ -82,12 +80,10 @@ describe('Ingredient renders correctly', () => {
 
     expect(getByLabelText(/name-input/i)).toBeTruthy();
     expect(getByLabelText(/quantity-input/i)).toBeTruthy();
-    expect(getByLabelText(/date-input/i)).toBeTruthy();
+    expect(getByLabelText(/date-input-button/i)).toBeTruthy();
 
     expect(getByLabelText(/name-input/i)).toHaveDisplayValue('Test Ingredient');
     expect(getByLabelText(/quantity-input/i)).toHaveDisplayValue('1');
-    //we can't check that the date picker has the correct date via display value so will have to check visually when implemented
-    expect(mockDateTimePicker.mock.calls[0][0].value.toLocaleDateString()).toEqual(new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7).toLocaleDateString());//careful running these tests at midnight as the date will change
   });
 });
 describe('IngredientForm input registers correct change', () => {
@@ -111,11 +107,14 @@ describe('IngredientForm input registers correct change', () => {
             const user = userEvent.setup();
             const testDate = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7); // 1 week from now
     
-            const {getByLabelText} = render(
+            const {getByLabelText, getByText} = render(
                 <IngredientForm isFormVisible={true}/>,
             );
     
-            const dateInput = getByLabelText(/date-input/i);
+            const dateInputButton = getByLabelText("date-input-button");
+
+            await user.press(dateInputButton);
+            const dateInput = getByLabelText("date-input");
     
             expect(dateInput).toBeTruthy();
     
@@ -126,7 +125,7 @@ describe('IngredientForm input registers correct change', () => {
                     utcOffset: 0,
                 }}, dateInput);
 
-            expect(new Date(dateInput.props.date).toTimeString()).toEqual(testDate.toTimeString());
+            expect(getByText(testDate.toLocaleDateString("en-UK", { year: "numeric", month: "2-digit", day: "2-digit" }))).toBeTruthy();
         });
         test('and quantity input is changed', async () => {
             const user = userEvent.setup();
@@ -203,7 +202,7 @@ describe("When Submit button is pressed", () => {
 
             expect(getByLabelText(/name-input/i)).toBeTruthy();
             expect(getByLabelText(/quantity-input/i)).toBeTruthy();
-            expect(getByLabelText(/date-input/i)).toBeTruthy();
+            expect(getByLabelText(/date-input-button/i)).toBeTruthy();
 
             expect(submitButton).toBeTruthy();
 
@@ -228,10 +227,14 @@ describe("When Submit button is pressed", () => {
 
             const nameInput = getByLabelText(/name-input/i);
             const quantityInput = getByLabelText(/quantity-input/i);
-            const dateInput = getByLabelText(/date-input/i);
+            const dateInputButton = getByLabelText("date-input-button");
 
             await user.type(nameInput, 'Test Ingredient 1', {submitEditing: true});
             await user.type(quantityInput, '1', {submitEditing: true});
+
+            await user.press(dateInputButton);
+            const dateInput = getByLabelText("date-input");
+
             fireEvent(dateInput, 'onChange', {
                 type: 'set',
                 nativeEvent: {
@@ -269,7 +272,7 @@ describe("When Submit button is pressed", () => {
 
             expect(getByLabelText(/name-input/i)).toBeTruthy();
             expect(getByLabelText(/quantity-input/i)).toBeTruthy();
-            expect(getByLabelText(/date-input/i)).toBeTruthy();
+            expect(getByLabelText(/date-input-button/i)).toBeTruthy();
 
             expect(submitButton).toBeTruthy();
 
@@ -303,10 +306,15 @@ describe("When Submit button is pressed", () => {
 
             const nameInput = getByLabelText(/name-input/i);
             const quantityInput = getByLabelText(/quantity-input/i);
-            const dateInput = getByLabelText(/date-input/i);
+            const dateInputButton = getByLabelText(/date-input-button/i);
+
 
             await user.type(nameInput, ' Input Test', {submitEditing: true});
             await user.type(quantityInput, '2', {submitEditing: true});
+
+            await user.press(dateInputButton);
+            const dateInput = getByLabelText("date-input");
+
             fireEvent(dateInput, 'onChange', {
                 type: 'set',
                 nativeEvent: {
