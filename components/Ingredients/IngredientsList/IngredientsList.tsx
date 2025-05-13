@@ -4,11 +4,13 @@ import { useData } from "@/Contexts/DataProvider";
 import { useState } from "react";
 import IngredientComponent from "./IngredientComponent/IngredientComponent";
 import IngredientForm from "../IngredientForm/IngredientForm";
+import ListView from "@/components/ListView";
 
 export default function IngredientsList({onEdit}: {onEdit: () => void}) {
     const [editId, setEditId] = useState<number | undefined>(undefined);
+
     return (
-        <ScrollView >
+        <ListView >
             {useData().ingredients.map((ingredient: Ingredient) => (
                 editId !== ingredient.Ingredient_ID ?
                     <IngredientComponent key={`ingredient-${ingredient.Ingredient_ID}`} ingredient={ingredient} onEdit={(id) => {
@@ -17,6 +19,6 @@ export default function IngredientsList({onEdit}: {onEdit: () => void}) {
                     }}/> :
                     <IngredientForm key={`ingredient-form-${ingredient.Ingredient_ID}`} ingredient={ingredient} onCancel={() => {setEditId(undefined)}} isFormVisible={true}/>
             ))}
-        </ScrollView>
+        </ListView>
     );
 }

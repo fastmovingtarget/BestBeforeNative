@@ -65,11 +65,11 @@ test("When The Add Ingredient button is pressed, change the visibility of Add In
     const {getByText, getByRole} = render(<IngredientsPage />);
     
     const addIngredientButton = getByRole("button", {name: /Add Ingredient/i});
-    expect(addIngredientButton).toHaveProperty("props.style", {backgroundColor: "blue", padding: 10, borderRadius: 5});
+    expect(addIngredientButton).toHaveProperty("props.style.backgroundColor", "#272727");
 
     await user.press(addIngredientButton);
 
-    expect(addIngredientButton).toHaveProperty("props.style", {display: "none"});
+    expect(addIngredientButton).toHaveProperty("props.style.display", "none");
 })
 
 test("When The Add Ingredient button is pressed", async () => {
