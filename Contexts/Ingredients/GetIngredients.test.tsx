@@ -6,7 +6,7 @@ fetchMock.enableMocks();
 
 // Mocking the fetch function
 beforeEach(() => {
-    fetch.resetMocks();
+    fetchMock.resetMocks();
 })
 
 describe('getIngredientsData', () => {
@@ -14,13 +14,12 @@ describe('getIngredientsData', () => {
         const mockSetIngredients = jest.fn();
         const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
         const userID = 1;
-        const ingredients = [] as Ingredient[]; // Assuming ingredients is an array of Ingredient type
 
         const now = new Date();
         const tomorrow = new Date(now.getUTCMilliseconds() + 86400000); // 1 day later
         //if I instance the dates seperately in the call and response, I get different timestamps 'cos the test takes time, so I'll just make 'em here
         
-        fetch.mockResponseOnce(JSON.stringify([
+        fetchMock.mockResponseOnce(JSON.stringify([
             {
                 Ingredient_ID: 1,
                 Ingredient_Name: 'Ingredient 1',
@@ -39,7 +38,6 @@ describe('getIngredientsData', () => {
         await getIngredientsData(
             mockServerProps,
             userID,
-            ingredients,
             mockSetIngredients,
         );
 
@@ -62,13 +60,10 @@ describe('getIngredientsData', () => {
         const mockSetIngredients = jest.fn();
         const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
         const userID = 1;
-        const ingredients = [] as Ingredient[]; // Assuming ingredients is an array of Ingredient type
 
-        const now = new Date();
-        const tomorrow = new Date(now.getUTCMilliseconds() + 86400000); // 1 day later
         //if I instance the dates seperately in the call and response, I get different timestamps 'cos the test takes time, so I'll just make 'em here
         
-        fetch.mockResponseOnce(JSON.stringify([
+        fetchMock.mockResponseOnce(JSON.stringify([
             {
                 Ingredient_ID: 1,
                 Ingredient_Name: 'Ingredient 1',
@@ -85,7 +80,6 @@ describe('getIngredientsData', () => {
         await getIngredientsData(
             mockServerProps,
             userID,
-            ingredients,
             mockSetIngredients,
         );
 
@@ -106,13 +100,11 @@ describe('getIngredientsData', () => {
         const mockSetIngredients = jest.fn();
         const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
         const userID = 1;
-        const ingredients = [] as Ingredient[]; // Assuming ingredients is an array of Ingredient type
-        fetch.mockResponseOnce(JSON.stringify({}), { status: 500 });
+        fetchMock.mockResponseOnce(JSON.stringify({}), { status: 500 });
 
         await getIngredientsData(
             mockServerProps,
             userID,
-            ingredients,
             mockSetIngredients,
         );
 
@@ -123,17 +115,15 @@ describe('getIngredientsData', () => {
             const mockSetIngredients = jest.fn();
             const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
             const userID = 1;
-            const ingredients = [] as Ingredient[]; // Assuming ingredients is an array of Ingredient type
     
             const now = new Date();
-            const tomorrow = new Date(now.getUTCMilliseconds() + 86400000); // 1 day later
 
             const searchOptions : IngredientSearchOptions = {
                 searchText: 'Ingredient 1',
             }
     
             //if I instance the dates seperately in the call and response, I get different timestamps 'cos the test takes time, so I'll just make 'em here
-            fetch.mockResponseOnce(JSON.stringify([
+            fetchMock.mockResponseOnce(JSON.stringify([
                 {
                     Ingredient_ID: 1,
                     Ingredient_Name: 'Ingredient 1',
@@ -146,7 +136,6 @@ describe('getIngredientsData', () => {
             await getIngredientsData(
                 mockServerProps,
                 userID,
-                ingredients,
                 mockSetIngredients,
                 searchOptions
             );
@@ -174,10 +163,8 @@ describe('getIngredientsData', () => {
             const mockSetIngredients = jest.fn();
             const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
             const userID = 1;
-            const ingredients = [] as Ingredient[]; // Assuming ingredients is an array of Ingredient type
     
             const now = new Date();
-            const tomorrow = new Date(now.getUTCMilliseconds() + 86400000); // 1 day later
 
             const searchOptions : IngredientSearchOptions = {
                 searchText: 'Ingredient 1',
@@ -187,7 +174,7 @@ describe('getIngredientsData', () => {
             }
     
             //if I instance the dates seperately in the call and response, I get different timestamps 'cos the test takes time, so I'll just make 'em here
-            fetch.mockResponseOnce(JSON.stringify([
+            fetchMock.mockResponseOnce(JSON.stringify([
                 {
                     Ingredient_ID: 1,
                     Ingredient_Name: 'Ingredient 1',
@@ -200,7 +187,6 @@ describe('getIngredientsData', () => {
             await getIngredientsData(
                 mockServerProps,
                 userID,
-                ingredients,
                 mockSetIngredients,
                 searchOptions
             );
