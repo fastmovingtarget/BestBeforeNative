@@ -7,19 +7,23 @@ export const deleteIngredientData = async (
     setIngredients : React.Dispatch<React.SetStateAction<Ingredient[]>>, 
     ingredientID : number,
 ) => {
+    setIngredients(ingredients.filter((ingredient) => ingredient.Ingredient_ID !== ingredientID));//remove the deleted ingredient from the list
 
-    await fetch(
-        `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/ingredients/${ingredientID}`, 
-        {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
+    let returnPromise = new Promise<"successful" | "failed">((resolve) => {
+        fetch(
+            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/ingredients/${ingredientID}`, 
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                }
             }
-        }
-    ).then((rawData) => {
-        if(!rawData.ok) {
-            return;
-        }
-        setIngredients(ingredients.filter((ingredient) => ingredient.Ingredient_ID !== ingredientID));//remove the deleted ingredient from the list
-    });
+        ).then((rawData) => {
+            if(rawData.ok) 
+                resolve("successful");
+            else
+                resolve("failed");
+        });
+    })
+    return returnPromise;
 }

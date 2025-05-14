@@ -30,7 +30,7 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
 
     const [ingredients, setIngredients] = useState<Ingredient[]>([])
     const [ingredientsSearchOptions, setIngredientsSearchOptions] = useState<IngredientSearchOptions>({})
-    const [ingredientsDataState, setIngredientsDataState] = useState<"loading" | "failed" | "successful" | "changed">("changed")
+    const [ingredientsDataState, setIngredientsDataState] = useState<"loading" | "failed" | "successful" | "updated">("successful")
     const [recipes, setRecipes] = useState<Recipe[]>([])
     const [recipePlans, setRecipePlans] = useState<Recipe_Plan[]>([])
     const [shoppingList, setShoppingList] = useState<Shopping_List_Item[]>([])
@@ -43,19 +43,20 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
     const userID = 1;
 
     useEffect(() => {
-        if(ingredientsDataState === "changed"){
-            console.log("IngredientsDataState 1: ", ingredientsDataState)
-            setIngredientsDataState("loading")
-            getIngredientsData(
-                databaseProps,
-                userID,
-                ingredients,
-                setIngredients,
-            ).then((result) => {
-                setIngredientsDataState(result)
-            })
-        }
-    }, [ingredients, ingredientsSearchOptions])
+        if(ingredientsDataState === "loading" || ingredientsDataState === "updated") 
+            return;
+
+        setIngredientsDataState("loading");
+
+        getIngredientsData(
+            databaseProps,
+            userID,
+            setIngredients,
+            ingredientsSearchOptions,
+        ).then((result) => {
+            setIngredientsDataState(result);
+        })
+    }, [ingredientsDataState, ingredientsSearchOptions])
     
     /*useEffect(() => {
         getRecipesData(
@@ -86,11 +87,11 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
 
     const ingredientsData = {
         ingredients,
-        deleteIngredient: (ingredientID: number) => deleteIngredientData(databaseProps, ingredients, setIngredients, ingredientID),
-        addIngredient: (ingredient: Ingredient) => {addIngredientData(databaseProps, ingredients, setIngredients, ingredient); setIngredientsDataState("changed")},
-        updateIngredient: (ingredient: Ingredient) => {updateIngredientData(databaseProps, ingredients, setIngredients, ingredient); setIngredientsDataState("changed")},
+        deleteIngredient: (ingredientID: number) => deleteIngredientData(databaseProps, ingredients, setIngredients, ingredientID).then((result) => setIngredientsDataState(result)),
+        addIngredient: (ingredient: Ingredient) => addIngredientData(databaseProps, userID, ingredients, setIngredients, ingredient).then((result) => setIngredientsDataState(result)),
+        updateIngredient: (ingredient: Ingredient) => updateIngredientData(databaseProps, ingredients, setIngredients, ingredient).then((result) => setIngredientsDataState(result)),
         ingredientsSearchOptions,
-        setIngredientsSearchOptions: (options: IngredientSearchOptions) => {setIngredientsSearchOptions((oldOptions) => {return {...oldOptions, ...options}}); setIngredientsDataState("changed")},
+        setIngredientsSearchOptions: (options: IngredientSearchOptions) => {setIngredientsSearchOptions((oldOptions) => {return {...oldOptions, ...options}}); setIngredientsDataState("successful")},
     }
 
     return (
