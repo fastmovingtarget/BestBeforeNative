@@ -6,7 +6,7 @@ fetchMock.enableMocks();
 
 // Mocking the fetch function
 beforeEach(() => {
-    fetch.resetMocks();
+    fetchMock.resetMocks();
 })
 
 test('should fetch ingredients data and update state', async () => {
@@ -35,7 +35,7 @@ test('should fetch ingredients data and update state', async () => {
         Ingredient_Quantity: 1,
     };
 
-    fetch.mockResponseOnce(JSON.stringify(
+    fetchMock.mockResponseOnce(JSON.stringify(
             {
                 ...ingredient,
                 Ingredient_ID: 3,
@@ -46,6 +46,7 @@ test('should fetch ingredients data and update state', async () => {
     /*Act **********************************************************************/
     await addIngredientData(
         mockServerProps,
+        1,
         ingredients,
         mockSetIngredients,
         ingredient
@@ -53,6 +54,15 @@ test('should fetch ingredients data and update state', async () => {
 
     /*Assert *******************************************************************/
 
+    expect(fetchMock).toHaveBeenCalledWith(
+        `http://${mockServerProps.DatabaseServer}:${mockServerProps.DatabasePort}/ingredients/`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body : "{\"Ingredient_Name\":\"Ingredient 1\",\"Ingredient_Date\":\"2025-05-14\",\"Ingredient_Quantity\":1,\"Ingredient_User_ID\":1}"
+        })
     expect(mockSetIngredients).toHaveBeenCalledWith([
         ...ingredients,
         {
@@ -86,7 +96,7 @@ test("should not update state if fetch fails", async () => {
         Ingredient_Quantity: 1,
     };
 
-    fetch.mockResponseOnce(
+    fetchMock.mockResponseOnce(
         "",
         {status: 500, statusText: "Internal Server Error"}
     );
@@ -94,6 +104,7 @@ test("should not update state if fetch fails", async () => {
     /*Act **********************************************************************/
     await addIngredientData(
         mockServerProps,
+        1,
         ingredients,
         mockSetIngredients,
         ingredient

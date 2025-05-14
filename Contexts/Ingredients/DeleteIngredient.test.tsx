@@ -6,7 +6,7 @@ fetchMock.enableMocks();
 
 // Mocking the fetch function
 beforeEach(() => {
-    fetch.resetMocks();
+    fetchMock.resetMocks();
 })
 
 test('should fetch ingredients data and update state', async () => {
@@ -39,7 +39,7 @@ test('should fetch ingredients data and update state', async () => {
         },
     ]; 
 
-    fetch.mockResponseOnce(
+    fetchMock.mockResponseOnce(
         "",
         {status: 204, statusText: "Ingredient Deleted"}
     );
@@ -77,13 +77,13 @@ test("should not update state if fetch fails", async () => {
         },
     ]; 
 
-    fetch.mockResponseOnce(
+    fetchMock.mockResponseOnce(
         "",
         {status: 500, statusText: "Internal Server Error"}
     );
 
     /*Act **********************************************************************/
-    await deleteIngredientData(
+    const deleteStatus = await deleteIngredientData(
         mockServerProps,
         ingredients,
         mockSetIngredients,
@@ -92,5 +92,6 @@ test("should not update state if fetch fails", async () => {
 
     /*Assert *******************************************************************/
 
-    expect(mockSetIngredients).not.toHaveBeenCalled();
+    expect(mockSetIngredients).toHaveBeenCalledWith(ingredients);
+    expect(deleteStatus).toBe("failed");
 })

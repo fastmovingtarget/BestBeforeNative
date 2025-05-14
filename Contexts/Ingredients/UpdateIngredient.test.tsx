@@ -6,7 +6,7 @@ fetchMock.enableMocks();
 
 // Mocking the fetch function
 beforeEach(() => {
-    fetch.resetMocks();
+    fetchMock.resetMocks();
 })
 
 test('should fetch ingredients data and update state', async () => {
@@ -36,7 +36,7 @@ test('should fetch ingredients data and update state', async () => {
         Ingredient_ID: 1,
     };
 
-    fetch.mockResponseOnce(JSON.stringify(
+    fetchMock.mockResponseOnce(JSON.stringify(
             {
                 ...ingredient_changed,
                 Ingredient_ID: 1,
@@ -86,13 +86,13 @@ test("should not update state if fetch fails", async () => {
         Ingredient_ID: 1,
     };
 
-    fetch.mockResponseOnce(
+    fetchMock.mockResponseOnce(
         "",
         {status: 500, statusText: "Internal Server Error"}
     );
 
     /*Act **********************************************************************/
-    await updateIngredientData(
+    const ingredientsState = await updateIngredientData(
         mockServerProps,
         ingredients,
         mockSetIngredients,
@@ -101,5 +101,5 @@ test("should not update state if fetch fails", async () => {
 
     /*Assert *******************************************************************/
 
-    expect(mockSetIngredients).not.toHaveBeenCalled();
+    expect(ingredientsState).toEqual("failed");
 })
