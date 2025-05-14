@@ -18,25 +18,10 @@ export default function IngredientSearch() {
                 <FormTextInput 
                     aria-label="search-input"
                     placeholder="Search for an ingredient..."
-                    onSubmitEditing={event => {setIngredientsSearchOptions({searchText: event.nativeEvent.text})}}
+                    onChange={event => {setIngredientsSearchOptions({searchText: event.nativeEvent.text})}}
                     defaultValue = {ingredientsSearchOptions?.searchText || ""}
                 />
             </FormFieldContainer>
         </ComponentView>
     )
 }
-const styles = StyleSheet.create({
-    textInputField:{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: "#111111",
-        color: "#e3dccf",
-        borderRadius: 5,
-        textAlignVertical: "center",
-        width: "70%",
-        lineHeight: 20,
-        fontSize: 16
-    }
-});

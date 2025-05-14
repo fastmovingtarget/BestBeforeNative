@@ -1,17 +1,17 @@
 import {Text, TextInput, NativeSyntheticEvent, TextInputSubmitEditingEventData} from "react-native";
 import type { PropsWithChildren } from "react";
-import type { TextStyle} from "react-native";
+import type { TextInputChangeEventData, TextStyle} from "react-native";
 
 type InputTextProps = {
     style?: TextStyle,
     defaultValue : string,
     placeholder?: string,
     inputMode?:'numeric' | 'text',
-    onSubmitEditing:(event : NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void,
+    onChange:(event : NativeSyntheticEvent<TextInputChangeEventData>) => void,
     ["aria-label"]:string
 }
 
-const FormTextInput = ({style, children, defaultValue, inputMode = "text", onSubmitEditing, 'aria-label' : ariaLabel, placeholder = ""} : PropsWithChildren<InputTextProps>) => {
+const FormTextInput = ({style, children, defaultValue, inputMode = "text", onChange, 'aria-label' : ariaLabel, placeholder = ""} : PropsWithChildren<InputTextProps>) => {
     return (
         <TextInput 
             style={{ 
@@ -20,7 +20,7 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onSub
             }}
             defaultValue={defaultValue}
             inputMode={inputMode}
-            onSubmitEditing={onSubmitEditing}
+            onChange={onChange}
             aria-label={ariaLabel}
             placeholder={placeholder}
             placeholderTextColor={"#e3dccf"}

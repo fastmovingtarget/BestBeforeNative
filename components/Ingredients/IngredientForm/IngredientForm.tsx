@@ -11,29 +11,32 @@ import { useData } from "@/Contexts/DataProvider";
 
 export default function IngredientForm({ingredient, onCancel, isFormVisible = false} : {ingredient?: Ingredient, onCancel?: () => void, isFormVisible?: boolean}) {
 
-    const [formIngredient, setFormIngredient] = useState<Ingredient>( ingredient || {
+
+    const blankIngredient = {
         Ingredient_Name: "",
         Ingredient_Quantity: 0,
         Ingredient_Date: new Date(),
-    });
+    }
+    const [formIngredient, setFormIngredient] = useState<Ingredient>( ingredient || blankIngredient);
     const [pickerVisible, setPickerVisible] = useState(false);
     const {addIngredient, updateIngredient} = useData();
 
     const cancelHandler = () => {
-        setFormIngredient(ingredient || {
-            Ingredient_Name: "",
-            Ingredient_Quantity: 0,
-            Ingredient_Date: new Date(),
-        })
+        formIngredient.Ingredient_ID ? 
+        setFormIngredient(ingredient || blankIngredient) 
+        : setFormIngredient(blankIngredient);
         if (onCancel) {
             onCancel();
         }
     }
 
     const submitHandler = () => {
-        formIngredient.Ingredient_ID ? 
-            updateIngredient(formIngredient) : 
-            addIngredient(formIngredient)
+        if(formIngredient?.Ingredient_ID)  
+            updateIngredient(formIngredient) 
+        else{ 
+            addIngredient(formIngredient);
+            setFormIngredient(blankIngredient);
+        }
         if (onCancel) {
             onCancel();
         }
@@ -46,7 +49,7 @@ export default function IngredientForm({ingredient, onCancel, isFormVisible = fa
                 <FormTextInput
                     defaultValue={formIngredient.Ingredient_Name || ""}
                     inputMode='text'
-                    onSubmitEditing={(event) => setFormIngredient({...formIngredient, Ingredient_Name: event.nativeEvent.text})}
+                    onChange={(event) => setFormIngredient({...formIngredient, Ingredient_Name: event.nativeEvent.text})}
                     aria-label="name-input"
                 />
             </FormFieldContainer>
@@ -75,7 +78,7 @@ export default function IngredientForm({ingredient, onCancel, isFormVisible = fa
                 <FormTextInput
                     defaultValue={formIngredient.Ingredient_Quantity?.toString() || ""}
                     inputMode='numeric'
-                    onSubmitEditing={(event) => setFormIngredient({...formIngredient, Ingredient_Quantity: parseInt(event.nativeEvent.text)})}
+                    onChange={(event) => setFormIngredient({...formIngredient, Ingredient_Quantity: parseInt(event.nativeEvent.text)})}
                     aria-label="quantity-input"
                 />
             </FormFieldContainer>
