@@ -1,9 +1,7 @@
 import {render, userEvent, fireEvent, screen} from '@testing-library/react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { DateTimePickerAndroid, DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import IngredientForm from './IngredientForm';
 import {useData} from '@/Contexts/DataProvider';
-import { TextInput } from 'react-native';
 import Ingredient from '@/Types/Ingredient';
 
 const mockdataContext = {
