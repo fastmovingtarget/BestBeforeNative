@@ -1,6 +1,6 @@
 import React, {useContext, createContext, useState, useEffect} from "react";
 import Ingredient, {IngredientSearchOptions} from "../Types/Ingredient";
-import Recipe from "../Types/Recipe";
+import Recipe, {RecipesSearchOptions} from "../Types/Recipe";
 import Recipe_Plan from "../Types/Recipe_Plan";
 import Shopping_List_Item from "../Types/Shopping_List_Item";
 import { getIngredientsData } from "./Ingredients/GetIngredients";
@@ -10,6 +10,7 @@ import { updateIngredientData } from "./Ingredients/UpdateIngredient";
 import { getRecipesData } from "./Recipes/GetRecipes";
 import { getRecipePlansData } from "./RecipePlans/GetRecipePlans";
 import { getShoppingListData } from "./ShoppingList/GetShoppingList";
+import RecipesSearch from "@/components/Recipes/RecipesSearch/RecipesSearch";
 
 const DataContext = createContext({
     ingredients: [] as Ingredient[],
@@ -19,7 +20,8 @@ const DataContext = createContext({
     ingredientsSearchOptions: {} as IngredientSearchOptions,
     setIngredientsSearchOptions: (options: IngredientSearchOptions) => {},
     recipes: [] as Recipe[],
-    setRecipes: (recipes: Recipe[]) => {},
+    recipesSearchOptions: {} as RecipesSearchOptions,
+    setRecipesSearchOptions: (options: RecipesSearchOptions) => {},
     recipePlans: [] as Recipe_Plan[],
     setRecipePlans: (recipePlans: Recipe_Plan[]) => {},
     shoppingList: [] as Shopping_List_Item[],
@@ -32,6 +34,8 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
     const [ingredientsSearchOptions, setIngredientsSearchOptions] = useState<IngredientSearchOptions>({})
     const [ingredientsDataState, setIngredientsDataState] = useState<"loading" | "failed" | "successful" | "updated">("successful")
     const [recipes, setRecipes] = useState<Recipe[]>([])
+    const [recipesSearchOptions, setRecipesSearchOptions] = useState<RecipesSearchOptions>({})
+    const [recipesDataState, setRecipesDataState] = useState<"loading" | "failed" | "successful" | "updated">("successful")
     const [recipePlans, setRecipePlans] = useState<Recipe_Plan[]>([])
     const [shoppingList, setShoppingList] = useState<Shopping_List_Item[]>([])
 
@@ -58,16 +62,23 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
         })
     }, [ingredientsDataState, ingredientsSearchOptions])
     
-    /*useEffect(() => {
+    useEffect(() => {
+        if(recipesDataState === "loading" || recipesDataState === "updated") 
+            return;
+
+        setRecipesDataState("loading");
+
         getRecipesData(
             databaseProps,
             userID,
-            recipes,
             setRecipes,
-        )
-    }, [recipes])
+            recipesSearchOptions
+        ).then((result) => {
+            setRecipesDataState(result);
+        })
+    }, [ingredientsDataState, recipesSearchOptions])
 
-    useEffect(() => {
+    /*useEffect(() => {
         getRecipePlansData(
             databaseProps,
             userID,
@@ -94,11 +105,17 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
         setIngredientsSearchOptions: (options: IngredientSearchOptions) => {setIngredientsSearchOptions((oldOptions) => {return {...oldOptions, ...options}}); setIngredientsDataState("successful")},
     }
 
+    const recipesData = {
+        recipes,
+        recipesSearchOptions,
+        setRecipesSearchOptions: (options: RecipesSearchOptions) => {setRecipesSearchOptions((oldOptions) => {return {...oldOptions, ...options}}); setRecipesDataState("successful")},
+    }
+
     return (
         <DataContext.Provider 
             value={{
                 ...ingredientsData, 
-                recipes, setRecipes, 
+                ...recipesData, 
                 recipePlans, setRecipePlans,
                 shoppingList, setShoppingList
             }}>
