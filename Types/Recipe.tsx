@@ -9,4 +9,11 @@ interface Recipe {
     Recipe_Ingredients: Recipe_Ingredient[];
 }
 
+export interface RecipesSearchOptions {
+    searchText?: string;
+    sortBy?: "Recipe_Name" | "Recipe_Difficulty" | "Recipe_Time";
+    sortOrder?: "asc" | "desc";
+    amount?: number;
+}
+
 export default Recipe;
