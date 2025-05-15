@@ -4,33 +4,9 @@ import { TextInput } from 'react-native';
 import Ingredient, {IngredientSearchOptions} from '@/Types/Ingredient';
 import IngredientSearch from './IngredientSearch';
 
-const mockIngredients : Ingredient[] = [
-    {
-        Ingredient_ID: 1,
-        Ingredient_Name: 'Test Ingredient 1',
-        Ingredient_Quantity: 1,
-        Ingredient_Date: new Date('2023-10-01')
-    },
-    {
-        Ingredient_ID: 2,
-        Ingredient_Name: 'Test Ingredient 2',
-        Ingredient_Quantity: 2,
-        Ingredient_Date: new Date('2023-10-02')
-    },
-    {
-        Ingredient_ID: 3,
-        Ingredient_Name: 'Test Ingredient 3',
-        Ingredient_Quantity: 3,
-        Ingredient_Date: new Date('2023-10-03')
-    }
-]
+
 
 const mockDataContext = {
-    ingredients: mockIngredients,
-    deleteIngredient: jest.fn(),
-    addIngredient : jest.fn(),
-    updateIngredient: jest.fn(),
-    getIngredients: jest.fn(),
     setIngredientsSearchOptions: jest.fn(),
   };
 
