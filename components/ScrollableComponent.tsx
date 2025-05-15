@@ -33,5 +33,4 @@ const componentViewStyles = {
     margin: 5,
 } as ViewStyle;
 
-
 export default ComponentView;
