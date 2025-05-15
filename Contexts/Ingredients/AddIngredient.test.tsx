@@ -14,24 +14,25 @@ test('should fetch ingredients data and update state', async () => {
     /*Arrange *******************************************************************/
     const mockSetIngredients = jest.fn();
     const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
+    const today = new Date();
     const ingredients : Ingredient[] = [
         {
             Ingredient_ID: 1,
             Ingredient_Name: 'Ingredient 1',
-            Ingredient_Date: new Date(),
+            Ingredient_Date: today,
             Ingredient_Quantity: 1,
         },
         {
             Ingredient_ID: 2,
             Ingredient_Name: 'Ingredient 2',
-            Ingredient_Date: new Date(),
+            Ingredient_Date: today,
             Ingredient_Quantity: 2,
         },
     ]; 
 
     const ingredient : Ingredient = {
         Ingredient_Name: 'Ingredient 1',
-        Ingredient_Date: new Date(),
+        Ingredient_Date: today,
         Ingredient_Quantity: 1,
     };
 
@@ -61,7 +62,7 @@ test('should fetch ingredients data and update state', async () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body : "{\"Ingredient_Name\":\"Ingredient 1\",\"Ingredient_Date\":\"2025-05-14\",\"Ingredient_Quantity\":1,\"Ingredient_User_ID\":1}"
+            body : `{\"Ingredient_Name\":\"Ingredient 1\",\"Ingredient_Date\":\"${today.toISOString().slice(0, 10)}\",\"Ingredient_Quantity\":1,\"Ingredient_User_ID\":1}`
         })
     expect(mockSetIngredients).toHaveBeenCalledWith([
         ...ingredients,
