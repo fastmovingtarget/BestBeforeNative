@@ -11,7 +11,6 @@ import { useData } from "@/Contexts/DataProvider";
 
 export default function IngredientForm({ingredient, onCancel, isFormVisible = false} : {ingredient?: Ingredient, onCancel?: () => void, isFormVisible?: boolean}) {
 
-
     const blankIngredient = {
         Ingredient_Name: "",
         Ingredient_Quantity: 0,
