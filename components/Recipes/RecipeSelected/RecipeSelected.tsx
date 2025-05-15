@@ -13,7 +13,7 @@ export default function RecipeSelected({recipe}: { recipe: Recipe}) {
             <LabelText >Time: {recipe.Recipe_Time} min</LabelText>
             <LabelText >Difficulty: {recipe.Recipe_Difficulty}</LabelText>
             <LabelText >Ingredients:</LabelText>
-            {recipe.Recipe_Ingredients.map((ingredient) => (
+            {recipe.Recipe_Ingredients?.map((ingredient) => (
                 <LabelText key={ingredient.Recipe_Ingredient_ID}>
                     {ingredient.Ingredient_Name}: {ingredient.Ingredient_Quantity}
                 </LabelText>
