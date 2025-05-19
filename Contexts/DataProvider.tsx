@@ -11,6 +11,8 @@ import { getRecipesData } from "./Recipes/GetRecipes";
 import { getRecipePlansData } from "./RecipePlans/GetRecipePlans";
 import { getShoppingListData } from "./ShoppingList/GetShoppingList";
 import RecipesSearch from "@/components/Recipes/RecipesSearch/RecipesSearch";
+import { addRecipeData } from "./Recipes/AddRecipe";
+import { updateRecipeData } from "./Recipes/UpdateRecipe";
 
 const DataContext = createContext({
     ingredients: [] as Ingredient[],
@@ -20,6 +22,8 @@ const DataContext = createContext({
     ingredientsSearchOptions: {} as IngredientSearchOptions,
     setIngredientsSearchOptions: (options: IngredientSearchOptions) => {},
     recipes: [] as Recipe[],
+    addRecipe: (recipe: Recipe) => {},
+    updateRecipe: (recipe: Recipe) => {},
     recipesSearchOptions: {} as RecipesSearchOptions,
     setRecipesSearchOptions: (options: RecipesSearchOptions) => {},
     recipePlans: [] as Recipe_Plan[],
@@ -109,6 +113,8 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
         recipes,
         recipesSearchOptions,
         setRecipesSearchOptions: (options: RecipesSearchOptions) => {setRecipesSearchOptions((oldOptions) => {return {...oldOptions, ...options}}); setRecipesDataState("successful")},
+        addRecipe: (recipe: Recipe) => addRecipeData(databaseProps, userID, recipes, setRecipes, recipe).then((result) => setRecipesDataState(result)),
+        updateRecipe: (recipe: Recipe) => updateRecipeData(databaseProps, recipes, setRecipes, recipe).then((result) => setRecipesDataState(result)),
     }
 
     return (
