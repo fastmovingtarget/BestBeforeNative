@@ -5,7 +5,7 @@ import RecipesListItem from "./RecipesListItem/RecipesListItem";
 import ListView from "@/components/ListView";
 import { useData } from "@/Contexts/DataProvider";
 
-export default function RecipesList({ setSelectedRecipe }: { setSelectedRecipe: (recipeID: number) => void }) {
+export default function RecipesList({ setSelectedRecipe }: { setSelectedRecipe: (recipe: Recipe) => void }) {
     const { recipes } = useData();
 
     return (

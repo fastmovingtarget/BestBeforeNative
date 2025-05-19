@@ -42,7 +42,7 @@ const mockRecipeListItem = ({recipe, setSelectedRecipe} : {recipe : Recipe, setS
   <>
     <Pressable
       aria-label="recipe item summary"
-      onPress={() => setSelectedRecipe(recipe.Recipe_ID)}
+      onPress={() => setSelectedRecipe(recipe.Recipe_ID || 0)}
     >
       <Text>{recipe.Recipe_Name}</Text>
       <Text>Time: {recipe.Recipe_Time} min</Text>
