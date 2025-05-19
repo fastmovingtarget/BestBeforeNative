@@ -7,11 +7,12 @@ type InputTextProps = {
     defaultValue : string,
     placeholder?: string,
     inputMode?:'numeric' | 'text',
-    onChange:(event : NativeSyntheticEvent<TextInputChangeEventData>) => void,
+    onChange?:(event : NativeSyntheticEvent<TextInputChangeEventData>) => void,
+    onChangeText?:(text : string) => void,
     ["aria-label"]:string
 }
 
-const FormTextInput = ({style, children, defaultValue, inputMode = "text", onChange, 'aria-label' : ariaLabel, placeholder = ""} : PropsWithChildren<InputTextProps>) => {
+const FormTextInput = ({style, children, defaultValue, inputMode = "text", onChange, onChangeText, 'aria-label' : ariaLabel, placeholder = ""} : PropsWithChildren<InputTextProps>) => {
     return (
         <TextInput 
             style={{ 
@@ -21,6 +22,7 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onCha
             defaultValue={defaultValue}
             inputMode={inputMode}
             onChange={onChange}
+            onChangeText={onChangeText}
             aria-label={ariaLabel}
             placeholder={placeholder}
             placeholderTextColor={"#e3dccf"}
