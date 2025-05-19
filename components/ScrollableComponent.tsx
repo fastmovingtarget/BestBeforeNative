@@ -10,7 +10,7 @@ type ComponentViewProps = {
 const ComponentView = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildren<ComponentViewProps>) => {
     return (
         <ScrollView 
-            style={{ 
+            contentContainerStyle={{ 
                 ...componentViewStyles,
                 ...style,
             }}
