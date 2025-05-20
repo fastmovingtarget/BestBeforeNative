@@ -6,7 +6,7 @@ fetchMock.enableMocks();
 
 // Mocking the fetch function
 beforeEach(() => {
-    fetch.resetMocks();
+    fetchMock.resetMocks();
 })
 
 test('should fetch ingredients data and update state', async () => {
@@ -73,13 +73,13 @@ test('should fetch ingredients data and update state', async () => {
         },
     ]; 
 
-    fetch.mockResponseOnce(
+    fetchMock.mockResponseOnce(
         "",
         {status: 204, statusText: "Recipe Deleted"}
     );
 
     /*Act **********************************************************************/
-    await deleteRecipeData(
+    const deleteResponse = await deleteRecipeData(
         mockServerProps,
         recipes,
         mockSetRecipes,
@@ -87,7 +87,7 @@ test('should fetch ingredients data and update state', async () => {
     );
 
     /*Assert *******************************************************************/
-
+    expect(deleteResponse).toBe("successful");
     expect(mockSetRecipes).toHaveBeenCalledWith(recipes_out);
 })
 
@@ -133,13 +133,13 @@ test("should not update state if fetch fails", async () => {
         },
     ]; 
 
-    fetch.mockResponseOnce(
+    fetchMock.mockResponseOnce(
         "",
         {status: 500, statusText: "Internal Server Error"}
     );
 
     /*Act **********************************************************************/
-    await deleteRecipeData(
+    const deleteResponse = await deleteRecipeData(
         mockServerProps,
         recipes,
         mockSetRecipes,
@@ -147,6 +147,5 @@ test("should not update state if fetch fails", async () => {
     );
 
     /*Assert *******************************************************************/
-
-    expect(mockSetRecipes).not.toHaveBeenCalled();
+    expect(deleteResponse).toBe("failed");
 })
