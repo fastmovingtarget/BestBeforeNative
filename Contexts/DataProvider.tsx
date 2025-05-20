@@ -8,11 +8,12 @@ import { deleteIngredientData } from "./Ingredients/DeleteIngredient";
 import { addIngredientData } from "./Ingredients/AddIngredient";
 import { updateIngredientData } from "./Ingredients/UpdateIngredient";
 import { getRecipesData } from "./Recipes/GetRecipes";
+import { addRecipeData } from "./Recipes/AddRecipe";
+import { updateRecipeData } from "./Recipes/UpdateRecipe";
+import { deleteRecipeData } from "./Recipes/DeleteRecipe";
 import { getRecipePlansData } from "./RecipePlans/GetRecipePlans";
 import { getShoppingListData } from "./ShoppingList/GetShoppingList";
 import RecipesSearch from "@/components/Recipes/RecipesSearch/RecipesSearch";
-import { addRecipeData } from "./Recipes/AddRecipe";
-import { updateRecipeData } from "./Recipes/UpdateRecipe";
 
 const DataContext = createContext({
     ingredients: [] as Ingredient[],
@@ -24,6 +25,7 @@ const DataContext = createContext({
     recipes: [] as Recipe[],
     addRecipe: (recipe: Recipe) => {},
     updateRecipe: (recipe: Recipe) => {},
+    deleteRecipe: (recipeID: number) => {},
     recipesSearchOptions: {} as RecipesSearchOptions,
     setRecipesSearchOptions: (options: RecipesSearchOptions) => {},
     recipePlans: [] as Recipe_Plan[],
@@ -70,17 +72,33 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
         if(recipesDataState === "loading" || recipesDataState === "updated") 
             return;
 
-        setRecipesDataState("loading");
+        if(recipesDataState === "failed") {
+            setTimeout(() => {
+                setRecipesDataState("loading");
+                getRecipesData(
+                    databaseProps,
+                    userID,
+                    setRecipes,
+                    recipesSearchOptions
+                ).then((result) => {
+                    setRecipesDataState(result);
+                })
+            }, 1000);
+        }
+        else{
+            setRecipesDataState("loading");
 
-        getRecipesData(
-            databaseProps,
-            userID,
-            setRecipes,
-            recipesSearchOptions
-        ).then((result) => {
-            setRecipesDataState(result);
-        })
-    }, [ingredientsDataState, recipesSearchOptions])
+            getRecipesData(
+                databaseProps,
+                userID,
+                setRecipes,
+                recipesSearchOptions
+            ).then((result) => {
+                setRecipesDataState(result);
+            })
+        }
+
+    }, [recipesDataState, recipesSearchOptions])
 
     /*useEffect(() => {
         getRecipePlansData(
@@ -102,17 +120,18 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
 
     const ingredientsData = {
         ingredients,
+        ingredientsSearchOptions,
+        setIngredientsSearchOptions: (options: IngredientSearchOptions) => {setIngredientsSearchOptions((oldOptions) => {return {...oldOptions, ...options}}); setIngredientsDataState("successful")},
         deleteIngredient: (ingredientID: number) => deleteIngredientData(databaseProps, ingredients, setIngredients, ingredientID).then((result) => setIngredientsDataState(result)),
         addIngredient: (ingredient: Ingredient) => addIngredientData(databaseProps, userID, ingredients, setIngredients, ingredient).then((result) => setIngredientsDataState(result)),
         updateIngredient: (ingredient: Ingredient) => updateIngredientData(databaseProps, ingredients, setIngredients, ingredient).then((result) => setIngredientsDataState(result)),
-        ingredientsSearchOptions,
-        setIngredientsSearchOptions: (options: IngredientSearchOptions) => {setIngredientsSearchOptions((oldOptions) => {return {...oldOptions, ...options}}); setIngredientsDataState("successful")},
     }
 
     const recipesData = {
         recipes,
         recipesSearchOptions,
-        setRecipesSearchOptions: (options: RecipesSearchOptions) => {setRecipesSearchOptions((oldOptions) => {return {...oldOptions, ...options}}); setRecipesDataState("successful")},
+        setRecipesSearchOptions: (options: RecipesSearchOptions) => {setRecipesSearchOptions((oldOptions) => { return {...oldOptions, ...options}}); setRecipesDataState("successful")},
+        deleteRecipe: (recipeID: number) => deleteRecipeData(databaseProps, recipes, setRecipes, recipeID).then((result) => setRecipesDataState(result)),
         addRecipe: (recipe: Recipe) => addRecipeData(databaseProps, userID, recipes, setRecipes, recipe).then((result) => setRecipesDataState(result)),
         updateRecipe: (recipe: Recipe) => updateRecipeData(databaseProps, recipes, setRecipes, recipe).then((result) => setRecipesDataState(result)),
     }
