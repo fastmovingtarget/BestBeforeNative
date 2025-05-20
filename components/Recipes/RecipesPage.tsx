@@ -1,19 +1,22 @@
 import { useState } from "react"
 import type Recipe from "@/Types/Recipe"
-import PageView from "../PageView"
+import PageView from "../CustomComponents/PageView"
 import RecipeForm from "./RecipeForm/RecipeForm"
 import RecipesList from "./RecipesList/RecipesList"
 import RecipesSearch from "./RecipesSearch/RecipesSearch"
 import RecipeSelected from "./RecipeSelected/RecipeSelected"
-import FormFieldContainer from "../FormFieldContainer"
-import ComponentView from "../ComponentView"
-import ButtonView from "../ButtonView"
+import FormFieldContainer from "../CustomComponents/FormFieldContainer"
+import ComponentView from "../CustomComponents/ComponentView"
+import ButtonView from "../CustomComponents/ButtonView"
+import LabelText from "../CustomComponents/LabelText"
 import {Text} from "react-native"
+import { useData } from "@/Contexts/DataProvider"
 
 export default function RecipesPage() {
 
     const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
     const [isEditing, setIsEditing] = useState(false);
+    const {deleteRecipe} = useData();
 
     return (
         <PageView>
@@ -30,13 +33,13 @@ export default function RecipesPage() {
                 ) : (
                 selectedRecipe && !isEditing ? (//if there's a selected recipe and we're not editing it, show the selected recipe
                     <>
-                        <ComponentView>
+                        <ComponentView style={{flexGrow:0}}>
                             <FormFieldContainer>
                                 <ButtonView onPress={() => setIsEditing(true)}>
-                                    <Text>Edit Recipe</Text>
+                                    <LabelText>Edit Recipe</LabelText>
                                 </ButtonView>
-                                <ButtonView onPress={() => setIsEditing(true)}>
-                                    <Text>Delete Recipe</Text>
+                                <ButtonView onPress={() => {setSelectedRecipe(null);deleteRecipe(selectedRecipe.Recipe_ID || -1)}}>
+                                    <LabelText>Delete Recipe</LabelText>
                                 </ButtonView>
                             </FormFieldContainer>
                         </ComponentView>
@@ -46,9 +49,9 @@ export default function RecipesPage() {
                     </>
                 ) : (//otherwise, show the recipe search and recipe list
                     <>
-                        <ComponentView>
-                            <ButtonView onPress={() => setIsEditing(true)}>
-                                <Text>Add New Recipe</Text>
+                        <ComponentView style={{flexDirection:"row"}}>
+                            <ButtonView onPress={() => setIsEditing(true)} style={{flexGrow:1}}>
+                                <LabelText>Add New Recipe</LabelText>
                             </ButtonView>
                         </ComponentView>
                         <RecipesSearch />
