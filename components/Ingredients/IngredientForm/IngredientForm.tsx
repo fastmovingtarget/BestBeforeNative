@@ -2,11 +2,11 @@ import React, {useState} from 'react'
 import { StyleSheet, Text, View, Pressable, TextInput } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ingredient from "@/Types/Ingredient";
-import ComponentView from '@/components/ComponentView';
-import ButtonView from '@/components/ButtonView';
-import FormFieldContainer from '@/components/FormFieldContainer';
-import LabelText from '@/components/LabelText';
-import FormTextInput from '@/components/FormTextInput';
+import ComponentView from '@/components/CustomComponents/ComponentView';
+import ButtonView from '@/components/CustomComponents/ButtonView';
+import FormFieldContainer from '@/components/CustomComponents/FormFieldContainer';
+import LabelText from '@/components/CustomComponents/LabelText';
+import FormTextInput from '@/components/CustomComponents/FormTextInput';
 import { useData } from "@/Contexts/DataProvider";
 
 export default function IngredientForm({ingredient, onCancel, isFormVisible = false} : {ingredient?: Ingredient, onCancel?: () => void, isFormVisible?: boolean}) {

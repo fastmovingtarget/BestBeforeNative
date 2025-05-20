@@ -4,7 +4,7 @@ import { useData } from "@/Contexts/DataProvider";
 import { useState } from "react";
 import IngredientComponent from "./IngredientComponent/IngredientComponent";
 import IngredientForm from "../IngredientForm/IngredientForm";
-import ListView from "@/components/ListView";
+import ListView from "@/components/CustomComponents/ListView";
 
 export default function IngredientsList({onEdit}: {onEdit: () => void}) {
     const [editId, setEditId] = useState<number | undefined>(undefined);

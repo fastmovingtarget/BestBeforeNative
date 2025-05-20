@@ -1,10 +1,10 @@
 import React from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import ScrollableComponent from "@/components/ScrollableComponent";
-import LabelText from "@/components/LabelText";
+import ScrollableComponent from "@/components/CustomComponents/ScrollableComponent";
+import LabelText from "@/components/CustomComponents/LabelText";
 import Recipe from "@/Types/Recipe";
-import FormFieldContainer from "@/components/FormFieldContainer";
-import ButtonView from "@/components/ButtonView";
+import FormFieldContainer from "@/components/CustomComponents/FormFieldContainer";
+import ButtonView from "@/components/CustomComponents/ButtonView";
 
 export default function RecipeSelected({recipe}: { recipe: Recipe}) {
     return (

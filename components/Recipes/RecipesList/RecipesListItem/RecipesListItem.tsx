@@ -1,6 +1,6 @@
 import React from "react";
-import PressableComponent from "@/components/PressableComponent";
-import LabelText from "@/components/LabelText";
+import PressableComponent from "@/components/CustomComponents/PressableComponent";
+import LabelText from "@/components/CustomComponents/LabelText";
 import Recipe from "@/Types/Recipe";
 
 export default function RecipesListItem({ recipe, setSelectedRecipe }: { recipe: Recipe, setSelectedRecipe: (recipe: Recipe) => void }) {

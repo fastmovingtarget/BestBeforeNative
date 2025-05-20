@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import Ingredient from "@/Types/Ingredient";
-import ComponentView from "@/components/ComponentView";
-import LabelText from "@/components/LabelText";
-import ButtonView from "@/components/ButtonView";
+import ComponentView from "@/components/CustomComponents/ComponentView";
+import LabelText from "@/components/CustomComponents/LabelText";
+import ButtonView from "@/components/CustomComponents/ButtonView";
 import { useData } from "@/Contexts/DataProvider";
 
 export default function IngredientComponent({ ingredient, onEdit } : { ingredient: Ingredient, onEdit: (ingredientID: number) => void }) {

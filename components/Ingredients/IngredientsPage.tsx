@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
-import ButtonView from "../ButtonView";
-import LabelText from "../LabelText";
-import PageView from "../PageView";
+import ButtonView from "../CustomComponents/ButtonView";
+import LabelText from "../CustomComponents/LabelText";
+import PageView from "../CustomComponents/PageView";
 import IngredientSearch from "./IngredientSearch/IngredientSearch";
 import IngredientsList from "./IngredientsList/IngredientsList";
 import IngredientForm from "./IngredientForm/IngredientForm";
