@@ -7,19 +7,24 @@ export const deleteRecipeData = async (
     setRecipes : React.Dispatch<React.SetStateAction<Recipe[]>>, 
     recipeID : number,
 ) => {
+    setRecipes(recipes.filter((recipe) => recipe.Recipe_ID !== recipeID));//remove the deleted recipe from the list
 
-    await fetch(
-        `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipes/${recipeID}`, 
-        {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
+    let returnPromise = new Promise<"successful" | "failed">((resolve) => {
+        fetch(
+            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipes/${recipeID}`, 
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                }
             }
-        }
-    ).then((rawData) => {
-        if(!rawData.ok) {
-            return;
-        }
-        setRecipes(recipes.filter((recipe) => recipe.Recipe_ID !== recipeID));//remove the deleted recipe from the list
-    });
+        ).then((rawData) => {
+            if(!rawData.ok) 
+                resolve("failed");
+            else
+                resolve("successful");
+        });
+    })
+
+    return returnPromise;
 }
