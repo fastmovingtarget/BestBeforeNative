@@ -21,7 +21,6 @@ const listViewStyles = {
     flexGrow: 1,
     flexDirection: "column",
     borderRadius: 10,
-    marginBottom: 80,//scales with tab bar
 } as ViewStyle;
 
 

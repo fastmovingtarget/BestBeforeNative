@@ -21,6 +21,9 @@ const pageViewStyles = {
     flexDirection: "column",
     justifyContent: "center",
     backgroundColor: "#000000",
+    height: "100%",
+    width: "100%",
+    paddingTop: 20,
 } as ViewStyle;
 
 export default PageView;

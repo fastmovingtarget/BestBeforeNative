@@ -22,7 +22,6 @@ const LabelText = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildr
 
 const labelTextStyles = {
     display: "flex",
-    flexGrow: 1,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

@@ -10,9 +10,11 @@ type InputTextProps = {
     onChange?:(event : NativeSyntheticEvent<TextInputChangeEventData>) => void,
     onChangeText?:(text : string) => void,
     ["aria-label"]:string
+    multiline?: boolean,
+    numberOfLines?: number,
 }
 
-const FormTextInput = ({style, children, defaultValue, inputMode = "text", onChange, onChangeText, 'aria-label' : ariaLabel, placeholder = ""} : PropsWithChildren<InputTextProps>) => {
+const FormTextInput = ({style, children, defaultValue, inputMode = "text", onChange, onChangeText, 'aria-label' : ariaLabel, placeholder = "", multiline = false, numberOfLines = 1} : PropsWithChildren<InputTextProps>) => {
     return (
         <TextInput 
             style={{ 
@@ -26,6 +28,8 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onCha
             aria-label={ariaLabel}
             placeholder={placeholder}
             placeholderTextColor={"#e3dccf"}
+            multiline={multiline}
+            numberOfLines={numberOfLines}
         >
             {children}
         </TextInput>
@@ -43,7 +47,8 @@ const inputTextStyles = {
         textAlignVertical: "center",
         width: "70%",
         lineHeight: 20,
-        fontSize: 16
+        fontSize: 16,
+        margin: 5,
 } as TextStyle;
 
 
