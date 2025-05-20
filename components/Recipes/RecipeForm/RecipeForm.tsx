@@ -1,13 +1,14 @@
 import React from 'react';
-import LabelText from '@/components/LabelText';
-import FormFieldContainer from '@/components/FormFieldContainer';
-import FormTextInput from '@/components/FormTextInput';
-import ScrollableComponent from '@/components/ScrollableComponent';
-import ButtonView from '@/components/ButtonView';
+import LabelText from '@/components/CustomComponents/LabelText';
+import FormFieldContainer from '@/components/CustomComponents/FormFieldContainer';
+import FormTextInput from '@/components/CustomComponents/FormTextInput';
+import ScrollableComponent from '@/components/CustomComponents/ScrollableComponent';
+import ButtonView from '@/components/CustomComponents/ButtonView';
 import Recipe from '@/Types/Recipe';
 import { useData } from '@/Contexts/DataProvider';
 import { Button } from 'react-native';
 import Recipe_Ingredient from '@/Types/Recipe_Ingredient';
+import ComponentView from '@/components/CustomComponents/ComponentView';
 
 const blankRecipe = {
     Recipe_Name: "",
@@ -60,90 +61,104 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
     }
 
     return (
-        <ScrollableComponent>
-            <FormFieldContainer>
-                <LabelText>Recipe Name</LabelText>
-                <FormTextInput
-                    placeholder="Enter recipe name"
-                    aria-label="recipe-name"
-                    onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Name: text})}}
-                    defaultValue={currentRecipe.Recipe_Name}
-                />
-            </FormFieldContainer>
-
-            <FormFieldContainer>
-                <LabelText>Recipe Time</LabelText>
-                <FormTextInput
-                    placeholder="Enter recipe time"
-                    aria-label="recipe-time"
-                    onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Time: Number(text)})}}
-                    defaultValue={currentRecipe.Recipe_Time.toString()}
-                />
-            </FormFieldContainer>
-
-            <FormFieldContainer>
-                <LabelText>Recipe Difficulty</LabelText>
-                <FormTextInput
-                    placeholder="Enter recipe difficulty"
-                    aria-label="recipe-difficulty"
-                    onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Difficulty: Number(text)})}}
-                    defaultValue={currentRecipe.Recipe_Difficulty.toString()}
-                />
-            </FormFieldContainer>
-
-            {currentRecipe.Recipe_Ingredients?.map((ingredient, index) => (
-                <FormFieldContainer key={index}>
-                    <FormTextInput
-                        placeholder="Enter ingredient"
-                        aria-label={`recipe-ingredient-name-${index}`}
-                        onChangeText={(text) => {
-                            const newIngredients = [...currentRecipe.Recipe_Ingredients || []];
-                            newIngredients[index].Ingredient_Name = text;
-                            setCurrentRecipe({...currentRecipe, Recipe_Ingredients: newIngredients});
-                        }}
-                        defaultValue={ingredient.Ingredient_Name || ""}
-                    />
-                    <FormTextInput
-                        placeholder="Enter ingredient"
-                        aria-label={`recipe-ingredient-quantity-${index}`}
-                        inputMode="numeric"
-                        onChangeText={(text) => {
-                            const newIngredients = [...currentRecipe.Recipe_Ingredients || []];
-                            newIngredients[index].Ingredient_Quantity = Number(text);
-                            setCurrentRecipe({...currentRecipe, Recipe_Ingredients: newIngredients});
-                        }}
-                        defaultValue={`${ingredient.Ingredient_Quantity}` || ""}
-                    />
-                    <ButtonView 
-                        onPress={() => deleteRecipeIngredient(index)}
-                        aria-label={`recipe-ingredient-delete-${index}`}
-                    >
-                        <LabelText>X</LabelText>
+        <>
+            <ComponentView style={{flexGrow:0}}>
+                <FormFieldContainer>
+                    <ButtonView onPress={onSubmit}>
+                        <LabelText>Submit</LabelText>
                     </ButtonView>
-                </FormFieldContainer>))
-            }
+                    <ButtonView onPress={onCancel}>
+                        <LabelText>Cancel</LabelText>
+                    </ButtonView>
+                </FormFieldContainer>
+            </ComponentView>
+            <ScrollableComponent style={{justifyContent: "flex-start"}}>
+                <FormFieldContainer>
+                    <LabelText>Recipe Name</LabelText>
+                    <FormTextInput
+                        placeholder="Enter recipe name"
+                        aria-label="recipe-name"
+                        onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Name: text})}}
+                        defaultValue={currentRecipe.Recipe_Name || ""}
+                        style={{flexGrow: 1, width: "auto"}}
+                    />
+                </FormFieldContainer>
 
-            <ButtonView onPress={addNewRecipeIngredient}>
-                <LabelText>Add Ingredient</LabelText>
-            </ButtonView>
+                <FormFieldContainer>
+                    <LabelText>Recipe Time</LabelText>
+                    <FormTextInput
+                        placeholder="Enter recipe time"
+                        aria-label="recipe-time"
+                        onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Time: Number(text)})}}
+                        defaultValue={currentRecipe.Recipe_Time?.toString() || "0"}
+                        style={{flexGrow: 1, width: "auto"}}
+                    />
+                </FormFieldContainer>
 
-            <FormFieldContainer>
-                <LabelText>Recipe Instructions</LabelText>
-                <FormTextInput
-                    placeholder="Enter recipe instructions"
-                    aria-label="recipe-instructions"
-                    onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Instructions: text})}}
-                    defaultValue={currentRecipe.Recipe_Instructions || ""}
-                />
-            </FormFieldContainer>
-            <FormFieldContainer>
-                <ButtonView onPress={onSubmit}>
-                    <LabelText>Submit</LabelText>
-                </ButtonView>
-                <ButtonView onPress={onCancel}>
-                    <LabelText>Cancel</LabelText>
-                </ButtonView>
-            </FormFieldContainer>
-        </ScrollableComponent>
+                <FormFieldContainer>
+                    <LabelText>Recipe Difficulty</LabelText>
+                    <FormTextInput
+                        placeholder="Enter recipe difficulty"
+                        aria-label="recipe-difficulty"
+                        onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Difficulty: Number(text)})}}
+                        defaultValue={currentRecipe.Recipe_Difficulty?.toString() || "0"}
+                        style={{flexGrow: 1, width: "auto"}}
+                    />
+                </FormFieldContainer>
+
+                {currentRecipe.Recipe_Ingredients?.map((ingredient, index) => (
+                    <FormFieldContainer key={index}>
+                        <FormTextInput
+                            placeholder="Enter ingredient"
+                            aria-label={`recipe-ingredient-name-${index}`}
+                            onChangeText={(text) => {
+                                const newIngredients = [...currentRecipe.Recipe_Ingredients || []];
+                                newIngredients[index].Ingredient_Name = text;
+                                setCurrentRecipe({...currentRecipe, Recipe_Ingredients: newIngredients});
+                            }}
+                            style={{flex: 1}}
+                            defaultValue={ingredient.Ingredient_Name || ""}
+                        />
+                        <FormTextInput
+                            placeholder="Enter ingredient"
+                            aria-label={`recipe-ingredient-quantity-${index}`}
+                            inputMode="numeric"
+                            onChangeText={(text) => {
+                                const newIngredients = [...currentRecipe.Recipe_Ingredients || []];
+                                newIngredients[index].Ingredient_Quantity = Number(text);
+                                setCurrentRecipe({...currentRecipe, Recipe_Ingredients: newIngredients});
+                            }}
+                            style={{flex: 1}}
+                            defaultValue={`${ingredient.Ingredient_Quantity}` || ""}
+                        />
+                        <ButtonView 
+                            onPress={() => deleteRecipeIngredient(index)}
+                            aria-label={`recipe-ingredient-delete-${index}`}
+                        >
+                            <LabelText>X</LabelText>
+                        </ButtonView>
+                    </FormFieldContainer>))
+                }
+
+                <FormFieldContainer style={{alignContent: "center", justifyContent: "center", width: "100%"}}>
+                    <ButtonView onPress={addNewRecipeIngredient} style={{flexGrow: 1}}>
+                        <LabelText>Add Ingredient</LabelText>
+                    </ButtonView>
+                </FormFieldContainer>
+
+                <FormFieldContainer style={{flexDirection: "column"}}>
+                    <LabelText>Recipe Instructions</LabelText>
+                    <FormTextInput
+                        placeholder="Enter recipe instructions"
+                        aria-label="recipe-instructions"
+                        onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Instructions: text})}}
+                        defaultValue={currentRecipe.Recipe_Instructions || ""}
+                        style={{width: "auto", flexGrow: 1}}
+                        multiline={true}
+                        numberOfLines={4}
+                    />
+                </FormFieldContainer>
+            </ScrollableComponent>
+        </>
     )
 }
