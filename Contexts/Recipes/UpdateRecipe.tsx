@@ -7,7 +7,7 @@ export const updateRecipeData = (
     setRecipes : React.Dispatch<React.SetStateAction<Recipe[]>>, 
     recipe : Recipe,
 ) => {
-                console.log("Updating recipe: ", recipe);
+    
     setRecipes(recipes.map(element => {
         if (element.Recipe_ID !== recipe.Recipe_ID)//if the element's ID isn't the input recipe's then no change
             return element;
@@ -30,7 +30,6 @@ export const updateRecipeData = (
             if(!rawData.ok) 
                 resolve("failed");            
             else{
-                console.log("Updated recipe: ", recipe);
                 resolve("successful");            
             }
         });
