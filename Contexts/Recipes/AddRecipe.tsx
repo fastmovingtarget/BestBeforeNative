@@ -7,6 +7,7 @@ export const addRecipeData = (
     recipes : Recipe[],
     setRecipes : React.Dispatch<React.SetStateAction<Recipe[]>>, 
     recipe : Recipe,) => {
+
     let returnPromise = new Promise<"successful" | "failed">((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipes/`, 
@@ -17,8 +18,8 @@ export const addRecipeData = (
                 },
                 body : JSON.stringify({
                     ...recipe,
-                    User_ID: userId,
-                })
+                    Recipe_User_ID: userId,
+                } as Recipe),
             }
         ).then((rawData) => {
             if(!rawData.ok) {
@@ -30,8 +31,8 @@ export const addRecipeData = (
                         ...recipes,
                         data,  
                     ]);
+                    resolve("successful");
                 })
-                resolve("successful");
             }   
         });
     })
