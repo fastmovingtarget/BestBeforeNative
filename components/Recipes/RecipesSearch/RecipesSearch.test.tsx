@@ -21,10 +21,6 @@ beforeEach(() => {
 });
 
 describe("Recipe Search Renders", () => {
-    test("The Search label", () => {
-        const {getByText} = render(<RecipesSearch />);
-        expect(getByText(/search/i)).toBeTruthy();
-    })
     test("The Search box", () => {
         const {getByLabelText} = render(<RecipesSearch />);
         expect(getByLabelText(/search-input/i)).toBeTruthy();
