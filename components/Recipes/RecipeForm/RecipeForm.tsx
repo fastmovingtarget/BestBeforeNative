@@ -63,12 +63,12 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
     return (
         <>
             <ComponentView style={{flexGrow:0}}>
-                <FormFieldContainer>
-                    <ButtonView onPress={onSubmit}>
-                        <LabelText>Submit</LabelText>
-                    </ButtonView>
-                    <ButtonView onPress={onCancel}>
+                <FormFieldContainer style={{padding:0, columnGap:10}}>
+                    <ButtonView style={{flexGrow:1}} onPress={onCancel}>
                         <LabelText>Cancel</LabelText>
+                    </ButtonView>
+                    <ButtonView style={{flexGrow:1}} onPress={onSubmit}>
+                        <LabelText>Submit</LabelText>
                     </ButtonView>
                 </FormFieldContainer>
             </ComponentView>
