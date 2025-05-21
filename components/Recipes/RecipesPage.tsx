@@ -34,11 +34,14 @@ export default function RecipesPage() {
                 selectedRecipe && !isEditing ? (//if there's a selected recipe and we're not editing it, show the selected recipe
                     <>
                         <ComponentView style={{flexGrow:0}}>
-                            <FormFieldContainer>
-                                <ButtonView onPress={() => setIsEditing(true)}>
+                            <FormFieldContainer style={{padding:0, columnGap:10}}>
+                                <ButtonView style={{flexGrow:1}} onPress={() => setSelectedRecipe(null)}>
+                                    <LabelText>Back</LabelText>
+                                </ButtonView>
+                                <ButtonView style={{flexGrow:1}} onPress={() => setIsEditing(true)}>
                                     <LabelText>Edit Recipe</LabelText>
                                 </ButtonView>
-                                <ButtonView onPress={() => {setSelectedRecipe(null);deleteRecipe(selectedRecipe.Recipe_ID || -1)}}>
+                                <ButtonView style={{flexGrow:1}} onPress={() => {setSelectedRecipe(null);deleteRecipe(selectedRecipe.Recipe_ID || -1)}}>
                                     <LabelText>Delete Recipe</LabelText>
                                 </ButtonView>
                             </FormFieldContainer>
