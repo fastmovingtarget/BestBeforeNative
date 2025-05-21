@@ -1,3 +1,7 @@
+//Wed, May 21, 2025 11:23:24 AM : Switching Cancel and Submit buttons for consistency
+
+
+
 import React from 'react';
 import LabelText from '@/components/CustomComponents/LabelText';
 import FormFieldContainer from '@/components/CustomComponents/FormFieldContainer';
@@ -63,12 +67,12 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
     return (
         <>
             <ComponentView style={{flexGrow:0}}>
-                <FormFieldContainer>
-                    <ButtonView onPress={onSubmit}>
-                        <LabelText>Submit</LabelText>
-                    </ButtonView>
-                    <ButtonView onPress={onCancel}>
+                <FormFieldContainer style={{padding:0, columnGap:10}}>
+                    <ButtonView style={{flexGrow:1}} onPress={onCancel}>
                         <LabelText>Cancel</LabelText>
+                    </ButtonView>
+                    <ButtonView style={{flexGrow:1}} onPress={onSubmit}>
+                        <LabelText>Submit</LabelText>
                     </ButtonView>
                 </FormFieldContainer>
             </ComponentView>
