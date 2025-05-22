@@ -1,3 +1,5 @@
+//2025-05-22 : Updating to include delete, add and update shopping list items
+
 import React, {useContext, createContext, useState, useEffect} from "react";
 import Ingredient, {IngredientSearchOptions} from "../Types/Ingredient";
 import Recipe, {RecipesSearchOptions} from "../Types/Recipe";
@@ -13,6 +15,9 @@ import { updateRecipeData } from "./Recipes/UpdateRecipe";
 import { deleteRecipeData } from "./Recipes/DeleteRecipe";
 import { getRecipePlansData } from "./RecipePlans/GetRecipePlans";
 import { getShoppingListData } from "./ShoppingList/GetShoppingList";
+import { deleteShoppingListItemData } from "./ShoppingList/DeleteShoppingListItem";
+import { addShoppingListItemData } from "./ShoppingList/AddShoppingListItem";
+import { updateShoppingListItemData } from "./ShoppingList/UpdateShoppingListItem";
 import RecipesSearch from "@/components/Recipes/RecipesSearch/RecipesSearch";
 
 const DataContext = createContext({
@@ -31,7 +36,9 @@ const DataContext = createContext({
     recipePlans: [] as Recipe_Plan[],
     setRecipePlans: (recipePlans: Recipe_Plan[]) => {},
     shoppingList: [] as Shopping_List_Item[],
-    setShoppingList: (shoppingList: Shopping_List_Item[]) => {},
+    deleteShoppingListItem: (itemID: number) => {},
+    addShoppingListItem: (item: Shopping_List_Item) => {},
+    updateShoppingListItem: (item: Shopping_List_Item) => {},
 });
 
 export const DataProvider = ({children}:{children:React.ReactNode}) => {
@@ -44,6 +51,7 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
     const [recipesDataState, setRecipesDataState] = useState<"loading" | "failed" | "successful" | "updated">("successful")
     const [recipePlans, setRecipePlans] = useState<Recipe_Plan[]>([])
     const [shoppingList, setShoppingList] = useState<Shopping_List_Item[]>([])
+    const [shoppingListDataState, setShoppingListDataState] = useState<"loading" | "failed" | "successful" | "updated">("successful")
 
     const databaseProps = {
         DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.183",
@@ -136,13 +144,20 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
         updateRecipe: (recipe: Recipe) => updateRecipeData(databaseProps, recipes, setRecipes, recipe).then((result) => setRecipesDataState(result)),
     }
 
+    const shoppingListData = {
+        shoppingList,
+        deleteShoppingListItem: (itemID: number) => deleteShoppingListItemData(databaseProps, shoppingList, setShoppingList, itemID).then((result) => setShoppingListDataState(result)),
+        addShoppingListItem: (item: Shopping_List_Item) => addShoppingListItemData(databaseProps, userID, shoppingList, setShoppingList, item).then((result) => setShoppingListDataState(result)),
+        updateShoppingListItem: (item: Shopping_List_Item) => updateShoppingListItemData(databaseProps, shoppingList, setShoppingList, item).then((result) => setShoppingListDataState(result)),
+    }
+
     return (
         <DataContext.Provider 
             value={{
                 ...ingredientsData, 
                 ...recipesData, 
+                ...shoppingListData,
                 recipePlans, setRecipePlans,
-                shoppingList, setShoppingList
             }}>
         {children}
         </DataContext.Provider>
