@@ -1,3 +1,5 @@
+//2025-05-27 : Text and comment edits for accuracy
+
 //2025-05-22 : Initial implementation and basic tests
 
 import {render, userEvent} from '@testing-library/react-native';
@@ -8,7 +10,7 @@ import ShoppingListItem from './ShoppingListItem/ShoppingListItem';
 import ShoppingListForm from '../ShoppingListForm/ShoppingListForm';
 import {useData} from '@/Contexts/DataProvider';
 
-// No need to test things we've already tested in the IngredientComponent test, just a basic array of ingredients to test the list rendering
+// No need to test things we've already tested in the ShoppingListItem test, just a basic array of items to test the list rendering
 const mockShoppingList : Shopping_List_Item[] = [
     {
         Item_ID: 1,
@@ -31,7 +33,7 @@ const mockdataContext = {
   shoppingList : mockShoppingList
 };
 
-// Not exactly a unit test if it's using IngredientComponent, so I'm adding in a basic mock of it here
+// Not exactly a unit test if it's using ShoppingListItem, so I'm adding in a basic mock of it here
 const mockShoppingListItem = ({item, onEdit} : {item : Shopping_List_Item, onEdit : (id : number | undefined) => {}}) =>
   <>
     <Text>{item.Item_Name}</Text>
@@ -83,8 +85,8 @@ beforeEach(() => {
   (ShoppingListForm as jest.Mock).mockImplementation(mockShoppingListForm);
 });
 
-describe('IngredientsList renders correctly', () => {
-    test('when given all basic ingredient data', () => {
+describe('ShoppingList renders correctly', () => {
+    test('when given all basic item data', () => {
         const {getByText} = render(
             <ShoppingList onEdit={() => {}} />
         );
@@ -98,7 +100,7 @@ describe('IngredientsList renders correctly', () => {
     })
 })
 
-test('IngredientComponent is replaced by FormComponent when Edit is clicked', async () => {
+test('ShoppingListItem is replaced by FormComponent when Edit is clicked', async () => {
   const user = userEvent.setup();
 
   const {getAllByText, getByText} = render(
@@ -109,7 +111,7 @@ test('IngredientComponent is replaced by FormComponent when Edit is clicked', as
 
   await user.press(editButton); // Simulate the press event
 
-  expect(getByText(/Form For : Test Ingredient 2/i)).toBeTruthy(); // Check if the ingredient name is still there
+  expect(getByText(/Form For : Test Item 2/i)).toBeTruthy(); // Check if the ingredient name is still there
 })
 
 test('onEdit is called when edit button is clicked', async () => {
@@ -127,20 +129,21 @@ test('onEdit is called when edit button is clicked', async () => {
   expect(mockOnEdit).toHaveBeenCalled(); // Check if the onEdit function was called
 })
 
-test('IngredientComponent is replaced by FormComponent when Edit is clicked and then goes back to IngredientComponent when cancelled', async () => {
+test('ItemComponent is replaced by FormComponent when Edit is clicked and then goes back to ItemComponent when cancelled', async () => {
   const user = userEvent.setup();
 
   const {getAllByText, getByText} = render(
     <ShoppingList onEdit={() => {}} />
   );
 
-  const editButton = getAllByText(/Edit/i)[1]; // Get the second edit button (for Test Ingredient 2)
+  expect(getAllByText(/Edit/i)).toHaveLength(3);
+  const editButton = getAllByText(/Edit/i)[1]; // Get the second edit button (for Test Item 2)
 
   await user.press(editButton); // Simulate the press event
 
   const cancelButton = getByText(/Cancel/i); // Get the cancel button
   await user.press(cancelButton); // Simulate the press event
 
-  expect(getByText(/Eat By 02\/10\/2023/i)).toBeTruthy(); // Check if the ingredient name is still there
+  expect(getAllByText(/Edit/i)).toHaveLength(3);
 })
 
