@@ -1,3 +1,5 @@
+//2025-05-27 : Adding Shopping list tab in to the app
+
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
@@ -44,6 +46,13 @@ export default function TabLayout() {
         name="recipes"
         options={{
           title: 'recipes',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="shoppinglist"
+        options={{
+          title: 'shoppinglist',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />
