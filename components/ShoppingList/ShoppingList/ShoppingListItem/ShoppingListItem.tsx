@@ -1,3 +1,5 @@
+//2025-05-27 : Adding purchase button to the list item
+
 //2025-05-21 : Basic Implementation of list item
 
 
@@ -9,7 +11,17 @@ import ButtonView from "@/components/CustomComponents/ButtonView";
 import { useData } from "@/Contexts/DataProvider";
 
 export default function IngredientComponent({ item, onEdit } : { item: Shopping_List_Item, onEdit: (itemID: number) => void }) {
-    const { deleteShoppingListItem } = useData();
+    const { deleteShoppingListItem, addIngredient } = useData();
+
+    const onPurchase = () => {
+        if (item.Item_ID) {
+            addIngredient({
+                Ingredient_Name: item.Item_Name,
+                Ingredient_Quantity: item.Item_Quantity || 0,
+            });
+            deleteShoppingListItem(item.Item_ID);
+        }
+    }
 
     return (
         <ComponentView >
@@ -19,6 +31,9 @@ export default function IngredientComponent({ item, onEdit } : { item: Shopping_
                 <LabelText>Buy By: {item.Plan_Date.toLocaleDateString()} for {item.Recipe_Name}</LabelText>
             ) : null}
             <View style={{flexDirection: "row", justifyContent: "space-around", width: "100%"}}>
+                <ButtonView onPress={onPurchase}>
+                    <LabelText>Purchase</LabelText>
+                </ButtonView>
                 <ButtonView onPress={() => onEdit(item.Item_ID || -1)}>
                     <LabelText>Edit</LabelText>
                 </ButtonView>

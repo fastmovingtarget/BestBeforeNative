@@ -1,3 +1,5 @@
+//2025-05-27 : Adding purchase button to the list item
+
 //2025-05-21 : Basic Implementation of list item
 
 
@@ -8,6 +10,7 @@ import {useData} from '@/Contexts/DataProvider';
 
 const mockdataContext = {
   deleteShoppingListItem: jest.fn(),
+  addIngredient: jest.fn(),
 };
 
 jest.mock("@/Contexts/DataProvider", () => {
@@ -115,5 +118,35 @@ describe('Shopping List Item calls correctly', () => {
 
     expect(mockdataContext.deleteShoppingListItem).toHaveBeenCalledTimes(1);
     expect(mockdataContext.deleteShoppingListItem).toHaveBeenCalledWith(1);
+  })
+  it("when purchase button is pressed", async () => {
+
+    const user = userEvent.setup();
+    const testItemData : Shopping_List_Item = {
+          Item_ID: 1,
+          Item_Name: 'Test Item',
+          Item_Quantity: 1
+    };
+
+    const {getByText} = render(
+      <ShoppingListItem
+        item={testItemData}
+        onEdit={onEditMock}
+      />,
+    );
+
+    const purchaseButton = getByText(/Purchase/i);
+
+    await user.press(purchaseButton);
+
+    expect(mockdataContext.addIngredient).toHaveBeenCalledTimes(1);
+    expect(mockdataContext.addIngredient).toHaveBeenCalledWith({
+      Ingredient_Name: "Test Item",
+      Ingredient_Quantity: 1,
+    });
+
+    expect(mockdataContext.deleteShoppingListItem).toHaveBeenCalledTimes(1);
+    expect(mockdataContext.deleteShoppingListItem).toHaveBeenCalledWith(1);
+
   })
 })
