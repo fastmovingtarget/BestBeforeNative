@@ -1,10 +1,12 @@
+//2025-05-27 : Adding in async shopping list implementation
+
 //2025-05-22 : Updating to include delete, add and update shopping list items
 
 import React, {useContext, createContext, useState, useEffect} from "react";
 import Ingredient, {IngredientSearchOptions} from "../Types/Ingredient";
 import Recipe, {RecipesSearchOptions} from "../Types/Recipe";
 import Recipe_Plan from "../Types/Recipe_Plan";
-import Shopping_List_Item from "../Types/Shopping_List_Item";
+import Shopping_List_Item, {ShoppingListSearchOptions} from "../Types/Shopping_List_Item";
 import { getIngredientsData } from "./Ingredients/GetIngredients";
 import { deleteIngredientData } from "./Ingredients/DeleteIngredient";
 import { addIngredientData } from "./Ingredients/AddIngredient";
@@ -39,6 +41,8 @@ const DataContext = createContext({
     deleteShoppingListItem: (itemID: number) => {},
     addShoppingListItem: (item: Shopping_List_Item) => {},
     updateShoppingListItem: (item: Shopping_List_Item) => {},
+    shoppingListSearchOptions: {} as ShoppingListSearchOptions,
+    setShoppingListSearchOptions: (options: ShoppingListSearchOptions) => {},
 });
 
 export const DataProvider = ({children}:{children:React.ReactNode}) => {
@@ -51,6 +55,7 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
     const [recipesDataState, setRecipesDataState] = useState<"loading" | "failed" | "successful" | "updated">("successful")
     const [recipePlans, setRecipePlans] = useState<Recipe_Plan[]>([])
     const [shoppingList, setShoppingList] = useState<Shopping_List_Item[]>([])
+    const [shoppingListSearchOptions, setShoppingListSearchOptions] = useState<ShoppingListSearchOptions>({})
     const [shoppingListDataState, setShoppingListDataState] = useState<"loading" | "failed" | "successful" | "updated">("successful")
 
     const databaseProps = {
@@ -105,8 +110,32 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
                 setRecipesDataState(result);
             })
         }
-
     }, [recipesDataState, recipesSearchOptions])
+
+    useEffect(() => {
+        if(shoppingListDataState === "loading" || shoppingListDataState === "updated") 
+            return;
+
+        if(shoppingListDataState === "failed") {
+            setTimeout(() => {
+                setShoppingListDataState("loading");
+                getShoppingListData(
+                    databaseProps,
+                    userID,
+                    setShoppingList,
+                    shoppingListSearchOptions
+                ).then((result) => {
+                    setShoppingListDataState(result);
+                })
+            }, 1000);
+        }
+        getShoppingListData(
+            databaseProps,
+            userID,
+            setShoppingList,
+            shoppingListSearchOptions
+        )
+    }, [shoppingListDataState, shoppingListSearchOptions])
 
     /*useEffect(() => {
         getRecipePlansData(
@@ -115,16 +144,8 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
             recipePlans,
             setRecipePlans,
         )
-    }, [recipePlans])
+    }, [recipePlans])*/
 
-    useEffect(() => {
-        getShoppingListData(
-            databaseProps,
-            userID,
-            shoppingList,
-            setShoppingList,
-        )
-    }, [shoppingList])*/
 
     const ingredientsData = {
         ingredients,
@@ -146,6 +167,8 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
 
     const shoppingListData = {
         shoppingList,
+        shoppingListSearchOptions,
+        setShoppingListSearchOptions: (options: ShoppingListSearchOptions) => {setShoppingListSearchOptions((oldOptions) => { return {...oldOptions, ...options}}); setShoppingListDataState("successful")},
         deleteShoppingListItem: (itemID: number) => deleteShoppingListItemData(databaseProps, shoppingList, setShoppingList, itemID).then((result) => setShoppingListDataState(result)),
         addShoppingListItem: (item: Shopping_List_Item) => addShoppingListItemData(databaseProps, userID, shoppingList, setShoppingList, item).then((result) => setShoppingListDataState(result)),
         updateShoppingListItem: (item: Shopping_List_Item) => updateShoppingListItemData(databaseProps, shoppingList, setShoppingList, item).then((result) => setShoppingListDataState(result)),
