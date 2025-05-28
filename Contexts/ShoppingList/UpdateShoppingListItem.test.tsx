@@ -1,3 +1,5 @@
+//2025-05-28 : Changed to work with promise return and asynchronous fetch
+
 import { render, screen, act } from '@testing-library/react';
 import { updateShoppingListItemData } from './UpdateShoppingListItem';
 import Shopping_List_Item from '../../Types/Shopping_List_Item'; // Adjust the import path as necessary
@@ -6,7 +8,7 @@ fetchMock.enableMocks();
 
 // Mocking the fetch function
 beforeEach(() => {
-    fetch.resetMocks();
+    fetchMock.resetMocks();
 })
 
 test('should fetch ingredients data and update state', async () => {
@@ -33,7 +35,7 @@ test('should fetch ingredients data and update state', async () => {
         Item_Quantity: 3,
     };
 
-    fetch.mockResponseOnce(JSON.stringify(
+    fetchMock.mockResponseOnce(JSON.stringify(
             shoppingListItem
         )
     );
@@ -75,13 +77,13 @@ test("should not update state if fetch fails", async () => {
         Item_Quantity: 3,
     };
 
-    fetch.mockResponseOnce(
+    fetchMock.mockResponseOnce(
         "",
         {status: 500, statusText: "Internal Server Error"}
     );
 
     /*Act **********************************************************************/
-    await updateShoppingListItemData(
+    const updateReturn = await updateShoppingListItemData(
         mockServerProps,
         shoppingList,
         mockSetShoppingList,
@@ -89,6 +91,5 @@ test("should not update state if fetch fails", async () => {
     );
 
     /*Assert *******************************************************************/
-
-    expect(mockSetShoppingList).not.toHaveBeenCalled();
+    expect(updateReturn).toEqual("failed");
 });
