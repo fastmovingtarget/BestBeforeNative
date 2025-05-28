@@ -1,3 +1,5 @@
+//2025-05-28 : Allows for a null date to be sent (from the purchase button in Shopping List tab)
+
 import React from "react";
 import Ingredient from "../../Types/Ingredient";
 
@@ -11,7 +13,7 @@ export const addIngredientData = async (
 
     const updateBody = JSON.stringify({ 
         ...ingredient,
-        Ingredient_Date: new Date(ingredient.Ingredient_Date || "").toISOString().slice(0, 10), // Format date to YYYY-MM-DD
+        Ingredient_Date: ingredient.Ingredient_Date ? new Date(ingredient.Ingredient_Date).toISOString().slice(0, 10) : undefined, // Format date to YYYY-MM-DD, keep it undefined if not provided
         Ingredient_User_ID: userID,
     })
 
