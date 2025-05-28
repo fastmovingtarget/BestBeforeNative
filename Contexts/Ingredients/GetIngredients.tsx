@@ -1,3 +1,5 @@
+//2025-05-28 : When null Ingredient Date comes in, retains null value
+
 import React from "react";
 import Ingredient, {IngredientSearchOptions} from "../../Types/Ingredient";
 
@@ -29,13 +31,14 @@ export const getIngredientsData = async (
                 resolve("failed");
             }
             else {
+                
                 rawData.json().then((data : Ingredient[]) => {
                     setIngredients(
                         data.map((element: Ingredient) => {
                             if(element.Ingredient_Date) 
                                 return {
                                     ...element,
-                                    Ingredient_Date: new Date(element.Ingredient_Date),//date comes in as a string and doesn't get properly parsed within .json()
+                                    Ingredient_Date: element.Ingredient_Date ? new Date(element.Ingredient_Date) : undefined,//date comes in as a string and doesn't get properly parsed within .json()
                                 };
                             
                             return element
