@@ -1,3 +1,5 @@
+//2025-05-28 : Now tests the Asynchronous Delete implementation
+
 import { render, screen, act } from '@testing-library/react';
 import { deleteShoppingListItemData } from './DeleteShoppingListItem';
 import Shopping_List_Item from '../../Types/Shopping_List_Item'; // Adjust the import path as necessary
@@ -6,7 +8,7 @@ fetchMock.enableMocks();
 
 // Mocking the fetch function
 beforeEach(() => {
-    fetch.resetMocks();
+    fetchMock.resetMocks();
 })
 
 test('should fetch ingredients data and update state', async () => {
@@ -28,7 +30,7 @@ test('should fetch ingredients data and update state', async () => {
         },
     ]; 
 
-    fetch.mockResponseOnce(
+    fetchMock.mockResponseOnce(
         "",
         {status: 204, statusText: "Ingredient Deleted"}
     );
@@ -69,13 +71,13 @@ test("should not update state if fetch fails", async () => {
         },
     ]; 
 
-    fetch.mockResponseOnce(
+    fetchMock.mockResponseOnce(
         "",
         {status: 500, statusText: "Internal Server Error"}
     );
 
     /*Act **********************************************************************/
-    await deleteShoppingListItemData(
+    const deleteReturn = await deleteShoppingListItemData(
         mockServerProps,
         shoppingList,
         mockSetShoppingList,
@@ -84,5 +86,5 @@ test("should not update state if fetch fails", async () => {
 
     /*Assert *******************************************************************/
 
-    expect(mockSetShoppingList).not.toHaveBeenCalled();
+    expect(deleteReturn).toEqual("failed");
 })
