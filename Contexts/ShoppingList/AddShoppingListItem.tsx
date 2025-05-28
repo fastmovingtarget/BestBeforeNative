@@ -1,3 +1,5 @@
+//2025-05-28 : Asynchronous fetch implementation
+
 //2025-05-22 : Adding asynchronous update implementation
 
 import React from "react";
@@ -29,12 +31,15 @@ export const addShoppingListItemData = (
                 resolve("failed");
             }
             else{
-                resolve("successful");
                 rawData.json().then((data) => {//the data returned should be the ingredient that was added including the id
                     setIngredients([
                         ...shoppingList,
-                        data
+                        {
+                            ...shoppingListItem,
+                            Item_ID: data.Item_ID, // Set the ID from the response
+                        }
                     ]);
+                    resolve("successful");
                 })
             }
         });
