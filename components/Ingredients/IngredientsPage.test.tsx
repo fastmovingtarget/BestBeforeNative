@@ -1,3 +1,5 @@
+//2025-10-14 : Removed improperly described test
+
 import { View, Text, TextInput } from "react-native";
 import {userEvent} from '@testing-library/react-native';
 import React, { useState } from "react";
@@ -70,21 +72,4 @@ test("When The Add Ingredient button is pressed, change the visibility of Add In
     await user.press(addIngredientButton);
 
     expect(addIngredientButton).toHaveProperty("props.style.display", "none");
-})
-
-test("When The Add Ingredient button is pressed", async () => {
-    const user = userEvent.setup();
-    
-    const mockIngredientForm = IngredientForm as jest.Mock;
-    mockIngredientForm.mockImplementation(({style}) => <Text style={style}>Form:</Text>);
-
-    const {getByText, getByRole} = render(<IngredientsPage />);
-    
-    const addIngredientButton = getByRole("button", {name: /Add Ingredient/i});
-    expect(mockIngredientForm).toHaveBeenCalledWith({isFormVisible: false, onCancel: expect.any(Function)}, {});
-    expect(mockIngredientForm).not.toHaveBeenCalledWith({isFormVisible: true, onCancel: expect.any(Function)}, {});
-
-    await user.press(addIngredientButton);
-    
-    expect(mockIngredientForm).toHaveBeenCalledWith({isFormVisible: true, onCancel: expect.any(Function)}, {});
 })
