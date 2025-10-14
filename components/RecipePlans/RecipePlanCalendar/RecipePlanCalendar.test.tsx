@@ -1,3 +1,5 @@
+//2025-10-14 : Fixed expected month to be full rather than shortened
+
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
 
@@ -28,7 +30,7 @@ beforeEach(() => {
   (RecipePlanCalendarDay as jest.Mock).mockImplementation(({date}) => <Text>{date.getDate()}</Text>);
 });
 
-const monthsOfYear = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const monthsOfYear = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 describe("Recipe Plan Calendar Renders", () => {
     test("The month correctly", () => {
