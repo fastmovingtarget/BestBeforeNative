@@ -1,3 +1,5 @@
+//2025-10-14 : Initial Implementation of Recipe Plan Page
+
 //2025-05-27 : Adding in async shopping list implementation
 
 //2025-05-22 : Updating to include delete, add and update shopping list items
@@ -20,7 +22,8 @@ import { getShoppingListData } from "./ShoppingList/GetShoppingList";
 import { deleteShoppingListItemData } from "./ShoppingList/DeleteShoppingListItem";
 import { addShoppingListItemData } from "./ShoppingList/AddShoppingListItem";
 import { updateShoppingListItemData } from "./ShoppingList/UpdateShoppingListItem";
-import RecipesSearch from "@/components/Recipes/RecipesSearch/RecipesSearch";
+import { addRecipePlanData } from "./RecipePlans/AddRecipePlan";
+import { deleteRecipePlanData } from "./RecipePlans/DeleteRecipePlan";
 
 const DataContext = createContext({
     ingredients: [] as Ingredient[],
@@ -36,7 +39,8 @@ const DataContext = createContext({
     recipesSearchOptions: {} as RecipesSearchOptions,
     setRecipesSearchOptions: (options: RecipesSearchOptions) => {},
     recipePlans: [] as Recipe_Plan[],
-    setRecipePlans: (recipePlans: Recipe_Plan[]) => {},
+    addRecipePlan: (recipePlan: Recipe_Plan) => {},
+    deleteRecipePlan: (recipePlanID?: number) => {},
     shoppingList: [] as Shopping_List_Item[],
     deleteShoppingListItem: (itemID: number) => {},
     addShoppingListItem: (item: Shopping_List_Item) => {},
@@ -54,6 +58,7 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
     const [recipesSearchOptions, setRecipesSearchOptions] = useState<RecipesSearchOptions>({})
     const [recipesDataState, setRecipesDataState] = useState<"loading" | "failed" | "successful" | "updated">("successful")
     const [recipePlans, setRecipePlans] = useState<Recipe_Plan[]>([])
+    const [recipePlansDataState, setRecipePlansDataState] = useState<"loading" | "failed" | "successful" | "updated">("successful")
     const [shoppingList, setShoppingList] = useState<Shopping_List_Item[]>([])
     const [shoppingListSearchOptions, setShoppingListSearchOptions] = useState<ShoppingListSearchOptions>({})
     const [shoppingListDataState, setShoppingListDataState] = useState<"loading" | "failed" | "successful" | "updated">("successful")
@@ -137,14 +142,29 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
         )
     }, [shoppingListDataState, shoppingListSearchOptions])
 
-    /*useEffect(() => {
+    useEffect(() => {
+        if(recipePlansDataState === "loading" || recipePlansDataState === "updated") 
+            return;
+        if(recipePlansDataState === "failed") {
+            setTimeout(() => {
+                setRecipePlansDataState("loading");
+                getRecipePlansData(
+                    databaseProps,
+                    userID,
+                    recipePlans,
+                    setRecipePlans,
+                ).then((result) => {
+                    setRecipePlansDataState(result);
+                })
+            }, 1000);
+        }
         getRecipePlansData(
             databaseProps,
             userID,
             recipePlans,
             setRecipePlans,
         )
-    }, [recipePlans])*/
+    }, [recipePlans])
 
 
     const ingredientsData = {
@@ -174,13 +194,20 @@ export const DataProvider = ({children}:{children:React.ReactNode}) => {
         updateShoppingListItem: (item: Shopping_List_Item) => updateShoppingListItemData(databaseProps, shoppingList, setShoppingList, item).then((result) => setShoppingListDataState(result)),
     }
 
+    const recipePlansData = {
+        recipePlans,
+        addRecipePlan: (recipePlan: Recipe_Plan) => {addRecipePlanData(databaseProps, userID, recipePlans, setRecipePlans, recipePlan).then((result) => setRecipePlansDataState(result))},
+        deleteRecipePlan : (recipePlanID?: number) => {deleteRecipePlanData(databaseProps, recipePlans, setRecipePlans, recipePlanID).then((result) => setRecipePlansDataState(result))},
+        updateRecipePlan : (recipePlan: Recipe_Plan) => {},
+    }
+
     return (
         <DataContext.Provider 
             value={{
                 ...ingredientsData, 
                 ...recipesData, 
                 ...shoppingListData,
-                recipePlans, setRecipePlans,
+                ...recipePlansData,
             }}>
         {children}
         </DataContext.Provider>

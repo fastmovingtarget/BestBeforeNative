@@ -1,3 +1,5 @@
+//2025-10-14 : Initial Implementation of Recipe Plan Page
+
 import React from "react";
 import Recipe_Plan from "../../Types/Recipe_Plan";
 
@@ -5,21 +7,32 @@ export const deleteRecipePlanData = async (
     serverProps : {DatabaseServer:string, DatabasePort:string},
     recipePlans : Recipe_Plan[],
     setRecipes : React.Dispatch<React.SetStateAction<Recipe_Plan[]>>, 
-    recipePlanID : number,
+    recipePlanID? : number,
 ) => {
 
-    await fetch(
-        `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipe_plans/${recipePlanID}`, 
-        {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            }
+
+    const returnPromise = new Promise<"successful" | "failed">((resolve) => {
+        if(!recipePlanID) {
+            console.error("No recipe plan ID provided for deletion.");
+            resolve("failed");
         }
-    ).then((rawData) => {
-        if(!rawData.ok) {
-            return;
-        }
+
         setRecipes(recipePlans.filter((recipePlan) => recipePlan.Recipe_ID !== recipePlanID));//remove the deleted recipe from the list
-    });
+        
+        fetch(
+            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipe_plans/${recipePlanID}`, 
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            }
+        ).then((rawData) => {
+            if(!rawData.ok) 
+                resolve("failed");
+            else
+                resolve("successful");
+        });
+    })
+    return returnPromise;
 }

@@ -1,3 +1,5 @@
+//2025-10-14 : Initial Implementation of Recipe Plan Page
+
 import { render, screen, act } from '@testing-library/react';
 import { addRecipePlanData } from './AddRecipePlan';
 import Recipe_Plan from '../../Types/Recipe_Plan'; // Adjust the import path as necessary
@@ -6,7 +8,7 @@ fetchMock.enableMocks();
 
 // Mocking the fetch function
 beforeEach(() => {
-    fetch.resetMocks();
+    fetchMock.resetMocks();
 })
 
 test('should fetch Recipe Plan data and update state', async () => {
@@ -36,7 +38,7 @@ test('should fetch Recipe Plan data and update state', async () => {
         Plan_Date: new Date()
     }
 
-    fetch.mockResponseOnce(JSON.stringify(
+    fetchMock.mockResponseOnce(JSON.stringify(
                 {
                     ...newRecipePlan,
                     Recipe_Plan_ID: 3,
@@ -47,6 +49,7 @@ test('should fetch Recipe Plan data and update state', async () => {
         /*Act **********************************************************************/
         await addRecipePlanData(
             mockServerProps,
+            1,
             recipePlans,
             mockSetRecipePlans,
             newRecipePlan
@@ -89,7 +92,7 @@ test("should not update state if fetch fails", async () => {
         Plan_Date: new Date()
     }
 
-    fetch.mockResponseOnce(
+    fetchMock.mockResponseOnce(
         "",
         {status: 500, statusText: "Internal Server Error"}
     );
@@ -97,6 +100,7 @@ test("should not update state if fetch fails", async () => {
     /*Act **********************************************************************/
     await addRecipePlanData(
         mockServerProps,
+        1,
         recipePlans,
         mockSetRecipePlans,
         newRecipePlan
