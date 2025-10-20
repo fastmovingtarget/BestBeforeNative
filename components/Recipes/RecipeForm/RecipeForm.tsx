@@ -1,6 +1,6 @@
+//2025-10-20 : Switched to using Recipes Data Context
+
 //Wed, May 21, 2025 11:23:24 AM : Switching Cancel and Submit buttons for consistency
-
-
 
 import React from 'react';
 import LabelText from '@/components/CustomComponents/LabelText';
@@ -9,8 +9,7 @@ import FormTextInput from '@/components/CustomComponents/FormTextInput';
 import ScrollableComponent from '@/components/CustomComponents/ScrollableComponent';
 import ButtonView from '@/components/CustomComponents/ButtonView';
 import Recipe from '@/Types/Recipe';
-import { useData } from '@/Contexts/DataProvider';
-import { Button } from 'react-native';
+import { useRecipes } from "@/Contexts/Recipes/RecipesDataProvider"
 import Recipe_Ingredient from '@/Types/Recipe_Ingredient';
 import ComponentView from '@/components/CustomComponents/ComponentView';
 
@@ -25,7 +24,7 @@ const blankRecipe = {
 export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inputRecipe?: Recipe, exitForm: () => void}) {
 
     const [currentRecipe, setCurrentRecipe] = React.useState<Recipe>(inputRecipe);
-    const {addRecipe, updateRecipe} = useData();
+    const {addRecipe, updateRecipe} = useRecipes();
 
     const onSubmit = () => {
         if(inputRecipe.Recipe_ID) {
