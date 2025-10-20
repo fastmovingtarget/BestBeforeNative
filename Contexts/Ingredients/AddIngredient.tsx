@@ -1,15 +1,22 @@
+//2025-10-20 : Moved server properties into individual files, now return enum states
+
 //2025-05-28 : Allows for a null date to be sent (from the purchase button in Shopping List tab)
 
 import React from "react";
 import Ingredient from "../../Types/Ingredient";
+import { UpdateState } from "@/Types/DataLoadingState";
 
 export const addIngredientData = async (
-    serverProps : {DatabaseServer:string, DatabasePort:string},
     userID : number,
     ingredients : Ingredient[],
     setIngredients : React.Dispatch<React.SetStateAction<Ingredient[]>>, 
     ingredient : Ingredient,
-) => {
+) : Promise<UpdateState> => {
+
+    const serverProps = {
+        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.183",
+        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
+    }
 
     const updateBody = JSON.stringify({ 
         ...ingredient,
@@ -17,7 +24,7 @@ export const addIngredientData = async (
         Ingredient_User_ID: userID,
     })
 
-    let returnPromise = new Promise<"successful" | "failed">((resolve) => {
+    let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/ingredients/`, 
             {
@@ -29,7 +36,7 @@ export const addIngredientData = async (
             }
         ).then((rawData) => {
             if(!rawData.ok) {
-                resolve("failed");
+                resolve(UpdateState.FailedAdd);
             }
             else{
                 rawData.json().then((data) => {//the data returned should be the ingredient that was added including the id
@@ -40,7 +47,7 @@ export const addIngredientData = async (
                             Ingredient_Date: new Date(data.Ingredient_Date),//date comes in as a string and doesn't get properly parsed within .json()
                         }]);
                 })
-                resolve("successful");
+                resolve(UpdateState.Successful);
             }
         });
     })
