@@ -1,7 +1,7 @@
-import {render, userEvent, screen} from '@testing-library/react-native';
-import {useData} from '@/Contexts/DataProvider';
-import { TextInput } from 'react-native';
-import Recipe, {RecipesSearchOptions} from '@/Types/Recipe';
+//2025-10-20 : Using Recipes context rather than Data context
+
+import {render, userEvent} from '@testing-library/react-native';
+import {useRecipes} from '@/Contexts/Recipes/RecipesDataProvider';
 import RecipesSearch from './RecipesSearch';
 
 
@@ -16,7 +16,7 @@ jest.mock('@/Contexts/DataProvider', () => ({
 
 beforeEach(() => {
   jest.resetAllMocks();
-  const mockUseData = useData as jest.Mock;
+  const mockUseData = useRecipes as jest.Mock;
   mockUseData.mockReturnValue(mockDataContext);
 });
 
