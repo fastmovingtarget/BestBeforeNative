@@ -1,4 +1,5 @@
-import { StyleSheet, Image, Platform } from 'react-native';
+//2025-10-20 : Removing unneeded imports
+
 
 import RecipesPage from '@/components/Recipes/RecipesPage';
 
