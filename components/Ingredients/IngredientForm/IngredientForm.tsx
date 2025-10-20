@@ -1,5 +1,7 @@
+//2025-10-20 : Updated to useIngredient context, simplified a terary operator
+
 import React, {useState} from 'react'
-import { StyleSheet, Text, View, Pressable, TextInput } from "react-native";
+import { StyleSheet } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ingredient from "@/Types/Ingredient";
 import ComponentView from '@/components/CustomComponents/ComponentView';
@@ -7,7 +9,7 @@ import ButtonView from '@/components/CustomComponents/ButtonView';
 import FormFieldContainer from '@/components/CustomComponents/FormFieldContainer';
 import LabelText from '@/components/CustomComponents/LabelText';
 import FormTextInput from '@/components/CustomComponents/FormTextInput';
-import { useData } from "@/Contexts/DataProvider";
+import { useIngredients } from "@/Contexts/Ingredients/IngredientsDataProvider";
 
 export default function IngredientForm({ingredient, onCancel, isFormVisible = false} : {ingredient?: Ingredient, onCancel?: () => void, isFormVisible?: boolean}) {
 
@@ -18,12 +20,14 @@ export default function IngredientForm({ingredient, onCancel, isFormVisible = fa
     }
     const [formIngredient, setFormIngredient] = useState<Ingredient>( ingredient || blankIngredient);
     const [pickerVisible, setPickerVisible] = useState(false);
-    const {addIngredient, updateIngredient} = useData();
+    const {addIngredient, updateIngredient} = useIngredients();
 
     const cancelHandler = () => {
-        formIngredient.Ingredient_ID ? 
-        setFormIngredient(ingredient || blankIngredient) 
-        : setFormIngredient(blankIngredient);
+        if(formIngredient.Ingredient_ID) 
+            setFormIngredient(ingredient || blankIngredient);
+        else
+            setFormIngredient(blankIngredient);
+
         if (onCancel) {
             onCancel();
         }
