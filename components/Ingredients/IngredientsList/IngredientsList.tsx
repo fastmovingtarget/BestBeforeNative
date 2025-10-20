@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, Pressable, ScrollView } from "react-native";
+//2025-10-20 : Changed to use Ingredients Context
+
 import Ingredient from "@/Types/Ingredient";
-import { useData } from "@/Contexts/DataProvider";
+import { useIngredients } from "@/Contexts/Ingredients/IngredientsDataProvider";
 import { useState } from "react";
 import IngredientComponent from "./IngredientComponent/IngredientComponent";
 import IngredientForm from "../IngredientForm/IngredientForm";
@@ -11,7 +12,7 @@ export default function IngredientsList({onEdit}: {onEdit: () => void}) {
 
     return (
         <ListView >
-            {useData().ingredients.map((ingredient: Ingredient) => (
+            {useIngredients().ingredients.map((ingredient: Ingredient) => (
                 editId !== ingredient.Ingredient_ID ?
                     <IngredientComponent key={`ingredient-${ingredient.Ingredient_ID}`} ingredient={ingredient} onEdit={(id) => {
                         setEditId(id);

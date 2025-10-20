@@ -1,12 +1,14 @@
-import { StyleSheet, Text, View, Pressable } from "react-native";
+//2025-10-20 : Changed to use Ingredients Context
+
+import {  View } from "react-native";
 import Ingredient from "@/Types/Ingredient";
 import ComponentView from "@/components/CustomComponents/ComponentView";
 import LabelText from "@/components/CustomComponents/LabelText";
 import ButtonView from "@/components/CustomComponents/ButtonView";
-import { useData } from "@/Contexts/DataProvider";
+import { useIngredients } from "@/Contexts/Ingredients/IngredientsDataProvider";
 
 export default function IngredientComponent({ ingredient, onEdit } : { ingredient: Ingredient, onEdit: (ingredientID: number) => void }) {
-    const { deleteIngredient } = useData();
+    const { deleteIngredient } = useIngredients();
 
     return (
         <ComponentView >
