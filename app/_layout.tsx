@@ -1,3 +1,5 @@
+//2025-10-20 : Added Recipes Data Provider
+
 //2025-10-20 : Removed Data Provider, added Authentication Data Provider & Ingredients Data provider
 
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
@@ -11,6 +13,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { AuthenticationDataProvider } from '@/Contexts/Authentication/AuthenticationDataProvider';
 import { IngredientsDataProvider } from '@/Contexts/Ingredients/IngredientsDataProvider';
+import { RecipesDataProvider } from '@/Contexts/Recipes/RecipesDataProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -35,11 +38,13 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AuthenticationDataProvider>
         <IngredientsDataProvider>
+          <RecipesDataProvider>
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />
           </Stack>
           <StatusBar style="auto" />
+          </RecipesDataProvider>
         </IngredientsDataProvider>
       </AuthenticationDataProvider>
     </ThemeProvider>
