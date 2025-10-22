@@ -1,3 +1,5 @@
+//2025-10-22 : Failed sync triggers retry after a cooldown period
+
 //2025-10-20 : Separated ingredients data provider
 
 import { useState, createContext, useContext, useEffect  } from "react";
@@ -31,14 +33,25 @@ export const IngredientsDataProvider = ({children}:{children:React.ReactNode}) =
     const {userId} = useAuthenticationData();
 
     useEffect(() => {
-        if(ingredientsDataState === SyncState.Loading && userId)
-            getIngredientsData(userId, setIngredients, ingredientsSearchOptions).then((result) => setIngredientsDataState(result));
+        if(ingredientsDataState === SyncState.Loading && userId){
+            getIngredientsData(userId, setIngredients, ingredientsSearchOptions).then((result) => {
+                setIngredientsDataState(result)
+            });
+        }
+        if(ingredientsDataState === SyncState.Failed && userId){
+            setTimeout(() => {
+                setIngredientsDataState(SyncState.Loading);
+            }, 5000);
+        }
     }, [ingredientsDataState, userId, ingredientsSearchOptions]);
 
     const checkStartSync = (updateState : UpdateState) => {
-        if(updateState === UpdateState.Successful)
+        if(updateState === UpdateState.Successful){
             setIngredientsDataState(SyncState.Loading);
-
+        }
+        else{
+            setIngredientsDataState(updateState);
+        }
         return updateState;
     }
 
