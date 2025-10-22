@@ -1,3 +1,5 @@
+//2025-10-22 : Corrected fail state resolution
+
 //2025-10-20 : Moved server properties into individual files, now return enum states
 
 import React from "react";
@@ -41,7 +43,7 @@ export const updateIngredientData = async (
             }
         ).then((rawData) => {
             if(!rawData.ok) {//this should encompass all errors
-                resolve(UpdateState.FailedUpdate);
+                resolve(UpdateState.Failed);
             }
             else resolve(UpdateState.Successful);//nothing useful passed back from the server, so we can just return successful
         });
