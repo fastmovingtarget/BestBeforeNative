@@ -1,3 +1,5 @@
+//2025-10-23 : Minor improvements to test formatting
+
 //2025-10-22 : Removing server props from test criteria
 
 import { deleteIngredientData } from './DeleteIngredient';
@@ -5,6 +7,22 @@ import Ingredient from '../../Types/Ingredient'; // Adjust the import path as ne
 import fetchMock from 'jest-fetch-mock';
 import { UpdateState } from '@/Types/DataLoadingState';
 fetchMock.enableMocks();
+
+const today = new Date();
+const ingredients : Ingredient[] = [
+    {
+        Ingredient_ID: 1,
+        Ingredient_Name: 'Ingredient 1',
+        Ingredient_Date: today,
+        Ingredient_Quantity: 1,
+    },
+    {
+        Ingredient_ID: 2,
+        Ingredient_Name: 'Ingredient 2',
+        Ingredient_Date: today,
+        Ingredient_Quantity: 2,
+    },
+]; 
 
 // Mocking the fetch function
 beforeEach(() => {
@@ -16,26 +34,12 @@ test('should fetch ingredients data and update state', async () => {
     /*Arrange *******************************************************************/
     const mockSetIngredients = jest.fn();
     //input ingredients
-    const ingredients : Ingredient[] = [
-        {
-            Ingredient_ID: 1,
-            Ingredient_Name: 'Ingredient 1',
-            Ingredient_Date: new Date(),
-            Ingredient_Quantity: 1,
-        },
-        {
-            Ingredient_ID: 2,
-            Ingredient_Name: 'Ingredient 2',
-            Ingredient_Date: new Date(),
-            Ingredient_Quantity: 2,
-        },
-    ]; 
     //output ingredients
     const ingredients_out : Ingredient[] = [
         {
             Ingredient_ID: 2,
             Ingredient_Name: 'Ingredient 2',
-            Ingredient_Date: new Date(),
+            Ingredient_Date: today,
             Ingredient_Quantity: 2,
         },
     ]; 
@@ -61,21 +65,6 @@ test('should fetch ingredients data and update state', async () => {
 test("should not update state if fetch fails", async () => {
     /*Arrange *******************************************************************/
     const mockSetIngredients = jest.fn();
-    //input ingredients
-    const ingredients : Ingredient[] = [
-        {
-            Ingredient_ID: 1,
-            Ingredient_Name: 'Ingredient 1',
-            Ingredient_Date: new Date(),
-            Ingredient_Quantity: 1,
-        },
-        {
-            Ingredient_ID: 2,
-            Ingredient_Name: 'Ingredient 2',
-            Ingredient_Date: new Date(),
-            Ingredient_Quantity: 2,
-        },
-    ]; 
 
     fetchMock.mockResponseOnce(
         "",
@@ -91,6 +80,6 @@ test("should not update state if fetch fails", async () => {
 
     /*Assert *******************************************************************/
 
-    expect(mockSetIngredients).toHaveBeenCalledWith(ingredients);
+    expect(mockSetIngredients).not.toHaveBeenCalled();
     expect(deleteStatus).toEqual(UpdateState.Failed);
 })

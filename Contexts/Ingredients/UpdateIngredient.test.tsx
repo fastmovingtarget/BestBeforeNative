@@ -1,3 +1,5 @@
+//2025-10-23 : Minor improvements to test formatting
+
 //2025-10-22 : Removing server props from test criteria
 
 
@@ -102,4 +104,5 @@ test("should not update state if fetch fails", async () => {
     /*Assert *******************************************************************/
 
     expect(ingredientsState).toEqual(UpdateState.Failed);
+    expect(mockSetIngredients).not.toHaveBeenCalled();
 })
