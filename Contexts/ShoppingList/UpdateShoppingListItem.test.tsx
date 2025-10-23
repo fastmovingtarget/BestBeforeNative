@@ -1,9 +1,11 @@
+//2025-10-23 : Updated to use UpdateState enum, improved visual formatting
+
 //2025-05-28 : Changed to work with promise return and asynchronous fetch
 
-import { render, screen, act } from '@testing-library/react';
 import { updateShoppingListItemData } from './UpdateShoppingListItem';
 import Shopping_List_Item from '../../Types/Shopping_List_Item'; // Adjust the import path as necessary
 import fetchMock from 'jest-fetch-mock';
+import { UpdateState } from '@/Types/DataLoadingState';
 fetchMock.enableMocks();
 
 // Mocking the fetch function
@@ -15,7 +17,6 @@ test('should fetch ingredients data and update state', async () => {
 
     /*Arrange *******************************************************************/
     const mockSetShoppingList = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
     const shoppingList : Shopping_List_Item[] = [
         {
             Item_ID: 1,
@@ -42,7 +43,6 @@ test('should fetch ingredients data and update state', async () => {
 
     /*Act **********************************************************************/
     await updateShoppingListItemData(
-        mockServerProps,
         shoppingList,
         mockSetShoppingList,
         shoppingListItem
@@ -58,7 +58,6 @@ test('should fetch ingredients data and update state', async () => {
 test("should not update state if fetch fails", async () => {
     /*Arrange *******************************************************************/
     const mockSetShoppingList = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
     const shoppingList : Shopping_List_Item[] = [
         {
             Item_ID: 1,
@@ -84,12 +83,12 @@ test("should not update state if fetch fails", async () => {
 
     /*Act **********************************************************************/
     const updateReturn = await updateShoppingListItemData(
-        mockServerProps,
         shoppingList,
         mockSetShoppingList,
         shoppingListItem
     );
 
     /*Assert *******************************************************************/
-    expect(updateReturn).toEqual("failed");
+    expect(updateReturn).toEqual(UpdateState.Failed);
+    expect(mockSetShoppingList).not.toHaveBeenCalled();
 });
