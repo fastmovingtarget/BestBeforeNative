@@ -1,3 +1,5 @@
+//2025-10-23 : Adding paths for sync and update failures
+
 //2025-10-20 : Recipes Data Context created
 
 import { createContext, useState, useContext, useEffect } from "react";
@@ -29,13 +31,24 @@ export const RecipesDataProvider = ({children}:{children:React.ReactNode}) => {
     const {userId} = useAuthenticationData();
     
     useEffect(() => {
-        if(recipesDataState === SyncState.Loading && userId)
+        if(recipesDataState === SyncState.Loading && userId){
             getRecipesData(userId, setRecipes, recipesSearchOptions).then((result) => setRecipesDataState(result));
+        }
+        if(recipesDataState === SyncState.Failed && userId){
+            setTimeout(() => {
+                setRecipesDataState(SyncState.Loading);
+            }, 5000);
+        }
     }, [recipesDataState, userId, recipesSearchOptions]);
 
     const checkStartSync = (updateState : UpdateState) => {
-        if(updateState === UpdateState.Successful)
+        if(updateState === UpdateState.Successful){
             setRecipesDataState(SyncState.Loading);
+        }
+        else{
+            setRecipesDataState(updateState);
+        }
+        return updateState;
     }
 
     const setRecipesSearchOptions = (options: RecipesSearchOptions) => {setRecipesSearchOptionsState((oldOptions) => {return {...oldOptions, ...options}}); checkStartSync(UpdateState.Successful);};
