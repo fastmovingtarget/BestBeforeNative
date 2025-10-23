@@ -1,3 +1,5 @@
+//2025-10-23 : Removed unneccessary fetch mocks
+
 //2025-10-23 : Basic success and failure tests for load, sync and update states
 
 
@@ -9,12 +11,9 @@ import { deleteRecipeData } from "../Recipes/DeleteRecipe";
 import { addRecipeData } from "../Recipes/AddRecipe";
 import { updateRecipeData } from "../Recipes/UpdateRecipe";
 
-import fetchMock from 'jest-fetch-mock';
 import Recipe from "@/Types/Recipe";
 import { Pressable, Text, View } from "react-native";
 import { SyncState, UpdateState } from "@/Types/DataLoadingState";
-
-fetchMock.enableMocks();
 
 jest.mock("../Recipes/GetRecipes", () =>{
     return {
@@ -82,7 +81,6 @@ const mockRecipes : Recipe[] = [
     ];
 
 beforeEach(() => {
-    fetchMock.resetMocks();
     jest.resetAllMocks();
 
     (getRecipesData as jest.Mock).mockImplementation(
