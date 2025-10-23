@@ -1,21 +1,28 @@
+//2025-10-23 : Server info now loads internally, Resolves using SyncState enum
+
 //2025-05-28 : Searches with options string, returns a promise with success/failure state
 
 import React from "react";
 import Shopping_List_Item, { ShoppingListSearchOptions } from "../../Types/Shopping_List_Item";
+import { SyncState } from "@/Types/DataLoadingState";
 
 export const getShoppingListData = (
-    serverProps : {DatabaseServer:string, DatabasePort:string},
     userID : number, 
     setShoppingList : React.Dispatch<React.SetStateAction<Shopping_List_Item[]>>, 
     searchOptions : ShoppingListSearchOptions = {}
 ) => {
+
+    const serverProps = {
+        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.183",
+        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
+    }
 
     const optionsString = Object.entries(searchOptions).map(([key, value]) => {//map the key and uri encoded value pairs to a string joined by &
         if (value === undefined) return ""; // Skip undefined values
         return `${key}=${encodeURIComponent(value)}`;
     }).join("&");
 
-    let returnPromise = new Promise<"updated" | "failed">((resolve) => {
+    let returnPromise = new Promise<SyncState>((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/shoppinglist/${userID}?${optionsString}`, 
             {
@@ -26,7 +33,7 @@ export const getShoppingListData = (
             }
         ).then((rawData) => {
             if(rawData.status !== 200) {
-                resolve("failed");
+                resolve(SyncState.Failed);
             }
             else{
                 rawData.json().then((data) => {
@@ -41,7 +48,7 @@ export const getShoppingListData = (
                             return element
                         }),
                     );
-                    resolve("updated");
+                    resolve(SyncState.Successful);
                 })
             }
         });
