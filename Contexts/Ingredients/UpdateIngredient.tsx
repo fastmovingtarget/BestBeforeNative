@@ -1,3 +1,5 @@
+//2025-10-23 : Standardised to update state on response to fetch
+
 //2025-10-22 : Corrected fail state resolution
 
 //2025-10-20 : Moved server properties into individual files, now return enum states
@@ -16,14 +18,6 @@ export const updateIngredientData = async (
         DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.183",
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     }
-
-    setIngredients(ingredients.map(element => {
-        if (element.Ingredient_ID !== ingredient.Ingredient_ID)//if the element's ID isn't the input ingredient's then no change
-            return element;
-        else //otherwise return the ingredient that was input
-            return ingredient;
-            
-    }));
 
     const updateBody = JSON.stringify({ 
         ...ingredient,
@@ -45,7 +39,15 @@ export const updateIngredientData = async (
             if(!rawData.ok) {//this should encompass all errors
                 resolve(UpdateState.Failed);
             }
-            else resolve(UpdateState.Successful);//nothing useful passed back from the server, so we can just return successful
+            else {
+                resolve(UpdateState.Successful);//nothing useful passed back from the server, so we can just return successful
+                setIngredients(ingredients.map(element => {
+                    if (element.Ingredient_ID !== ingredient.Ingredient_ID)//if the element's ID isn't the input ingredient's then no change
+                        return element;
+                    else //otherwise return the ingredient that was input
+                        return ingredient;
+                }));
+            }
         });
     })
     return returnPromise;

@@ -1,3 +1,5 @@
+//2025-10-23 : Standardised to update state on response to fetch
+
 //2025-10-20 : Changed to use loading state enumerator, server props populated internally
 
 import React from "react";
@@ -15,8 +17,6 @@ export const deleteRecipeData = async (
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     }
 
-    setRecipes(recipes.filter((recipe) => recipe.Recipe_ID !== recipeID));//remove the deleted recipe from the list
-
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipes/${recipeID}`, 
@@ -29,8 +29,10 @@ export const deleteRecipeData = async (
         ).then((rawData) => {
             if(!rawData.ok) 
                 resolve(UpdateState.Failed);
-            else
+            else{
+                setRecipes(recipes.filter((recipe) => recipe.Recipe_ID !== recipeID));//remove the deleted recipe from the list
                 resolve(UpdateState.Successful);
+            }
         });
     })
 

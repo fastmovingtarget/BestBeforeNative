@@ -1,3 +1,5 @@
+//2025-10-23 : Standardised to update state on response to fetch
+
 //2025-10-20 : Changed to use loading state enumerator, server props populated internally
 
 import React from "react";
@@ -15,14 +17,6 @@ export const updateRecipeData = (
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     }
 
-    setRecipes(recipes.map(element => {
-        if (element.Recipe_ID !== recipe.Recipe_ID)//if the element's ID isn't the input recipe's then no change
-            return element;
-        else //otherwise return the recipe that was input
-            return recipe;
-            
-    }));
-
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipes/${recipe.Recipe_ID}`, 
@@ -37,6 +31,13 @@ export const updateRecipeData = (
             if(!rawData.ok) 
                 resolve(UpdateState.Failed);            
             else{
+                setRecipes(recipes.map(element => {
+                    if (element.Recipe_ID !== recipe.Recipe_ID)//if the element's ID isn't the input recipe's then no change
+                        return element;
+                    else //otherwise return the recipe that was input
+                        return recipe;
+                        
+                }));
                 resolve(UpdateState.Successful);            
             }
         });
