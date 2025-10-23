@@ -1,10 +1,10 @@
+//2025-10-23 : Converted to use Shopping List Context
+
 //2025-05-27 : Initial implementation of shopping list page
 
-import { View, Text, TextInput } from "react-native";
-import {userEvent} from '@testing-library/react-native';
-import React, { useState } from "react";
-import { render } from "@testing-library/react-native";
-import Shopping_List_Item from "@/Types/Shopping_List_Item";
+import { Text } from "react-native";
+import { userEvent, render } from '@testing-library/react-native';
+import React from "react";
 
 import ShoppingListPage from "./ShoppingListPage";
 import ShoppingListSearch from "./ShoppingListSearch/ShoppingListSearch";
@@ -60,7 +60,7 @@ test("When The Add Shopping List Item button is pressed, change the visibility o
 
     (ShoppingListForm as jest.Mock).mockImplementation(({style}) => <Text style={style}>Form:</Text>);
 
-    const {queryByText, getByText, getByLabelText} = render(<ShoppingListPage />);
+    const {queryByText, getByText} = render(<ShoppingListPage />);
     const addButton = getByText(/Add Item/i);
 
     await user.press(addButton);
@@ -74,7 +74,7 @@ test("When The Form Cancel button is pressed, change the form to", async () => {
 
     (ShoppingListForm as jest.Mock).mockImplementation(({onCancel}) => <Text onPress={onCancel}>Form:</Text>);
 
-    const {queryByText, getByText, getByLabelText} = render(<ShoppingListPage />);
+    const {queryByText, getByText} = render(<ShoppingListPage />);
     const addButton = getByText(/Add Item/i);
 
     await user.press(addButton);

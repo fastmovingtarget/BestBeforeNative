@@ -1,14 +1,16 @@
+//2025-10-23 : Converted to use Shopping List Context
+
 //2025-05-22 : Initial implementation and basic tests using ingredients form as a template
 
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Shopping_List_Item from '@/Types/Shopping_List_Item';
 import FormFieldContainer from '@/components/CustomComponents/FormFieldContainer';
 import LabelText from '@/components/CustomComponents/LabelText';
 import FormTextInput from '@/components/CustomComponents/FormTextInput';
 import ButtonView from '@/components/CustomComponents/ButtonView';
 import ComponentView from '@/components/CustomComponents/ComponentView';
-import { useData } from "@/Contexts/DataProvider";
 import { useState } from 'react';
+import { useShoppingList } from '@/Contexts/ShoppingList/ShoppingListDataProvider';
 
 const blankItem : Shopping_List_Item = {
     Item_Name: "",
@@ -22,12 +24,14 @@ export default function ShoppingListForm({item = blankItem, isFormVisible, onCan
         Item_Quantity: 0,
     }
     const [formItem, setFormItem] = useState<Shopping_List_Item>( item || blankItem);//gets 
-    const {addShoppingListItem, updateShoppingListItem} = useData();
+    const {addShoppingItem, updateShoppingItem} = useShoppingList();
 
     const cancelHandler = () => {
-        item.Item_ID ? 
-        setFormItem(item || blankItem) 
-        : setFormItem(blankItem);
+        if(item.Item_ID)  
+            setFormItem(item || blankItem) 
+        else
+            setFormItem(blankItem);
+
         if (onCancel) {
             onCancel();
         }
@@ -35,9 +39,9 @@ export default function ShoppingListForm({item = blankItem, isFormVisible, onCan
 
     const submitHandler = () => {
         if(item?.Item_ID)  
-            updateShoppingListItem(formItem) 
+            updateShoppingItem(formItem) 
         else{ 
-            addShoppingListItem(formItem);
+            addShoppingItem(formItem);
             setFormItem(blankItem);
         }
         if (onCancel) {
