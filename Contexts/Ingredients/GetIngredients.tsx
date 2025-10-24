@@ -1,3 +1,5 @@
+//2025-10-24 : Adding catch for fetch errors
+
 //2025-10-20 : Moved server properties into individual files, now return enum states
 
 //2025-05-28 : When null Ingredient Date comes in, retains null value
@@ -51,6 +53,8 @@ export const getIngredientsData = async (
                     resolve(SyncState.Successful);
                 })
             }
+        }).catch(() => {
+            resolve(SyncState.Failed);
         });
     });
     return returnPromise;

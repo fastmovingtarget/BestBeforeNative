@@ -1,3 +1,5 @@
+//2025-10-24 : Adding catch for fetch errors
+
 //2025-10-20 : Changed to use loading state enumerator, server props populated internally
 
 import React from "react";
@@ -41,6 +43,8 @@ export const addRecipeData = (
                     resolve(UpdateState.Successful);
                 })
             }   
+        }).catch(() => {
+            resolve(UpdateState.Failed);
         });
     })
     return returnPromise;

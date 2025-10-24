@@ -1,3 +1,5 @@
+//2025-10-24 : Adding catch for fetch errors
+
 //2025-10-23 : Standardised to update state on response to fetch
 
 //2025-10-22 : Corrected fail state resolution
@@ -35,6 +37,8 @@ export const deleteIngredientData = async (
             }
             else
                 resolve(UpdateState.Failed);
+        }).catch(() => {
+                    resolve(UpdateState.Failed);
         });
     })
     return returnPromise;

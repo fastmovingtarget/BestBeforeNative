@@ -1,3 +1,5 @@
+//2025-10-24 : Adding catch for fetch errors
+
 //2025-10-20 : Moved server properties into individual files, now return enum states
 
 //2025-05-28 : Allows for a null date to be sent (from the purchase button in Shopping List tab)
@@ -49,6 +51,8 @@ export const addIngredientData = async (
                 })
                 resolve(UpdateState.Successful);
             }
+        }).catch(() => {
+            resolve(UpdateState.Failed);
         });
     })
     return returnPromise;
