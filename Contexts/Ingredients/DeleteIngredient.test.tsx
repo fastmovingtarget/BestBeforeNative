@@ -1,8 +1,28 @@
-import { render, screen, act } from '@testing-library/react';
+//2025-10-23 : Minor improvements to test formatting
+
+//2025-10-22 : Removing server props from test criteria
+
 import { deleteIngredientData } from './DeleteIngredient';
 import Ingredient from '../../Types/Ingredient'; // Adjust the import path as necessary
 import fetchMock from 'jest-fetch-mock';
+import { UpdateState } from '@/Types/DataLoadingState';
 fetchMock.enableMocks();
+
+const today = new Date();
+const ingredients : Ingredient[] = [
+    {
+        Ingredient_ID: 1,
+        Ingredient_Name: 'Ingredient 1',
+        Ingredient_Date: today,
+        Ingredient_Quantity: 1,
+    },
+    {
+        Ingredient_ID: 2,
+        Ingredient_Name: 'Ingredient 2',
+        Ingredient_Date: today,
+        Ingredient_Quantity: 2,
+    },
+]; 
 
 // Mocking the fetch function
 beforeEach(() => {
@@ -13,28 +33,13 @@ test('should fetch ingredients data and update state', async () => {
 
     /*Arrange *******************************************************************/
     const mockSetIngredients = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
     //input ingredients
-    const ingredients : Ingredient[] = [
-        {
-            Ingredient_ID: 1,
-            Ingredient_Name: 'Ingredient 1',
-            Ingredient_Date: new Date(),
-            Ingredient_Quantity: 1,
-        },
-        {
-            Ingredient_ID: 2,
-            Ingredient_Name: 'Ingredient 2',
-            Ingredient_Date: new Date(),
-            Ingredient_Quantity: 2,
-        },
-    ]; 
     //output ingredients
     const ingredients_out : Ingredient[] = [
         {
             Ingredient_ID: 2,
             Ingredient_Name: 'Ingredient 2',
-            Ingredient_Date: new Date(),
+            Ingredient_Date: today,
             Ingredient_Quantity: 2,
         },
     ]; 
@@ -45,8 +50,7 @@ test('should fetch ingredients data and update state', async () => {
     );
 
     /*Act **********************************************************************/
-    await deleteIngredientData(
-        mockServerProps,
+    const deleteStatus = await deleteIngredientData(
         ingredients,
         mockSetIngredients,
         1
@@ -55,27 +59,12 @@ test('should fetch ingredients data and update state', async () => {
     /*Assert *******************************************************************/
 
     expect(mockSetIngredients).toHaveBeenCalledWith(ingredients_out);
+    expect(deleteStatus).toEqual(UpdateState.Successful);
 })
 
 test("should not update state if fetch fails", async () => {
     /*Arrange *******************************************************************/
     const mockSetIngredients = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
-    //input ingredients
-    const ingredients : Ingredient[] = [
-        {
-            Ingredient_ID: 1,
-            Ingredient_Name: 'Ingredient 1',
-            Ingredient_Date: new Date(),
-            Ingredient_Quantity: 1,
-        },
-        {
-            Ingredient_ID: 2,
-            Ingredient_Name: 'Ingredient 2',
-            Ingredient_Date: new Date(),
-            Ingredient_Quantity: 2,
-        },
-    ]; 
 
     fetchMock.mockResponseOnce(
         "",
@@ -84,7 +73,6 @@ test("should not update state if fetch fails", async () => {
 
     /*Act **********************************************************************/
     const deleteStatus = await deleteIngredientData(
-        mockServerProps,
         ingredients,
         mockSetIngredients,
         -1
@@ -92,6 +80,6 @@ test("should not update state if fetch fails", async () => {
 
     /*Assert *******************************************************************/
 
-    expect(mockSetIngredients).toHaveBeenCalledWith(ingredients);
-    expect(deleteStatus).toBe("failed");
+    expect(mockSetIngredients).not.toHaveBeenCalled();
+    expect(deleteStatus).toEqual(UpdateState.Failed);
 })

@@ -1,22 +1,25 @@
+//2025-10-24 : mock data context names fixed
+
+//2025-10-23 : Converted to use Shopping List Context
+
 //2025-05-22 : Initial implementation and basic tests using ingredients form as a template
 
 import {render, userEvent} from '@testing-library/react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import ShoppingListForm from './ShoppingListForm';
-import {useData} from '@/Contexts/DataProvider';
+import { useShoppingList } from '@/Contexts/ShoppingList/ShoppingListDataProvider';
 import Shopping_List_Item from '@/Types/Shopping_List_Item';
 
 const mockdataContext = {
-  deleteShoppingListItem: jest.fn(),
-  addShoppingListItem : jest.fn(),
-  updateShoppingListItem: jest.fn(),
+  deleteShoppingItem: jest.fn(),
+  addShoppingItem: jest.fn(),
+  updateShoppingItem: jest.fn(),
 };
 
 
-jest.mock("@/Contexts/DataProvider", () => {
+jest.mock("@/Contexts/ShoppingList/ShoppingListDataProvider", () => {
   return {
     __esModule: true,
-    useData: jest.fn(),
+    useShoppingList: jest.fn(),
   };
 });
 
@@ -24,14 +27,12 @@ const onCancelMock = jest.fn();
 
 beforeEach(() => {
     jest.resetAllMocks();
-    const useDataMock = useData as jest.Mock;
-    useDataMock.mockReturnValue(mockdataContext);
+    const useShoppingListMock = useShoppingList as jest.Mock;
+    useShoppingListMock.mockReturnValue(mockdataContext);
 });
 
 describe('Shopping List Form renders correctly', () => {
   it('when given no input item', () => {
-    const user = userEvent.setup();
-
     const {getByText, getByLabelText} = render(
       <ShoppingListForm isFormVisible={true}/>,
     );
@@ -46,8 +47,6 @@ describe('Shopping List Form renders correctly', () => {
     expect(getByLabelText(/quantity-input/i)).toHaveDisplayValue('0');
   });
   it('when given an input item', () => {
-    const user = userEvent.setup();
-
     const {getByText, getByLabelText} = render(
       <ShoppingListForm item={{
             Item_Name: "Test Item",
@@ -163,8 +162,8 @@ describe("When Submit button is pressed", () => {
 
             await user.press(submitButton);
 
-            expect(mockdataContext.addShoppingListItem).toHaveBeenCalledTimes(1);
-            expect(mockdataContext.updateShoppingListItem).toHaveBeenCalledTimes(0);
+            expect(mockdataContext.addShoppingItem).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.updateShoppingItem).toHaveBeenCalledTimes(0);
         })
         test("With changed values when changed", async () => {
             const user = userEvent.setup();
@@ -189,10 +188,10 @@ describe("When Submit button is pressed", () => {
 
             await user.press(submitButton);
 
-            expect(mockdataContext.addShoppingListItem).toHaveBeenCalledTimes(1);
-            expect(mockdataContext.addShoppingListItem).toHaveBeenCalledWith(testItem);
+            expect(mockdataContext.addShoppingItem).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.addShoppingItem).toHaveBeenCalledWith(testItem);
 
-            expect(mockdataContext.updateShoppingListItem).toHaveBeenCalledTimes(0);
+            expect(mockdataContext.updateShoppingItem).toHaveBeenCalledTimes(0);
 
         })
 
@@ -221,9 +220,9 @@ describe("When Submit button is pressed", () => {
 
             await user.press(submitButton);
 
-            expect(mockdataContext.addShoppingListItem).toHaveBeenCalledTimes(0);
-            expect(mockdataContext.updateShoppingListItem).toHaveBeenCalledTimes(1);
-            expect(mockdataContext.updateShoppingListItem).toHaveBeenCalledWith(testItem);
+            expect(mockdataContext.addShoppingItem).toHaveBeenCalledTimes(0);
+            expect(mockdataContext.updateShoppingItem).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.updateShoppingItem).toHaveBeenCalledWith(testItem);
         })
         test("With changed values when changed", async () => { 
             const user = userEvent.setup();
@@ -256,16 +255,16 @@ describe("When Submit button is pressed", () => {
 
             await user.press(submitButton);
 
-            expect(mockdataContext.addShoppingListItem).toHaveBeenCalledTimes(0);
-            expect(mockdataContext.updateShoppingListItem).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.addShoppingItem).toHaveBeenCalledTimes(0);
+            expect(mockdataContext.updateShoppingItem).toHaveBeenCalledTimes(1);
 
-            expect(mockdataContext.updateShoppingListItem).toHaveBeenCalledWith(expectedIngredient);
+            expect(mockdataContext.updateShoppingItem).toHaveBeenCalledWith(expectedIngredient);
         })
     })
 })
 describe("Form Visibility is", () => {
     test("Visble when isFormVisible is true", () => {
-        const {getByText, getByLabelText} = render(
+        const { getByLabelText} = render(
             <ShoppingListForm isFormVisible={true}/>,
         );
 

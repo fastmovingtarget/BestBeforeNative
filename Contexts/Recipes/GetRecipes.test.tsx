@@ -1,15 +1,18 @@
-import { render, screen, act } from '@testing-library/react';
+//2025-10-23 : Updated to use UpdateState enum, improved visual formatting
+
+
 import { getRecipesData } from './GetRecipes';
 import Recipe, {RecipesSearchOptions} from '../../Types/Recipe'; // Adjust the import path as necessary
 import fetchMock from 'jest-fetch-mock';
-fetchMock.enableMocks();
 
-const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
+const mockServerProps = { DatabaseServer: '192.168.50.183', DatabasePort: '5091' };
 const userID = 1;
 //         
 // Mocking the fetch function
 beforeEach(() => {
-    fetchMock.resetMocks();
+    jest.resetAllMocks();
+    fetchMock.enableMocks();
+    fetchMock.doMock();
 })
 
 test('should fetch recipes and add to empty recipes array', async () => {
@@ -55,7 +58,6 @@ test('should fetch recipes and add to empty recipes array', async () => {
     fetchMock.mockResponseOnce(JSON.stringify(fetchedRecipes));
 
     await getRecipesData(
-        mockServerProps,
         userID,
         mockSetRecipes,
     );
@@ -71,7 +73,6 @@ test('should handle fetch error', async () => {
     fetchMock.mockResponseOnce(JSON.stringify({}), { status: 500 });
 
     await getRecipesData(
-        mockServerProps,
         userID,
         mockSetRecipes,
     );
@@ -101,7 +102,6 @@ describe("Should be called with options: ", () => {
         fetchMock.mockResponseOnce(JSON.stringify(fetchedRecipes));
 
         await getRecipesData(
-            mockServerProps,
             userID,
             mockSetRecipes,
             searchOptions
@@ -143,7 +143,6 @@ describe("Should be called with options: ", () => {
         fetchMock.mockResponseOnce(JSON.stringify(fetchedRecipes));
 
         await getRecipesData(
-            mockServerProps,
             userID,
             mockSetRecipes,
             searchOptions

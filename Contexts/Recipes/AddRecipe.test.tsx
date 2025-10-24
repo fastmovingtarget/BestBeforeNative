@@ -1,20 +1,77 @@
-import { render, screen, act } from '@testing-library/react';
+//2025-10-23 : Updated to use UpdateState enum, improved visual formatting
+
 import { addRecipeData } from './AddRecipe';
 import Recipe from '../../Types/Recipe'; // Adjust the import path as necessary
 import fetchMock from 'jest-fetch-mock';
-fetchMock.enableMocks();
+import { UpdateState } from '@/Types/DataLoadingState';
+
+const Recipes : Recipe[] = [
+    {
+        Recipe_ID: 1,
+        Recipe_Name: 'Recipe 1',
+        Recipe_Difficulty: 1,
+        Recipe_Time: 11,
+        Recipe_Instructions: 'Instructions for Recipe 1',
+        Recipe_Ingredients: [{
+            Recipe_Ingredient_ID: 11,
+            Ingredient_Name: 'Recipe 1 Ingredient 1',
+            Ingredient_Quantity: 2,
+        },
+        {
+            Recipe_Ingredient_ID: 12,
+            Ingredient_Name: 'Recipe 1 Ingredient 2',
+            Ingredient_Quantity: 2,
+        }],
+    },
+    {
+        Recipe_ID: 2,
+        Recipe_Name: 'Recipe 2',
+        Recipe_Difficulty: 2,
+        Recipe_Time: 22,
+        Recipe_Instructions: 'Instructions for Recipe 2',
+        Recipe_Ingredients: [{
+            Recipe_Ingredient_ID: 21,
+            Ingredient_Name: 'Recipe 2 Ingredient 1',
+            Ingredient_Quantity: 2,
+        },
+        {
+            Recipe_Ingredient_ID: 22,
+            Ingredient_Name: 'Recipe 2 Ingredient 2',
+            Ingredient_Quantity: 2,
+        }],
+    },
+]; 
+
+const TestRecipe : Recipe = {
+    Recipe_Name: 'New Test Recipe',
+    Recipe_Difficulty: 1,
+    Recipe_Time: 11,
+    Recipe_Instructions: 'Instructions for Test Recipe',
+    Recipe_Ingredients: [{
+        Recipe_Ingredient_ID: 11,
+        Ingredient_Name: 'Test Recipe Ingredient 1',
+        Ingredient_Quantity: 2,
+    },
+    {
+        Recipe_Ingredient_ID: 12,
+        Ingredient_Name: 'Test Recipe Ingredient 2',
+        Ingredient_Quantity: 2,
+    }],
+};
+
+const mockSetRecipes = jest.fn();
 
 // Mocking the fetch function
 beforeEach(() => {
-    fetchMock.resetMocks();
+    jest.resetAllMocks();
+    fetchMock.enableMocks();
+    fetchMock.doMock();
 })
 
 test('should fetch Recipes data and update state', async () => {
 
     /*Arrange *******************************************************************/
-    const mockSetRecipes = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
-    const Recipes : Recipe[] = [
+    const expectedRecipes = [
         {
             Recipe_ID: 1,
             Recipe_Name: 'Recipe 1',
@@ -48,113 +105,46 @@ test('should fetch Recipes data and update state', async () => {
                 Ingredient_Name: 'Recipe 2 Ingredient 2',
                 Ingredient_Quantity: 2,
             }],
-        },
+        },{
+            Recipe_ID: 3,
+            Recipe_Name: 'New Test Recipe',
+            Recipe_Difficulty: 1,
+            Recipe_Time: 11,
+            Recipe_Instructions: 'Instructions for Test Recipe',
+            Recipe_Ingredients: [{
+                Recipe_Ingredient_ID: 11,
+                Ingredient_Name: 'Test Recipe Ingredient 1',
+                Ingredient_Quantity: 2,
+            },
+            {
+                Recipe_Ingredient_ID: 12,
+                Ingredient_Name: 'Test Recipe Ingredient 2',
+                Ingredient_Quantity: 2,
+            }]
+        }        
     ]; 
-
-    const Recipe : Recipe = {
-        Recipe_ID: 1,
-        Recipe_Name: 'New Test Recipe',
-        Recipe_Difficulty: 1,
-        Recipe_Time: 11,
-        Recipe_Instructions: 'Instructions for Test Recipe',
-        Recipe_Ingredients: [{
-            Recipe_Ingredient_ID: 11,
-            Ingredient_Name: 'Test Recipe Ingredient 1',
-            Ingredient_Quantity: 2,
-        },
-        {
-            Recipe_Ingredient_ID: 12,
-            Ingredient_Name: 'Test Recipe Ingredient 2',
-            Ingredient_Quantity: 2,
-        }],
-    };
-
     fetchMock.mockResponseOnce(
         JSON.stringify({
-            ...Recipe,
+            ...TestRecipe,
             Recipe_ID: 3,
         })
     );
 
     /*Act **********************************************************************/
     const addRecipeResponse = await addRecipeData(
-        mockServerProps,
         1,
         Recipes,
         mockSetRecipes,
-        Recipe
+        TestRecipe
     );
 
     /*Assert *******************************************************************/
-    expect(addRecipeResponse).toBe("successful");
+    expect(addRecipeResponse).toBe(UpdateState.Successful);
 
-    expect(mockSetRecipes).toHaveBeenCalledWith([
-        ...Recipes,
-        {
-            ...Recipe,
-            Recipe_ID: 3,
-        },
-    ]);
+    expect(mockSetRecipes).toHaveBeenCalledWith(expectedRecipes);
 })
 test("should not update state if fetch fails", async () => {
-    /*Arrange *******************************************************************/
-    const mockSetRecipes = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
-    const Recipes : Recipe[] = [
-        {
-            Recipe_ID: 1,
-            Recipe_Name: 'Recipe 1',
-            Recipe_Difficulty: 1,
-            Recipe_Time: 11,
-            Recipe_Instructions: 'Instructions for Recipe 1',
-            Recipe_Ingredients: [{
-                Recipe_Ingredient_ID: 11,
-                Ingredient_Name: 'Recipe 1 Ingredient 1',
-                Ingredient_Quantity: 2,
-            },
-            {
-                Recipe_Ingredient_ID: 12,
-                Ingredient_Name: 'Recipe 1 Ingredient 2',
-                Ingredient_Quantity: 2,
-            }],
-        },
-        {
-            Recipe_ID: 2,
-            Recipe_Name: 'Recipe 2',
-            Recipe_Difficulty: 2,
-            Recipe_Time: 22,
-            Recipe_Instructions: 'Instructions for Recipe 2',
-            Recipe_Ingredients: [{
-                Recipe_Ingredient_ID: 21,
-                Ingredient_Name: 'Recipe 2 Ingredient 1',
-                Ingredient_Quantity: 2,
-            },
-            {
-                Recipe_Ingredient_ID: 22,
-                Ingredient_Name: 'Recipe 2 Ingredient 2',
-                Ingredient_Quantity: 2,
-            }],
-        },
-    ]; 
-
-    const Recipe : Recipe = {
-        Recipe_ID: 1,
-        Recipe_Name: 'New Test Recipe',
-        Recipe_Difficulty: 1,
-        Recipe_Time: 11,
-        Recipe_Instructions: 'Instructions for Test Recipe',
-        Recipe_Ingredients: [{
-            Recipe_Ingredient_ID: 11,
-            Ingredient_Name: 'Test Recipe Ingredient 1',
-            Ingredient_Quantity: 2,
-        },
-        {
-            Recipe_Ingredient_ID: 12,
-            Ingredient_Name: 'Test Recipe Ingredient 2',
-            Ingredient_Quantity: 2,
-        }],
-    };
-
+    /*Arrange *******************************************************************/    
     fetchMock.mockResponseOnce(
         "",
         {status: 500, statusText: "Internal Server Error"}
@@ -162,14 +152,13 @@ test("should not update state if fetch fails", async () => {
 
     /*Act **********************************************************************/
     const addRecipeResponse = await addRecipeData(
-        mockServerProps,
         1,
         Recipes,
         mockSetRecipes,
-        Recipe
+        TestRecipe
     );
 
     /*Assert *******************************************************************/
-    expect(addRecipeResponse).toBe("failed");
+    expect(addRecipeResponse).toBe(UpdateState.Failed);
     expect(mockSetRecipes).not.toHaveBeenCalled();
 });

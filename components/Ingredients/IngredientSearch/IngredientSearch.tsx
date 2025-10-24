@@ -1,15 +1,12 @@
-import {Text, TextInput, View, StyleSheet} from "react-native";
-import React, {useState} from "react";
+//2025-10-20 : Removed extra imports, changed to use ingredients context
+
 import ComponentView from "@/components/CustomComponents/ComponentView";
-import LabelText from "@/components/CustomComponents/LabelText";
 import FormTextInput from "@/components/CustomComponents/FormTextInput";
-import FormFieldContainer from "@/components/CustomComponents/FormFieldContainer";
-import {useData} from "@/Contexts/DataProvider";
-import Ingredient from "@/Types/Ingredient";
+import { useIngredients } from "@/Contexts/Ingredients/IngredientsDataProvider";
 
 export default function IngredientSearch() {
 
-    const {setIngredientsSearchOptions, ingredientsSearchOptions} = useData()
+    const {setIngredientsSearchOptions, ingredientsSearchOptions} = useIngredients();
 
     return (
         <ComponentView>

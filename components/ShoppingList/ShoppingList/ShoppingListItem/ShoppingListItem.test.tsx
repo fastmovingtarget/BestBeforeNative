@@ -1,3 +1,5 @@
+//2025-10-23 : Converted to use Shopping List and Ingredients contexts
+
 //2025-05-27 : Adding purchase button to the list item
 
 //2025-05-21 : Basic Implementation of list item
@@ -6,17 +8,26 @@
 import {render, userEvent} from '@testing-library/react-native';
 import ShoppingListItem from './ShoppingListItem';
 import type Shopping_List_Item from '@/Types/Shopping_List_Item';
-import {useData} from '@/Contexts/DataProvider';
+import {useShoppingList} from '@/Contexts/ShoppingList/ShoppingListDataProvider';
+import { useIngredients } from '@/Contexts/Ingredients/IngredientsDataProvider';
 
-const mockdataContext = {
-  deleteShoppingListItem: jest.fn(),
+const mockShoppingContext = {
+  deleteShoppingItem: jest.fn(),
+};
+const mockIngredientsContext = {
   addIngredient: jest.fn(),
 };
 
-jest.mock("@/Contexts/DataProvider", () => {
+jest.mock("@/Contexts/ShoppingList/ShoppingListDataProvider", () => {
   return {
     __esModule: true,
-    useData: jest.fn(),
+    useShoppingList: jest.fn(),
+  };
+});
+jest.mock("@/Contexts/Ingredients/IngredientsDataProvider", () => {
+  return {
+    __esModule: true,
+    useIngredients: jest.fn(),
   };
 });
 
@@ -24,8 +35,10 @@ const onEditMock = jest.fn();
 
 beforeEach(() => {
   jest.resetAllMocks();
-  const useDataMock = useData as jest.Mock;
-  useDataMock.mockReturnValue(mockdataContext);
+  const useIngredientsMock = useIngredients as jest.Mock;
+  useIngredientsMock.mockReturnValue(mockIngredientsContext);
+  const useShoppingListMock = useShoppingList as jest.Mock;
+  useShoppingListMock.mockReturnValue(mockShoppingContext);
 });
 
 describe('Shopping List Item renders correctly', () => {
@@ -116,8 +129,8 @@ describe('Shopping List Item calls correctly', () => {
 
     await user.press(deleteButton);
 
-    expect(mockdataContext.deleteShoppingListItem).toHaveBeenCalledTimes(1);
-    expect(mockdataContext.deleteShoppingListItem).toHaveBeenCalledWith(1);
+    expect(mockShoppingContext.deleteShoppingItem).toHaveBeenCalledTimes(1);
+    expect(mockShoppingContext.deleteShoppingItem).toHaveBeenCalledWith(1);
   })
   it("when purchase button is pressed", async () => {
 
@@ -139,14 +152,14 @@ describe('Shopping List Item calls correctly', () => {
 
     await user.press(purchaseButton);
 
-    expect(mockdataContext.addIngredient).toHaveBeenCalledTimes(1);
-    expect(mockdataContext.addIngredient).toHaveBeenCalledWith({
+    expect(mockIngredientsContext.addIngredient).toHaveBeenCalledTimes(1);
+    expect(mockIngredientsContext.addIngredient).toHaveBeenCalledWith({
       Ingredient_Name: "Test Item",
       Ingredient_Quantity: 1,
     });
 
-    expect(mockdataContext.deleteShoppingListItem).toHaveBeenCalledTimes(1);
-    expect(mockdataContext.deleteShoppingListItem).toHaveBeenCalledWith(1);
+    expect(mockShoppingContext.deleteShoppingItem).toHaveBeenCalledTimes(1);
+    expect(mockShoppingContext.deleteShoppingItem).toHaveBeenCalledWith(1);
 
   })
 })

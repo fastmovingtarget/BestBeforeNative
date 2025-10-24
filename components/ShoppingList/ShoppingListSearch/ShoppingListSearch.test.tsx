@@ -1,9 +1,9 @@
+//2025-10-23 : Converted to use Shopping List Context
+
 //2025-05-27 : Initial implementation of shopping list search function
 
-import {render, userEvent, screen} from '@testing-library/react-native';
-import {useData} from '@/Contexts/DataProvider';
-import { TextInput } from 'react-native';
-import Shopping_List_Item, {ShoppingListSearchOptions} from '@/Types/Shopping_List_Item';
+import {render, userEvent} from '@testing-library/react-native';
+import { useShoppingList } from '@/Contexts/ShoppingList/ShoppingListDataProvider';
 import ShoppingListSearch from './ShoppingListSearch';
 
 
@@ -12,13 +12,13 @@ const mockDataContext = {
     setShoppingListSearchOptions: jest.fn(),
   };
 
-jest.mock('@/Contexts/DataProvider', () => ({
-  useData: jest.fn(),
+jest.mock('@/Contexts/ShoppingList/ShoppingListDataProvider', () => ({
+  useShoppingList: jest.fn(),
 }));
 
 beforeEach(() => {
   jest.resetAllMocks();
-  const mockUseData = useData as jest.Mock;
+  const mockUseData = useShoppingList as jest.Mock;
   mockUseData.mockReturnValue(mockDataContext);
 });
 

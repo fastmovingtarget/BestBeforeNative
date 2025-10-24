@@ -1,16 +1,15 @@
+//2025-10-23 : Converted to use Shopping List Context
+
 //2025-05-27 : Initial implementation of shopping list search function
 
-import {Text, TextInput, View, StyleSheet} from "react-native";
-import React, {useState} from "react";
+import React from "react";
 import ComponentView from "@/components/CustomComponents/ComponentView";
-import LabelText from "@/components/CustomComponents/LabelText";
 import FormTextInput from "@/components/CustomComponents/FormTextInput";
-import FormFieldContainer from "@/components/CustomComponents/FormFieldContainer";
-import {useData} from "@/Contexts/DataProvider";
+import { useShoppingList } from "@/Contexts/ShoppingList/ShoppingListDataProvider";
 
 export default function ShoppingListSearch() {
 
-    const {setShoppingListSearchOptions, shoppingListSearchOptions} = useData()
+    const {setShoppingListSearchOptions, shoppingListSearchOptions} = useShoppingList()
 
     return (
         <ComponentView>

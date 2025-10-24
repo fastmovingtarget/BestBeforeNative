@@ -1,11 +1,13 @@
+//2025-10-20 : Using Recipes context rather than Data context
+
 import React from "react";
 import ComponentView from "@/components/CustomComponents/ComponentView";
 import FormTextInput from "@/components/CustomComponents/FormTextInput";
-import {useData} from "@/Contexts/DataProvider";
+import {useRecipes} from "@/Contexts/Recipes/RecipesDataProvider";
 
 export default function RecipesSearch() {
 
-    const {setRecipesSearchOptions, recipesSearchOptions} = useData()
+    const {setRecipesSearchOptions, recipesSearchOptions} = useRecipes()
 
     return (
         <ComponentView style={{flexDirection:"row"}}>

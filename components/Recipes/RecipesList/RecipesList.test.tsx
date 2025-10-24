@@ -1,9 +1,11 @@
+//2025-10-24 : Fixing import and mock to use correct context provider
+
 import {render, userEvent} from '@testing-library/react-native';
 import { Text, Pressable } from 'react-native';
 import Recipe from '@/Types/Recipe';
 import RecipesListItem from './RecipesListItem/RecipesListItem';
 import RecipesList from './RecipesList';
-import {useData} from '@/Contexts/DataProvider';
+import {useRecipes} from '@/Contexts/Recipes/RecipesDataProvider';
 
 // No need to test things we've already tested in the IngredientComponent test, just a basic array of ingredients to test the list rendering
 const mockRecipes : Recipe[] = [
@@ -58,17 +60,17 @@ jest.mock("./RecipesListItem/RecipesListItem", () => {
   }
 });
 
-jest.mock("@/Contexts/DataProvider", () => {
+jest.mock("@/Contexts/Recipes/RecipesDataProvider", () => {
   return {
     __esModule: true,
-    useData: jest.fn(),
+    useRecipes: jest.fn(),
   };
 });
 
 beforeEach(() => {
   jest.resetAllMocks();
-  const useDataMock = useData as jest.Mock;
-  useDataMock.mockReturnValue(mockdataContext);
+  const useRecipesMock = useRecipes as jest.Mock;
+  useRecipesMock.mockReturnValue(mockdataContext);
 
   const RecipeListItemMock = RecipesListItem as jest.Mock;
   RecipeListItemMock.mockImplementation(mockRecipeListItem);

@@ -1,3 +1,5 @@
+//2025-10-23 : Converted to use Shopping List Context
+
 //2025-05-27 : Text and comment edits for accuracy
 
 //2025-05-22 : Initial implementation and basic tests
@@ -8,7 +10,7 @@ import ShoppingList from './ShoppingList';
 import Shopping_List_Item from '@/Types/Shopping_List_Item';
 import ShoppingListItem from './ShoppingListItem/ShoppingListItem';
 import ShoppingListForm from '../ShoppingListForm/ShoppingListForm';
-import {useData} from '@/Contexts/DataProvider';
+import { useShoppingList } from '@/Contexts/ShoppingList/ShoppingListDataProvider';
 
 // No need to test things we've already tested in the ShoppingListItem test, just a basic array of items to test the list rendering
 const mockShoppingList : Shopping_List_Item[] = [
@@ -34,7 +36,7 @@ const mockdataContext = {
 };
 
 // Not exactly a unit test if it's using ShoppingListItem, so I'm adding in a basic mock of it here
-const mockShoppingListItem = ({item, onEdit} : {item : Shopping_List_Item, onEdit : (id : number | undefined) => {}}) =>
+const mockShoppingListItem = ({item, onEdit} : {item : Shopping_List_Item, onEdit : (id : number | undefined) => void}) =>
   <>
     <Text>{item.Item_Name}</Text>
     <Text>{item.Item_Quantity ? item.Item_Quantity + "g" : "??g"}</Text>
@@ -43,7 +45,7 @@ const mockShoppingListItem = ({item, onEdit} : {item : Shopping_List_Item, onEdi
     </Pressable>
   </>
 
-const mockShoppingListForm = ({item, onCancel} : {item : Shopping_List_Item, onCancel : () => {}}) => {
+const mockShoppingListForm = ({item, onCancel} : {item : Shopping_List_Item, onCancel : () => void}) => {
   return (
     <>  
       <Text>{`Form for : ${item.Item_Name}`}</Text>    
@@ -68,17 +70,17 @@ jest.mock("../ShoppingListForm/ShoppingListForm", () => {
   }
 });
 
-jest.mock("@/Contexts/DataProvider", () => {
+jest.mock("@/Contexts/ShoppingList/ShoppingListDataProvider", () => {
   return {
     __esModule: true,
-    useData: jest.fn(),
+    useShoppingList: jest.fn(),
   };
 });
 
 beforeEach(() => {
   jest.resetAllMocks();
-  const useDataMock = useData as jest.Mock;
-  useDataMock.mockReturnValue(mockdataContext);
+  const useShoppingListMock = useShoppingList as jest.Mock;
+  useShoppingListMock.mockReturnValue(mockdataContext);
 
   (ShoppingListItem as jest.Mock).mockImplementation(mockShoppingListItem);
 
@@ -118,7 +120,7 @@ test('onEdit is called when edit button is clicked', async () => {
   const user = userEvent.setup();
   const mockOnEdit = jest.fn(); // Mock function to track calls
 
-  const {getAllByText, getByText} = render(
+  const {getAllByText} = render(
     <ShoppingList onEdit={mockOnEdit} />
   );
 

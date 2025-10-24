@@ -1,9 +1,11 @@
+//2025-10-14 : Initial Implementation of Recipe Plan Page
+
 import Recipe_Ingredient from "./Recipe_Ingredient";
 
 interface Recipe_Plan {
     Plan_ID? : number;
     Plan_Date : Date;
-    Recipe_ID : number;
+    Recipe_ID? : number;
     Recipe_Name : string;
     Plan_Ingredients? : Plan_Ingredients[];
 }

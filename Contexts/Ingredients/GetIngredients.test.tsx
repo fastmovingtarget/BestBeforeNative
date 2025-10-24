@@ -1,6 +1,7 @@
-import { render, screen, act } from '@testing-library/react';
+//2025-10-22 : Removing server props from test criteria
+
 import { getIngredientsData } from './GetIngredients';
-import Ingredient, {IngredientSearchOptions} from '../../Types/Ingredient'; // Adjust the import path as necessary
+import { IngredientSearchOptions } from '../../Types/Ingredient'; // Adjust the import path as necessary
 import fetchMock from 'jest-fetch-mock';
 fetchMock.enableMocks();
 
@@ -12,7 +13,6 @@ beforeEach(() => {
 describe('getIngredientsData', () => {
     test('should fetch ingredients data and update state', async () => {
         const mockSetIngredients = jest.fn();
-        const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
         const userID = 1;
 
         const now = new Date();
@@ -36,7 +36,6 @@ describe('getIngredientsData', () => {
         );
 
         await getIngredientsData(
-            mockServerProps,
             userID,
             mockSetIngredients,
         );
@@ -55,10 +54,10 @@ describe('getIngredientsData', () => {
                 Ingredient_Quantity: 2,
             },
         ]);
-    }),
+    })
+
     test('test get ingredients works when date isn\'t in the fetched data', async () => {
         const mockSetIngredients = jest.fn();
-        const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
         const userID = 1;
 
         //if I instance the dates seperately in the call and response, I get different timestamps 'cos the test takes time, so I'll just make 'em here
@@ -78,7 +77,6 @@ describe('getIngredientsData', () => {
         );
 
         await getIngredientsData(
-            mockServerProps,
             userID,
             mockSetIngredients,
         );
@@ -95,25 +93,24 @@ describe('getIngredientsData', () => {
                 Ingredient_Quantity: 2,
             },
         ]);
-    }),
+    })
+
     test('should handle fetch error', async () => {
         const mockSetIngredients = jest.fn();
-        const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
         const userID = 1;
         fetchMock.mockResponseOnce(JSON.stringify({}), { status: 500 });
 
         await getIngredientsData(
-            mockServerProps,
             userID,
             mockSetIngredients,
         );
 
         expect(mockSetIngredients).not.toHaveBeenCalled(); // Check if setIngredients was not called
-    });
+    })
+    
     describe("Should be called with options", () => {
         test('search string', async () => {
             const mockSetIngredients = jest.fn();
-            const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
             const userID = 1;
     
             const now = new Date();
@@ -134,7 +131,6 @@ describe('getIngredientsData', () => {
             );
     
             await getIngredientsData(
-                mockServerProps,
                 userID,
                 mockSetIngredients,
                 searchOptions
@@ -150,7 +146,7 @@ describe('getIngredientsData', () => {
             ]);
 
             expect(fetch).toHaveBeenCalledWith(
-                `http://${mockServerProps.DatabaseServer}:${mockServerProps.DatabasePort}/ingredients/${userID}?searchText=Ingredient%201`, {
+                `http://${"192.168.50.183"}:${"5091"}/ingredients/${userID}?searchText=Ingredient%201`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -161,7 +157,6 @@ describe('getIngredientsData', () => {
         })
         test('search called with all options', async () => {
             const mockSetIngredients = jest.fn();
-            const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
             const userID = 1;
     
             const now = new Date();
@@ -185,7 +180,6 @@ describe('getIngredientsData', () => {
             );
     
             await getIngredientsData(
-                mockServerProps,
                 userID,
                 mockSetIngredients,
                 searchOptions
@@ -201,7 +195,7 @@ describe('getIngredientsData', () => {
             ]);
 
             expect(fetch).toHaveBeenCalledWith(
-                `http://${mockServerProps.DatabaseServer}:${mockServerProps.DatabasePort}/ingredients/${userID}?searchText=Ingredient%201&sortBy=Ingredient_Name&sortOrder=asc&amount=100`, {
+                `http://${"192.168.50.183"}:${"5091"}/ingredients/${userID}?searchText=Ingredient%201&sortBy=Ingredient_Name&sortOrder=asc&amount=100`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

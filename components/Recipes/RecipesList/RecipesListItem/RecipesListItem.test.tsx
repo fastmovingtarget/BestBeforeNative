@@ -1,3 +1,5 @@
+//2025-10-24 : Fixing import and mock to use correct context provider
+
 import {render, userEvent} from '@testing-library/react-native';
 import RecipesListItem from './RecipesListItem';
 import Recipe from '@/Types/Recipe';
@@ -19,6 +21,7 @@ describe('Recipe List Item renders correctly', () => {
   it('when given all basic recipe data', () => {
     const {getByText} = render(
       <RecipesListItem
+        key={(mockRecipe.Recipe_ID || 0).toString()}
         recipe={mockRecipe}
         setSelectedRecipe={jest.fn()}/>,
     );
@@ -34,6 +37,7 @@ const user = userEvent.setup();
     const mockSetSelectedRecipe = jest.fn();
     const {getByLabelText} = render(
         <RecipesListItem
+        key={(mockRecipe.Recipe_ID || 0).toString()}
         recipe={mockRecipe}
         setSelectedRecipe={mockSetSelectedRecipe}/>,
     );
@@ -50,6 +54,7 @@ const user = userEvent.setup();
     const mockSetSelectedRecipe = jest.fn();
     const {getByText} = render(
         <RecipesListItem
+        key={(mockRecipe.Recipe_ID || 0).toString()}
         recipe={mockRecipe}
         setSelectedRecipe={mockSetSelectedRecipe}/>,
     );

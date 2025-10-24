@@ -1,10 +1,12 @@
+//2025-10-24 : Fixing import and mock to use correct context provider
+
 import {render, userEvent} from '@testing-library/react-native';
 import { Text, Pressable } from 'react-native';
 import IngredientsList from './IngredientsList';
 import Ingredient from '@/Types/Ingredient';
 import IngredientComponent from './IngredientComponent/IngredientComponent';
 import IngredientForm from '../IngredientForm/IngredientForm';
-import {useData} from '@/Contexts/DataProvider';
+import {useIngredients} from '@/Contexts/Ingredients/IngredientsDataProvider';
 
 // No need to test things we've already tested in the IngredientComponent test, just a basic array of ingredients to test the list rendering
 const mockIngredients : Ingredient[] = [
@@ -33,7 +35,7 @@ const mockdataContext = {
 };
 
 // Not exactly a unit test if it's using IngredientComponent, so I'm adding in a basic mock of it here
-const mockIngredientComponent = ({ingredient, onEdit} : {ingredient : Ingredient, onEdit : (id : number | undefined) => {}}) =>
+const mockIngredientComponent = ({ingredient, onEdit} : {ingredient : Ingredient, onEdit : (id : number | undefined) => void}) =>
   <>
     <Text>{ingredient.Ingredient_Name}</Text>
     <Text>{ingredient.Ingredient_Quantity ? ingredient.Ingredient_Quantity + "g" : "??g"}</Text>
@@ -43,7 +45,7 @@ const mockIngredientComponent = ({ingredient, onEdit} : {ingredient : Ingredient
     </Pressable>
   </>
 
-const mockIngredientForm = ({ingredient, onCancel} : {ingredient : Ingredient, onCancel : () => {}}) => {
+const mockIngredientForm = ({ingredient, onCancel} : {ingredient : Ingredient, onCancel : () => void}) => {
   return (
     <>  
       <Text>{`Form for : ${ingredient.Ingredient_Name}`}</Text>    
@@ -68,17 +70,17 @@ jest.mock("../IngredientForm/IngredientForm", () => {
   }
 });
 
-jest.mock("@/Contexts/DataProvider", () => {
+jest.mock("@/Contexts/Ingredients/IngredientsDataProvider", () => {
   return {
     __esModule: true,
-    useData: jest.fn(),
+    useIngredients: jest.fn(),
   };
 });
 
 beforeEach(() => {
   jest.resetAllMocks();
-  const useDataMock = useData as jest.Mock;
-  useDataMock.mockReturnValue(mockdataContext);
+  const useIngredientsMock = useIngredients as jest.Mock;
+  useIngredientsMock.mockReturnValue(mockdataContext);
 
   const IngredientComponentMock = IngredientComponent as jest.Mock;
   IngredientComponentMock.mockImplementation(mockIngredientComponent);
@@ -123,7 +125,7 @@ test('onEdit is called when edit button is clicked', async () => {
   const user = userEvent.setup();
   const mockOnEdit = jest.fn(); // Mock function to track calls
 
-  const {getAllByText, getByText} = render(
+  const {getAllByText} = render(
     <IngredientsList onEdit={mockOnEdit} />
   );
 

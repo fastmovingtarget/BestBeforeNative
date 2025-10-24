@@ -1,3 +1,5 @@
+//2025-10-20 : Changed to using recipes context
+
 import { useState } from "react"
 import type Recipe from "@/Types/Recipe"
 import PageView from "../CustomComponents/PageView"
@@ -9,14 +11,13 @@ import FormFieldContainer from "../CustomComponents/FormFieldContainer"
 import ComponentView from "../CustomComponents/ComponentView"
 import ButtonView from "../CustomComponents/ButtonView"
 import LabelText from "../CustomComponents/LabelText"
-import {Text} from "react-native"
-import { useData } from "@/Contexts/DataProvider"
+import { useRecipes } from "../../Contexts/Recipes/RecipesDataProvider";
 
 export default function RecipesPage() {
 
     const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
     const [isEditing, setIsEditing] = useState(false);
-    const {deleteRecipe} = useData();
+    const {deleteRecipe} = useRecipes();
 
     return (
         <PageView>

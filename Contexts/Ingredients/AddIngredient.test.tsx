@@ -1,4 +1,5 @@
-import { render, screen, act } from '@testing-library/react';
+//2025-10-22 : Removing server props from test criteria
+
 import { addIngredientData } from './AddIngredient';
 import Ingredient from '../../Types/Ingredient'; // Adjust the import path as necessary
 import fetchMock from 'jest-fetch-mock';
@@ -13,7 +14,6 @@ test('should fetch ingredients data and update state', async () => {
 
     /*Arrange *******************************************************************/
     const mockSetIngredients = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
     const today = new Date();
     const ingredients : Ingredient[] = [
         {
@@ -46,7 +46,6 @@ test('should fetch ingredients data and update state', async () => {
 
     /*Act **********************************************************************/
     await addIngredientData(
-        mockServerProps,
         1,
         ingredients,
         mockSetIngredients,
@@ -56,7 +55,7 @@ test('should fetch ingredients data and update state', async () => {
     /*Assert *******************************************************************/
 
     expect(fetchMock).toHaveBeenCalledWith(
-        `http://${mockServerProps.DatabaseServer}:${mockServerProps.DatabasePort}/ingredients/`,
+        `http://${"192.168.50.183"}:${"5091"}/ingredients/`,
         {
             method: "POST",
             headers: {
@@ -75,7 +74,6 @@ test('should fetch ingredients data and update state', async () => {
 test("should not update state if fetch fails", async () => {
     /*Arrange *******************************************************************/
     const mockSetIngredients = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
     const ingredients : Ingredient[] = [
         {
             Ingredient_ID: 1,
@@ -104,7 +102,6 @@ test("should not update state if fetch fails", async () => {
 
     /*Act **********************************************************************/
     await addIngredientData(
-        mockServerProps,
         1,
         ingredients,
         mockSetIngredients,

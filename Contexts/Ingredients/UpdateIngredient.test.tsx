@@ -1,7 +1,12 @@
-import { render, screen, act } from '@testing-library/react';
+//2025-10-23 : Minor improvements to test formatting
+
+//2025-10-22 : Removing server props from test criteria
+
+
 import { updateIngredientData } from './UpdateIngredient';
 import Ingredient from '../../Types/Ingredient'; // Adjust the import path as necessary
 import fetchMock from 'jest-fetch-mock';
+import { UpdateState } from '@/Types/DataLoadingState';
 fetchMock.enableMocks();
 
 // Mocking the fetch function
@@ -13,7 +18,6 @@ test('should fetch ingredients data and update state', async () => {
 
     /*Arrange *******************************************************************/
     const mockSetIngredients = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
     const ingredients : Ingredient[] = [
         {
             Ingredient_ID: 1,
@@ -45,8 +49,7 @@ test('should fetch ingredients data and update state', async () => {
     );
 
     /*Act **********************************************************************/
-    await updateIngredientData(
-        mockServerProps,
+    const updateIngredientsState = await updateIngredientData(
         ingredients,
         mockSetIngredients,
         ingredient_changed
@@ -58,12 +61,12 @@ test('should fetch ingredients data and update state', async () => {
         ingredient_changed,
         ingredients[1]
     ]);
+    expect(updateIngredientsState).toEqual(UpdateState.Successful);
 })
 
 test("should not update state if fetch fails", async () => {
     /*Arrange *******************************************************************/
     const mockSetIngredients = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
     const ingredients : Ingredient[] = [
         {
             Ingredient_ID: 1,
@@ -93,7 +96,6 @@ test("should not update state if fetch fails", async () => {
 
     /*Act **********************************************************************/
     const ingredientsState = await updateIngredientData(
-        mockServerProps,
         ingredients,
         mockSetIngredients,
         ingredient_changed
@@ -101,5 +103,6 @@ test("should not update state if fetch fails", async () => {
 
     /*Assert *******************************************************************/
 
-    expect(ingredientsState).toEqual("failed");
+    expect(ingredientsState).toEqual(UpdateState.Failed);
+    expect(mockSetIngredients).not.toHaveBeenCalled();
 })

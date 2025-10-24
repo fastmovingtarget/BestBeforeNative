@@ -1,15 +1,25 @@
+//2025-10-24 : Adding catch for fetch errors
+
+//2025-10-23 : Standardised to update state on response to fetch
+
+//2025-10-20 : Changed to use loading state enumerator, server props populated internally
+
 import React from "react";
 import Recipe from "../../Types/Recipe";
+import { UpdateState } from "@/Types/DataLoadingState";
 
 export const deleteRecipeData = async (
-    serverProps : {DatabaseServer:string, DatabasePort:string},
     recipes : Recipe[],
     setRecipes : React.Dispatch<React.SetStateAction<Recipe[]>>, 
     recipeID : number,
 ) => {
-    setRecipes(recipes.filter((recipe) => recipe.Recipe_ID !== recipeID));//remove the deleted recipe from the list
 
-    let returnPromise = new Promise<"successful" | "failed">((resolve) => {
+    const serverProps = {
+        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.183",
+        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
+    }
+
+    let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipes/${recipeID}`, 
             {
@@ -20,9 +30,13 @@ export const deleteRecipeData = async (
             }
         ).then((rawData) => {
             if(!rawData.ok) 
-                resolve("failed");
-            else
-                resolve("successful");
+                resolve(UpdateState.Failed);
+            else{
+                setRecipes(recipes.filter((recipe) => recipe.Recipe_ID !== recipeID));//remove the deleted recipe from the list
+                resolve(UpdateState.Successful);
+            }
+        }).catch(() => {
+            resolve(UpdateState.Failed);
         });
     })
 

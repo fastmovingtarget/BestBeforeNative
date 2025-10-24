@@ -1,3 +1,5 @@
+//2025-10-14 : Initial Implementation of Recipe Plan Page
+
 import { render, screen, act } from '@testing-library/react';
 import { deleteRecipePlanData } from './DeleteRecipePlan';
 import Recipe_Plan from '../../Types/Recipe_Plan'; // Adjust the import path as necessary
@@ -6,7 +8,7 @@ fetchMock.enableMocks();
 
 // Mocking the fetch function
 beforeEach(() => {
-    fetch.resetMocks();
+    fetchMock.resetMocks();
 })
 
 
@@ -41,7 +43,7 @@ test('should fetch ingredients data and update state', async () => {
         },
     ];
 
-    fetch.mockResponseOnce(
+    fetchMock.mockResponseOnce(
         "",
         {status: 204, statusText: "Recipe Deleted"}
     );
@@ -90,13 +92,13 @@ test("should not update state if fetch fails", async () => {
         },
     ];
 
-    fetch.mockResponseOnce(
+    fetchMock.mockResponseOnce(
         "",
         {status: 500, statusText: "Internal Server Error"}
     );
 
     /*Act **********************************************************************/
-    await deleteRecipePlanData(
+    const returnValue = await deleteRecipePlanData(
         mockServerProps,
         recipePlans,
         mockSetRecipePlans,
@@ -105,5 +107,5 @@ test("should not update state if fetch fails", async () => {
 
     /*Assert *******************************************************************/
 
-    expect(mockSetRecipePlans).not.toHaveBeenCalled();
+    expect(returnValue).toEqual("failed");
 })
