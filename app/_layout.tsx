@@ -1,3 +1,5 @@
+//2025-10-24 : Adding shopping list data provider
+
 //2025-10-20 : Added Recipes Data Provider
 
 //2025-10-20 : Removed Data Provider, added Authentication Data Provider & Ingredients Data provider
@@ -14,6 +16,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { AuthenticationDataProvider } from '@/Contexts/Authentication/AuthenticationDataProvider';
 import { IngredientsDataProvider } from '@/Contexts/Ingredients/IngredientsDataProvider';
 import { RecipesDataProvider } from '@/Contexts/Recipes/RecipesDataProvider';
+import { ShoppingListDataProvider } from '@/Contexts/ShoppingList/ShoppingListDataProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -39,11 +42,13 @@ export default function RootLayout() {
       <AuthenticationDataProvider>
         <IngredientsDataProvider>
           <RecipesDataProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <StatusBar style="auto" />
+            <ShoppingListDataProvider>
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+              <StatusBar style="auto" />
+            </ShoppingListDataProvider>
           </RecipesDataProvider>
         </IngredientsDataProvider>
       </AuthenticationDataProvider>
