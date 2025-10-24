@@ -1,3 +1,5 @@
+//2025-10-24 : Fixed fetch to call correct address, method, body. Added catch and fixed setState  name
+
 //2025-10-23 : Standardised state to change after response to fetch, server info now accessed internally
 
 //2025-05-22 : Adding asynchronous update implementation
@@ -8,7 +10,7 @@ import { UpdateState } from "@/Types/DataLoadingState";
 
 export const updateShoppingListItemData = async (
     shoppingList : Shopping_List_Item[],
-    setIngredients : React.Dispatch<React.SetStateAction<Shopping_List_Item[]>>, 
+    setShoppingList : React.Dispatch<React.SetStateAction<Shopping_List_Item[]>>, 
     shoppingListItem : Shopping_List_Item,
 ) => {
 
@@ -17,25 +19,22 @@ export const updateShoppingListItemData = async (
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     }
 
-
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
-            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/ingredients/${shoppingListItem.Item_ID}`, 
+            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/shoppinglist/${shoppingListItem.Item_ID}`, 
             {
-                method: "POST",
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body : JSON.stringify({
-                    shoppingListItem: shoppingListItem,
-                })
+                body : JSON.stringify(shoppingListItem)
             }
         ).then((rawData) => {
             if(!rawData.ok) {
                 resolve(UpdateState.Failed);
             }
             else{
-                setIngredients(shoppingList.map(element => {
+                setShoppingList(shoppingList.map(element => {
                     if (element.Item_ID !== shoppingListItem.Item_ID)//if the element's ID isn't the input ingredient's then no change
                         return element;
                     else //otherwise return the ingredient that was input
@@ -43,6 +42,8 @@ export const updateShoppingListItemData = async (
                 }));
                 resolve(UpdateState.Successful);
             }
+        }).catch(() => {
+            resolve(UpdateState.Failed);
         });
     })
     return returnPromise;
