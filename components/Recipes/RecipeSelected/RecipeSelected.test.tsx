@@ -1,7 +1,8 @@
-import {render, userEvent} from '@testing-library/react-native';
+//2025-10-24 : Fixing import and mock to use correct context provider
+
+import {render} from '@testing-library/react-native';
 import RecipeSelected from './RecipeSelected';
 import Recipe from '@/Types/Recipe';
-import Recipe_Ingredient from '@/Types/Recipe_Ingredient';
 
 const mockRecipe: Recipe = {
   Recipe_ID: 123,

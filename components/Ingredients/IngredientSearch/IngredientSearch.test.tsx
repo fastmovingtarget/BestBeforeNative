@@ -1,7 +1,7 @@
-import {render, userEvent, screen} from '@testing-library/react-native';
-import {useData} from '@/Contexts/DataProvider';
-import { TextInput } from 'react-native';
-import Ingredient, {IngredientSearchOptions} from '@/Types/Ingredient';
+//2025-10-24 : Fixing import and mock to use correct context provider
+
+import {render, userEvent} from '@testing-library/react-native';
+import {useIngredients} from '@/Contexts/Ingredients/IngredientsDataProvider';
 import IngredientSearch from './IngredientSearch';
 
 
@@ -10,14 +10,14 @@ const mockDataContext = {
     setIngredientsSearchOptions: jest.fn(),
   };
 
-jest.mock('@/Contexts/DataProvider', () => ({
-  useData: jest.fn(),
+jest.mock('@/Contexts/Ingredients/IngredientsDataProvider', () => ({
+  useIngredients: jest.fn(),
 }));
 
 beforeEach(() => {
   jest.resetAllMocks();
-  const mockUseData = useData as jest.Mock;
-  mockUseData.mockReturnValue(mockDataContext);
+  const mockUseIngredients = useIngredients as jest.Mock;
+  mockUseIngredients.mockReturnValue(mockDataContext);
 });
 
 describe("Ingredient Search Renders", () => {

@@ -1,3 +1,5 @@
+//2025-10-24 : Fixing import and mock to use correct context provider
+
 //2025-10-20 : Using Recipes context rather than Data context
 
 import {render, userEvent} from '@testing-library/react-native';
@@ -10,14 +12,14 @@ const mockDataContext = {
     setRecipesSearchOptions: jest.fn(),
   };
 
-jest.mock('@/Contexts/DataProvider', () => ({
-  useData: jest.fn(),
+jest.mock('@/Contexts/Recipes/RecipesDataProvider', () => ({
+  useRecipes: jest.fn(),
 }));
 
 beforeEach(() => {
   jest.resetAllMocks();
-  const mockUseData = useRecipes as jest.Mock;
-  mockUseData.mockReturnValue(mockDataContext);
+  const mockUseRecipes = useRecipes as jest.Mock;
+  mockUseRecipes.mockReturnValue(mockDataContext);
 });
 
 describe("Recipe Search Renders", () => {

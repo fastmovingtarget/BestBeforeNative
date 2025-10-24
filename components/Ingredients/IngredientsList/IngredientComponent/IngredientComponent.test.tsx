@@ -1,15 +1,17 @@
+//2025-10-24 : Fixing import and mock to use correct context provider
+
 import {render, userEvent} from '@testing-library/react-native';
 import IngredientComponent from './IngredientComponent';
-import {useData} from '@/Contexts/DataProvider';
+import {useIngredients} from '@/Contexts/Ingredients/IngredientsDataProvider';
 
 const mockdataContext = {
   deleteIngredient: jest.fn(),
 };
 
-jest.mock("@/Contexts/DataProvider", () => {
+jest.mock("@/Contexts/Ingredients/IngredientsDataProvider", () => {
   return {
     __esModule: true,
-    useData: jest.fn(),
+    useIngredients: jest.fn(),
   };
 });
 
@@ -17,8 +19,8 @@ const onEditMock = jest.fn();
 
 beforeEach(() => {
   jest.resetAllMocks();
-  const useDataMock = useData as jest.Mock;
-  useDataMock.mockReturnValue(mockdataContext);
+  const useIngredientsMock = useIngredients as jest.Mock;
+  useIngredientsMock.mockReturnValue(mockdataContext);
 });
 
 describe('Ingredient renders correctly', () => {

@@ -1,10 +1,10 @@
+//2025-10-24 : Fixing import and mock to use correct context provider
+
 //2025-10-14 : Removed improperly described test
 
-import { View, Text, TextInput } from "react-native";
-import {userEvent} from '@testing-library/react-native';
-import React, { useState } from "react";
-import { render } from "@testing-library/react-native";
-import Ingredient from "@/Types/Ingredient";
+import { Text } from "react-native";
+import {userEvent, render} from '@testing-library/react-native';
+import React from "react";
 
 import IngredientsPage from "./IngredientsPage";
 import IngredientSearch from "./IngredientSearch/IngredientSearch";
@@ -64,7 +64,7 @@ test("When The Add Ingredient button is pressed, change the visibility of Add In
     const mockIngredientForm = IngredientForm as jest.Mock;
     mockIngredientForm.mockImplementation(({style}) => <Text style={style}>Form:</Text>);
 
-    const {getByText, getByRole} = render(<IngredientsPage />);
+    const {getByRole} = render(<IngredientsPage />);
     
     const addIngredientButton = getByRole("button", {name: /Add Ingredient/i});
     expect(addIngredientButton).toHaveProperty("props.style.backgroundColor", "#272727");

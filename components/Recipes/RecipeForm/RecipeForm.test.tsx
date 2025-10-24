@@ -1,9 +1,9 @@
-import {render, userEvent, fireEvent, screen} from '@testing-library/react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+//2025-10-24 : Fixing import and mock to use correct context provider
+
+import {render, userEvent, screen} from '@testing-library/react-native';
 import RecipeForm from './RecipeForm';
-import {useData} from '@/Contexts/DataProvider';
+import {useRecipes} from '@/Contexts/Recipes/RecipesDataProvider';
 import Recipe from '@/Types/Recipe';
-import { getByLabelText } from '@testing-library/react';
 
 const mockDataContext = {
   deleteRecipe: jest.fn(),
@@ -11,13 +11,13 @@ const mockDataContext = {
   updateRecipe: jest.fn(),
 };
 
-jest.mock('@/Contexts/DataProvider', () => ({
-  useData: jest.fn(),
+jest.mock('@/Contexts/Recipes/RecipesDataProvider', () => ({
+  useRecipes: jest.fn(),
 }));
 
 beforeEach(() => {
   jest.resetAllMocks();
-  (useData as jest.Mock).mockReturnValue(mockDataContext);
+  (useRecipes as jest.Mock).mockReturnValue(mockDataContext);
 });
 
 const mockExitForm = jest.fn();

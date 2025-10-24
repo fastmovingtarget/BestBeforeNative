@@ -1,7 +1,9 @@
-import {render, userEvent, fireEvent, screen} from '@testing-library/react-native';
+//2025-10-24 : Fixing import and mock to use correct context provider
+
+import {render, userEvent, fireEvent} from '@testing-library/react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import IngredientForm from './IngredientForm';
-import {useData} from '@/Contexts/DataProvider';
+import {useIngredients} from '@/Contexts/Ingredients/IngredientsDataProvider';
 import Ingredient from '@/Types/Ingredient';
 
 const mockdataContext = {
@@ -11,10 +13,10 @@ const mockdataContext = {
 };
 
 
-jest.mock("@/Contexts/DataProvider", () => {
+jest.mock("@/Contexts/Ingredients/IngredientsDataProvider", () => {
   return {
     __esModule: true,
-    useData: jest.fn(),
+    useIngredients: jest.fn(),
   };
 });
 
@@ -32,14 +34,13 @@ const onCancelMock = jest.fn();
 
 beforeEach(() => {
     jest.resetAllMocks();
-    const useDataMock = useData as jest.Mock;
-    useDataMock.mockReturnValue(mockdataContext);
+    const useIngredientsMock = useIngredients as jest.Mock;
+    useIngredientsMock.mockReturnValue(mockdataContext);
     mockDateTimePicker.mockImplementation(originalModule.default);
 });
 
 describe('Ingredient renders correctly', () => {
   it('when given no ingredient', () => {
-    const user = userEvent.setup();
 
     const {getByText, getByLabelText} = render(
       <IngredientForm isFormVisible={true}/>,
@@ -59,7 +60,6 @@ describe('Ingredient renders correctly', () => {
   it('when given an ingredient', () => {
     const mockDateTimePicker = DateTimePicker as jest.Mock;
     mockDateTimePicker.mockImplementation(originalModule.default);
-    const user = userEvent.setup();
 
     const {getByText, getByLabelText} = render(
       <IngredientForm ingredient={{
@@ -333,7 +333,7 @@ describe("When Submit button is pressed", () => {
 })
 describe("Form Visibility is", () => {
     test("Visble when isFormVisible is true", () => {
-        const {getByText, getByLabelText} = render(
+        const { getByLabelText} = render(
             <IngredientForm isFormVisible={true}/>,
         );
 
