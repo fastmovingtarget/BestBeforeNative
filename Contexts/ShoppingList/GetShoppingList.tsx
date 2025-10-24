@@ -1,3 +1,5 @@
+//2025-10-24 : Adding catch for fetch errors
+
 //2025-10-23 : Server info now loads internally, Resolves using SyncState enum
 
 //2025-05-28 : Searches with options string, returns a promise with success/failure state
@@ -51,6 +53,8 @@ export const getShoppingListData = (
                     resolve(SyncState.Successful);
                 })
             }
+        }).catch(() => {
+            resolve(SyncState.Failed);
         });
     })
     return returnPromise;

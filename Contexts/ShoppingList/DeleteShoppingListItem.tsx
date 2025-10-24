@@ -1,3 +1,5 @@
+//2025-10-24 : Adding catch for fetch errors
+
 //2025-10-23 : Standardised state to change after response to fetch, server info now accessed internally
 
 //2025-05-22 : Adding asynchronous update implementation
@@ -16,7 +18,6 @@ export const deleteShoppingListItemData = async (
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     }
 
-
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/shoppingList/${shoppingListItem_ID}`, 
@@ -34,6 +35,8 @@ export const deleteShoppingListItemData = async (
                 setRecipes(shoppingList.filter((item) => item.Item_ID !== shoppingListItem_ID));//remove the deleted recipe from the list
                 resolve(UpdateState.Successful);
             }
+        }).catch(() => {
+            resolve(UpdateState.Failed);
         });
     })
     return returnPromise;
