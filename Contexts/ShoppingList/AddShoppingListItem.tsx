@@ -1,3 +1,5 @@
+//2025-10-24 : adding catch, fixing names
+
 //2025-10-23 : Standardised state to change after response to fetch, server info now accessed internally
 
 //2025-05-28 : Asynchronous fetch implementation
@@ -11,7 +13,7 @@ import { UpdateState } from "@/Types/DataLoadingState";
 export const addShoppingListItemData = (
     userID : number,
     shoppingList : Shopping_List_Item[],
-    setIngredients : React.Dispatch<React.SetStateAction<Shopping_List_Item[]>>, 
+    setShoppingList : React.Dispatch<React.SetStateAction<Shopping_List_Item[]>>, 
     shoppingListItem : Shopping_List_Item,
 ) => {
     
@@ -39,7 +41,7 @@ export const addShoppingListItemData = (
             }
             else{
                 rawData.json().then((data) => {//the data returned should be the ingredient that was added including the id
-                    setIngredients([
+                    setShoppingList([
                         ...shoppingList,
                         {
                             ...shoppingListItem,
@@ -49,6 +51,8 @@ export const addShoppingListItemData = (
                     resolve(UpdateState.Successful);
                 })
             }
+        }).catch(() => {
+            resolve(UpdateState.Failed);
         });
     })
     return returnPromise;
