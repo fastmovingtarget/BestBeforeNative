@@ -1,3 +1,5 @@
+//2025-10-24 : mock data context names fixed
+
 //2025-10-23 : Converted to use Shopping List Context
 
 //2025-05-22 : Initial implementation and basic tests using ingredients form as a template
@@ -8,9 +10,9 @@ import { useShoppingList } from '@/Contexts/ShoppingList/ShoppingListDataProvide
 import Shopping_List_Item from '@/Types/Shopping_List_Item';
 
 const mockdataContext = {
-  deleteShoppingListItem: jest.fn(),
-  addShoppingListItem : jest.fn(),
-  updateShoppingListItem: jest.fn(),
+  deleteShoppingItem: jest.fn(),
+  addShoppingItem: jest.fn(),
+  updateShoppingItem: jest.fn(),
 };
 
 
@@ -160,8 +162,8 @@ describe("When Submit button is pressed", () => {
 
             await user.press(submitButton);
 
-            expect(mockdataContext.addShoppingListItem).toHaveBeenCalledTimes(1);
-            expect(mockdataContext.updateShoppingListItem).toHaveBeenCalledTimes(0);
+            expect(mockdataContext.addShoppingItem).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.updateShoppingItem).toHaveBeenCalledTimes(0);
         })
         test("With changed values when changed", async () => {
             const user = userEvent.setup();
@@ -186,10 +188,10 @@ describe("When Submit button is pressed", () => {
 
             await user.press(submitButton);
 
-            expect(mockdataContext.addShoppingListItem).toHaveBeenCalledTimes(1);
-            expect(mockdataContext.addShoppingListItem).toHaveBeenCalledWith(testItem);
+            expect(mockdataContext.addShoppingItem).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.addShoppingItem).toHaveBeenCalledWith(testItem);
 
-            expect(mockdataContext.updateShoppingListItem).toHaveBeenCalledTimes(0);
+            expect(mockdataContext.updateShoppingItem).toHaveBeenCalledTimes(0);
 
         })
 
@@ -218,9 +220,9 @@ describe("When Submit button is pressed", () => {
 
             await user.press(submitButton);
 
-            expect(mockdataContext.addShoppingListItem).toHaveBeenCalledTimes(0);
-            expect(mockdataContext.updateShoppingListItem).toHaveBeenCalledTimes(1);
-            expect(mockdataContext.updateShoppingListItem).toHaveBeenCalledWith(testItem);
+            expect(mockdataContext.addShoppingItem).toHaveBeenCalledTimes(0);
+            expect(mockdataContext.updateShoppingItem).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.updateShoppingItem).toHaveBeenCalledWith(testItem);
         })
         test("With changed values when changed", async () => { 
             const user = userEvent.setup();
@@ -253,10 +255,10 @@ describe("When Submit button is pressed", () => {
 
             await user.press(submitButton);
 
-            expect(mockdataContext.addShoppingListItem).toHaveBeenCalledTimes(0);
-            expect(mockdataContext.updateShoppingListItem).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.addShoppingItem).toHaveBeenCalledTimes(0);
+            expect(mockdataContext.updateShoppingItem).toHaveBeenCalledTimes(1);
 
-            expect(mockdataContext.updateShoppingListItem).toHaveBeenCalledWith(expectedIngredient);
+            expect(mockdataContext.updateShoppingItem).toHaveBeenCalledWith(expectedIngredient);
         })
     })
 })
