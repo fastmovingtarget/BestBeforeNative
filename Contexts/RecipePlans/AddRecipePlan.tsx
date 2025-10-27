@@ -1,16 +1,23 @@
+//2025-10-27 : Updated to get server props inside functions
+
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
 import React from "react";
 import Recipe_Plan from "../../Types/Recipe_Plan";
+import { UpdateState } from "@/Types/DataLoadingState";
 
 export const addRecipePlanData = async (    
-    serverProps : {DatabaseServer:string, DatabasePort:string},
     userID : number,
     recipePlans : Recipe_Plan[],
     setRecipes : React.Dispatch<React.SetStateAction<Recipe_Plan[]>>,
     recipePlan : Recipe_Plan, ) => {
 
-    const returnPromise = new Promise<"successful" | "failed">((resolve) => {
+    const serverProps = {
+        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "localhost",
+        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5000"
+    };
+
+    const returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipe_plans/${userID}`, 
             {
@@ -24,7 +31,7 @@ export const addRecipePlanData = async (
             }
         ).then((rawData) => {
             if(!rawData.ok) {
-                resolve("failed");
+                resolve(UpdateState.Failed);
             }
             else {
                 rawData.json().then((data) => {//the data returned should be the Recipe Plan that was added including the id
@@ -42,7 +49,7 @@ export const addRecipePlanData = async (
                             data
                         ]);
                 })
-                resolve("successful");
+                resolve(UpdateState.Successful);
             }
         });
     })

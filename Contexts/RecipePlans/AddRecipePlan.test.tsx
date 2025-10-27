@@ -1,6 +1,7 @@
+//2025-10-27 : Updated to get server props inside functions
+
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
-import { render, screen, act } from '@testing-library/react';
 import { addRecipePlanData } from './AddRecipePlan';
 import Recipe_Plan from '../../Types/Recipe_Plan'; // Adjust the import path as necessary
 import fetchMock from 'jest-fetch-mock';
@@ -15,7 +16,6 @@ test('should fetch Recipe Plan data and update state', async () => {
 
     /*Arrange *******************************************************************/
     const mockSetRecipePlans = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
 
     const recipePlans: Recipe_Plan[] = [
         {
@@ -48,7 +48,6 @@ test('should fetch Recipe Plan data and update state', async () => {
     
         /*Act **********************************************************************/
         await addRecipePlanData(
-            mockServerProps,
             1,
             recipePlans,
             mockSetRecipePlans,
@@ -69,7 +68,6 @@ test("should not update state if fetch fails", async () => {
     
     /*Arrange *******************************************************************/
     const mockSetRecipePlans = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
 
     const recipePlans: Recipe_Plan[] = [
         {
@@ -99,7 +97,6 @@ test("should not update state if fetch fails", async () => {
     
     /*Act **********************************************************************/
     await addRecipePlanData(
-        mockServerProps,
         1,
         recipePlans,
         mockSetRecipePlans,
