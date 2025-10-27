@@ -1,6 +1,7 @@
+//2025-10-27 : Updated server prop location, no longer takes cache to update
+
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
-import { render, screen, act } from '@testing-library/react';
 import { getRecipePlansData } from './GetRecipePlans';
 import Recipe_Plan from '../../Types/Recipe_Plan'; // Adjust the import path as necessary
 import fetchMock from 'jest-fetch-mock';
@@ -13,7 +14,6 @@ beforeEach(() => {
 
 test('should fetch recipes', async () => {
     const mockSetRecipes = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
     const userID = 1;
     
 
@@ -36,9 +36,7 @@ test('should fetch recipes', async () => {
     fetchMock.mockResponseOnce(JSON.stringify(recipePlans));
 
     await getRecipePlansData(
-        mockServerProps,
         userID,
-        [] as Recipe_Plan [],
         mockSetRecipes,
     );
 
@@ -46,15 +44,11 @@ test('should fetch recipes', async () => {
 })
 test('should handle fetch error', async () => {
     const mockSetRecipes = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
     const userID = 1;
-    const recipes = [] as Recipe_Plan[]; // Assuming recipes is an array of Recipe type
     fetchMock.mockResponseOnce(JSON.stringify({}), { status: 500 });
 
     await getRecipePlansData(
-        mockServerProps,
         userID,
-        recipes,
         mockSetRecipes,
     );
 
