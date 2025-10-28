@@ -1,4 +1,5 @@
-import { render, screen, act } from '@testing-library/react';
+//2025-10-28 : Added promise wrapper, getting server props internally
+
 import { updateRecipePlanData } from './UpdateRecipePlan';
 import Recipe_Plan from '../../Types/Recipe_Plan'; // Adjust the import path as necessary
 import fetchMock from 'jest-fetch-mock';
@@ -6,14 +7,13 @@ fetchMock.enableMocks();
 
 // Mocking the fetch function
 beforeEach(() => {
-    fetch.resetMocks();
+    fetchMock.resetMocks();
 })
 
 test('should fetch recipes data and update state', async () => {
 
     /*Arrange *******************************************************************/
     const mockSetRecipes = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
     
     const recipePlans: Recipe_Plan[] = [
         {
@@ -37,7 +37,7 @@ test('should fetch recipes data and update state', async () => {
         Plan_Date: new Date()
     }
 
-    fetch.mockResponseOnce(JSON.stringify(
+    fetchMock.mockResponseOnce(JSON.stringify(
             {
                 ...updateRecipePlan,
                 Recipe_ID: 1,
@@ -47,7 +47,6 @@ test('should fetch recipes data and update state', async () => {
 
     /*Act **********************************************************************/
     await updateRecipePlanData(
-        mockServerProps,
         recipePlans,
         mockSetRecipes,
         updateRecipePlan
@@ -64,7 +63,6 @@ test('should fetch recipes data and update state', async () => {
 test("should not update state if fetch fails", async () => {
     /*Arrange *******************************************************************/
     const mockSetRecipes = jest.fn();
-    const mockServerProps = { DatabaseServer: 'localhost', DatabasePort: '3000' };
     
     const recipePlans: Recipe_Plan[] = [
         {
@@ -88,14 +86,13 @@ test("should not update state if fetch fails", async () => {
         Plan_Date: new Date()
     }
 
-    fetch.mockResponseOnce(
+    fetchMock.mockResponseOnce(
         "",
         {status: 500, statusText: "Internal Server Error"}
     );
 
     /*Act **********************************************************************/
     await updateRecipePlanData(
-        mockServerProps,
         recipePlans,
         mockSetRecipes,
         newRecipePlan
