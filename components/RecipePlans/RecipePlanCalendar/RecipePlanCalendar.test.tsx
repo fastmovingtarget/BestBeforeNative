@@ -1,9 +1,11 @@
+//2025-10-28 : More cohesive implementation of the calendar grid
+
 //2025-10-14 : Fixed expected month to be full rather than shortened
 
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
 
-import {render, userEvent, screen} from '@testing-library/react-native';
+import {render, userEvent} from '@testing-library/react-native';
 import {useData} from '@/Contexts/DataProvider';
 import { Text } from 'react-native';
 
@@ -30,6 +32,8 @@ beforeEach(() => {
   (RecipePlanCalendarDay as jest.Mock).mockImplementation(({date}) => <Text>{date.getDate()}</Text>);
 });
 
+const mockSetSelectedDate = jest.fn();
+
 const monthsOfYear = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 describe("Recipe Plan Calendar Renders", () => {
@@ -37,14 +41,14 @@ describe("Recipe Plan Calendar Renders", () => {
         const currentMonth = monthsOfYear[new Date().getMonth()];// can't hardcode this as it will change over time, but can at least check that it is the current month via a different method
 
         const {getByText} = render(
-            <RecipePlanCalendar />
+            <RecipePlanCalendar setSelectedDate={mockSetSelectedDate} />
         );
 
         expect(getByText(`${currentMonth}`)).toBeTruthy();
     });
     test("Month navigation buttons", () => {
         const {getByText} = render(
-            <RecipePlanCalendar />
+            <RecipePlanCalendar setSelectedDate={mockSetSelectedDate} />
         );
         
         expect(getByText(/</i)).toBeTruthy();
@@ -52,7 +56,7 @@ describe("Recipe Plan Calendar Renders", () => {
     });
     test("The calendar day headers", () => {
         const {getByText} = render(
-            <RecipePlanCalendar />
+            <RecipePlanCalendar setSelectedDate={mockSetSelectedDate} />
         );
 
         expect(getByText(/Mon/i)).toBeTruthy();
@@ -68,8 +72,9 @@ describe("Recipe Plan Calendar Renders", () => {
         const today = new Date();
         const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
 
+        const mockSetSelectedDate = jest.fn();
         const {getAllByText} = render(
-            <RecipePlanCalendar />
+            <RecipePlanCalendar setSelectedDate={mockSetSelectedDate} />
         );
 
         for(let i = 1; i <= daysInMonth; i++) {
@@ -84,7 +89,7 @@ describe("Recipe Plan Calendar functionality", () => {
     test("The month changes when the left button is pressed", async () => {
         const user = userEvent.setup();
         const {getByText, getAllByText} = render(
-            <RecipePlanCalendar />
+            <RecipePlanCalendar setSelectedDate={mockSetSelectedDate} />
         );
 
         const currentMonth = new Date().getMonth();
@@ -103,7 +108,7 @@ describe("Recipe Plan Calendar functionality", () => {
     test("The month changes when the right button is pressed", async () => {
         const user = userEvent.setup();
         const {getByText, getAllByText} = render(
-            <RecipePlanCalendar />
+            <RecipePlanCalendar setSelectedDate={mockSetSelectedDate} />
         );
 
         const currentMonth = new Date().getMonth();
