@@ -1,6 +1,8 @@
+//2025-10-28 : Improved styling
+
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
-import {render, userEvent, screen} from '@testing-library/react-native';
+import {render, userEvent } from '@testing-library/react-native';
 import RecipePlanCalendarDay from './RecipePlanCalendarDay';
 
 describe("RecipePlanCalendarDay Component Renders", () => {

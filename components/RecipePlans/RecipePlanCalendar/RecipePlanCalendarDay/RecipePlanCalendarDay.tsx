@@ -1,6 +1,7 @@
+//2025-10-28 : Improved styling
+
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
-import type Shopping_List_Item from "@/Types/Shopping_List_Item";
 import React from 'react';
 import LabelText from "@/components/CustomComponents/LabelText";
 import PressableComponent from "@/components/CustomComponents/PressableComponent";
@@ -9,9 +10,9 @@ export default function RecipePlanCalendarDay({onPress, date, recipePlans} : {on
     return (
         <PressableComponent
             onPress={() => onPress(date.getDate())}
-            style={{flexDirection: "column"}}
+            style={{flexDirection: "column", flex:1, margin: 1, padding: 0, justifyContent: "flex-start", alignItems: "center"}}
             >
-            <LabelText style={{textAlign: "center", fontSize: 16, fontWeight: "bold"}}>
+            <LabelText style={{textAlign: "center", fontSize: 14, fontWeight: "bold", verticalAlign: "top"}}>
                     {date.getDate()}
             </LabelText>
             {recipePlans.map(recipePlan => {
@@ -21,7 +22,7 @@ export default function RecipePlanCalendarDay({onPress, date, recipePlans} : {on
                         aria-label={"recipe-plan-" + recipePlan}
                         style={{
                             textAlign: "center",
-                            fontSize: 14,
+                            fontSize: 12,
                             marginVertical: 2,
                         }}
                     >
