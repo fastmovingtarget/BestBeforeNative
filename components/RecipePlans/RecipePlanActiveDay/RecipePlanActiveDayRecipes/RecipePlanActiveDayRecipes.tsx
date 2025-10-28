@@ -1,24 +1,25 @@
+//2025-10-28 : Now uses devolved contexts
+
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
 import React from 'react';
 import ScrollableComponent from '@/components/CustomComponents/ScrollableComponent';
 import ListView from '@/components/CustomComponents/ListView';
 
-import { useData } from '@/Contexts/DataProvider';
 import Recipe from '@/Types/Recipe';
 import Recipe_Plan from '@/Types/Recipe_Plan';
-import ComponentView from '@/components/CustomComponents/ComponentView';
 import LabelText from '@/components/CustomComponents/LabelText';
-import RecipesListItem from '@/components/Recipes/RecipesList/RecipesListItem/RecipesListItem';
+import RecipesListItem from '@/components/Recipes/RecipesList/RecipesListItem/RecipesListItem'; 
 import FormFieldContainer from '@/components/CustomComponents/FormFieldContainer';
 import ButtonView from '@/components/CustomComponents/ButtonView';
-
-
+import { useRecipePlans } from '@/Contexts/RecipePlans/RecipePlanDataProvider';
+import { useRecipes } from '@/Contexts/Recipes/RecipesDataProvider';
 
 
 export default function RecipePlanActiveDayRecipes({date}: {date: Date}) {
 
-    const { recipePlans, recipes, addRecipePlan, deleteRecipePlan } = useData();
+    const { recipePlans, addRecipePlan, deleteRecipePlan } = useRecipePlans();
+    const { recipes } = useRecipes();
 
     const todayRecipePlans = recipePlans.filter((plan: Recipe_Plan) => {
         const planDate = new Date(plan.Plan_Date);
@@ -42,7 +43,10 @@ export default function RecipePlanActiveDayRecipes({date}: {date: Date}) {
                                     View Ingredients
                                 </LabelText>
                             </ButtonView>
-                            <ButtonView onPress={() => deleteRecipePlan(plan.Plan_ID)}>
+                            <ButtonView onPress={() => {
+                                if(plan.Plan_ID !== undefined) 
+                                    deleteRecipePlan(plan.Plan_ID)
+                                }}>
                                 <LabelText>
                                     Remove
                                 </LabelText>
