@@ -1,3 +1,5 @@
+//2025-10-28 : Making useContext fn more consistent with others
+
 //2025-10-28 : Initial Recipe Plan Data Provider Implementation
 
 import { createContext, useState, useContext, useEffect } from "react";
@@ -54,6 +56,6 @@ export const RecipePlansDataProvider = ({children}:{children:React.ReactNode}) =
     )
 }
 
-export const useRecipePlansData = () => {
+export const useRecipePlans = () => {
     return useContext(RecipePlansDataContext);
 }
