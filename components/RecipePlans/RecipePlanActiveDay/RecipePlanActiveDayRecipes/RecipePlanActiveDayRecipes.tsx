@@ -1,3 +1,5 @@
+//2025-10-29 : Added dummy setSelectedRecipe
+
 //2025-10-28 : Now uses devolved contexts
 
 //2025-10-14 : Initial Implementation of Recipe Plan Page
@@ -16,10 +18,11 @@ import { useRecipePlans } from '@/Contexts/RecipePlans/RecipePlanDataProvider';
 import { useRecipes } from '@/Contexts/Recipes/RecipesDataProvider';
 
 
-export default function RecipePlanActiveDayRecipes({date}: {date: Date}) {
+export default function RecipePlanActiveDayRecipes({date, setSelectedRecipe}: {date: Date, setSelectedRecipe: (recipePlan: Recipe_Plan) => void}) {
 
     const { recipePlans, addRecipePlan, deleteRecipePlan } = useRecipePlans();
     const { recipes } = useRecipes();
+    //todo implement view Recipe Plan Ingredients
 
     const todayRecipePlans = recipePlans.filter((plan: Recipe_Plan) => {
         const planDate = new Date(plan.Plan_Date);
