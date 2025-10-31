@@ -1,3 +1,5 @@
+//2025-10-31 : SetSelectedRecipe now links correctly
+
 //2025-10-29 : Added dummy setSelectedRecipe
 
 //2025-10-28 : Now uses devolved contexts
@@ -18,7 +20,7 @@ import { useRecipePlans } from '@/Contexts/RecipePlans/RecipePlanDataProvider';
 import { useRecipes } from '@/Contexts/Recipes/RecipesDataProvider';
 
 
-export default function RecipePlanActiveDayRecipes({date, setSelectedRecipe}: {date: Date, setSelectedRecipe: (recipePlan: Recipe_Plan) => void}) {
+export default function RecipePlanActiveDayRecipes({date, setSelectedRecipePlan}: {date: Date, setSelectedRecipePlan: (recipePlan: Recipe_Plan) => void}) {
 
     const { recipePlans, addRecipePlan, deleteRecipePlan } = useRecipePlans();
     const { recipes } = useRecipes();
@@ -41,7 +43,7 @@ export default function RecipePlanActiveDayRecipes({date, setSelectedRecipe}: {d
                             <LabelText>
                                 {plan.Recipe_Name}
                             </LabelText>
-                            <ButtonView onPress={() => {}}>
+                            <ButtonView onPress={() => setSelectedRecipePlan(plan)}>
                                 <LabelText>
                                     View Ingredients
                                 </LabelText>

@@ -1,10 +1,11 @@
+//2025-10-31 : SetSelectedRecipe now links correctly
+
 //2025-10-29 : Tests allow for devolved context, passing in setSelectedRecipe
 
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
 import {render, userEvent, screen} from '@testing-library/react-native';
 import {useRecipePlans} from '@/Contexts/RecipePlans/RecipePlanDataProvider';
-import { Pressable, Text } from 'react-native';
 
 import RecipePlanActiveDayRecipes from './RecipePlanActiveDayRecipes';
 import Recipe from '@/Types/Recipe';
@@ -58,7 +59,7 @@ describe("Recipe Plan Active Day Recipes Renders", () => {
     test("The recipe plans", () => {
 
         const {getByText} = render(
-            <RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipe={jest.fn()} />
+            <RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipePlan={jest.fn()} />
         );
 
         expect(getByText(/Planned Recipe 1/i)).toBeTruthy();
@@ -66,7 +67,7 @@ describe("Recipe Plan Active Day Recipes Renders", () => {
     });
     test("The recipe list", () => {
         const {getByText} = render(
-            <RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipe={jest.fn()} />
+            <RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipePlan={jest.fn()} />
         );
 
         expect(getByText(/Test Recipe 1/i)).toBeTruthy();
@@ -75,7 +76,7 @@ describe("Recipe Plan Active Day Recipes Renders", () => {
     test("The View Ingredients button", () => {
 
         const {getAllByText} = render(
-            <RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipe={jest.fn()} />
+            <RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipePlan={jest.fn()} />
         );
 
         expect(getAllByText(/View Ingredients/i).length).toEqual(2);
@@ -83,7 +84,7 @@ describe("Recipe Plan Active Day Recipes Renders", () => {
     test("The Remove button", () => {
 
         const {getAllByText} = render(
-            <RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipe={jest.fn()} />
+            <RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipePlan={jest.fn()} />
         );
 
         expect(getAllByText(/Remove/i).length).toEqual(2);
@@ -98,7 +99,7 @@ describe("Recipe Plan Active Day Recipes Interactions", () => {
             Recipe_Name: 'Test Recipe 1',
         }
 
-        render(<RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipe={jest.fn()} />);
+        render(<RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipePlan={jest.fn()} />);
 
         const recipeItem = screen.getByText(/Test Recipe 1/i);
         await user.press(recipeItem);
@@ -110,7 +111,7 @@ describe("Recipe Plan Active Day Recipes Interactions", () => {
     test("Clicking Remove calls to delete planned recipes", async () => {
         const user = userEvent.setup();
 
-        const {getAllByText} = render(<RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipe={jest.fn()} />);
+        const {getAllByText} = render(<RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipePlan={jest.fn()} />);
 
         const removeButton = getAllByText(/Remove/i)[1];
         await user.press(removeButton);
