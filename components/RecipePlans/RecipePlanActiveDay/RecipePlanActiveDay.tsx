@@ -1,39 +1,25 @@
+//2025-10-31 : Implementation for the switcher between recipes list and recipe breakdown
+
 //2025-10-28 : Simple initial implementation
 
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { Text } from "react-native";
 import PageView from "@/components/CustomComponents/PageView";
-import { useRecipePlans } from "@/Contexts/RecipePlans/RecipePlanDataProvider";
-import { useRecipes } from "@/Contexts/Recipes/RecipesDataProvider";
+import Recipe_Plan from "@/Types/Recipe_Plan";
+import RecipePlanActiveDayRecipes from "./RecipePlanActiveDayRecipes/RecipePlanActiveDayRecipes";
+import RecipePlanActiveDayRecipeIngredients from "./RecipePlanActiveDayRecipeIngredients/RecipePlanActiveDayRecipeIngredients";
 
 export default function RecipePlanner({selectedDate}: {selectedDate: Date | null}) {
-
-    const {recipePlans} = useRecipePlans();
-    const {recipes} = useRecipes();
-
-    const daysRecipePlans = recipePlans.filter(plan => {
-        if(selectedDate === null) return false;
-        const planDate = new Date(plan.Plan_Date);
-        return planDate.toDateString() === selectedDate.toDateString();
-    });
-
     //Active day page moves between selecting a recipe for the day and populating the selected recipe's ingredients
+    const [selectedRecipe, setSelectedRecipe] = useState<Recipe_Plan | null>(null);
     
     return (
         <PageView>
             <Text>{selectedDate ? selectedDate.toDateString() : "No Date Selected"}</Text>
-            <Text>Recipes for the day:</Text>
-            {
-                daysRecipePlans.map(plan => (
-                    <Text key={plan.Plan_ID}>{plan.Recipe_Name}</Text>
-                ))
-            }
+            {selectedRecipe ? 
+            (<RecipePlanActiveDayRecipeIngredients recipePlan={selectedRecipe} />) : 
+            (<RecipePlanActiveDayRecipes date={selectedDate ? selectedDate : new Date()} setSelectedRecipePlan={setSelectedRecipe} />)}
+            
         </PageView>
     );
 }
-
-const styles = StyleSheet.create({
-    addIngredientInvisible: {
-        display: "none",
-    },
-});
