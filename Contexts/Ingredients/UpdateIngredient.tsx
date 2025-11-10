@@ -1,3 +1,5 @@
+//2025-11-10 : Update now handles null date correctly
+
 //2025-10-24 : Adding catch for fetch errors
 
 //2025-10-23 : Standardised to update state on response to fetch
@@ -23,7 +25,7 @@ export const updateIngredientData = async (
 
     const updateBody = JSON.stringify({ 
         ...ingredient,
-        Ingredient_Date: new Date(ingredient.Ingredient_Date || "").toISOString().slice(0, 10), // Format date to YYYY-MM-DD
+        Ingredient_Date: ingredient.Ingredient_Date ? new Date(ingredient.Ingredient_Date).toISOString().slice(0, 10) : null, // Format date to YYYY-MM-DD
     })
 
     let returnPromise = new Promise<UpdateState>((resolve) => {
