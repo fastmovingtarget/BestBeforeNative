@@ -1,3 +1,5 @@
+//2025-11-10 : Added improved documentation
+
 //2025-10-24 : Adding catch for fetch errors
 
 //2025-10-20 : Moved server properties into individual files, now return enum states
@@ -7,6 +9,14 @@
 import React from "react";
 import Ingredient, {IngredientSearchOptions} from "../../Types/Ingredient";
 import { SyncState } from "@/Types/DataLoadingState";
+/**
+ * Fetches ingredients from the database based on user ID and optional search criteria,
+ * then updates the local state with the retrieved ingredients.
+ * @param {number} userID - The ID of the user whose ingredients are to be fetched.
+ * @param {React.Dispatch<React.SetStateAction<Ingredient[]>>} setIngredients - State setter function for updating the ingredient list.
+ * @param {IngredientSearchOptions} [searchOptions={}] - Optional search criteria for filtering ingredients.
+ * @returns {Promise<SyncState>} - A promise that resolves to the sync state indicating success or failure.
+ */
 
 export const getIngredientsData = async (
     userID : number, 

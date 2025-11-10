@@ -1,3 +1,5 @@
+//2025-11-10 : Added improved documentation
+
 //2025-10-24 : Adding catch for fetch errors
 
 //2025-10-23 : Standardised to update state on response to fetch
@@ -7,6 +9,15 @@
 import React from "react";
 import Recipe from "../../Types/Recipe";
 import { UpdateState } from "@/Types/DataLoadingState";
+
+/**
+ * Updates an existing recipe in the database and updates the local state.
+ * If the update is successful, the recipe list state is updated to reflect the changes.
+ * @param {Recipe[]} recipes - The current list of recipes.
+ * @param {React.Dispatch<React.SetStateAction<Recipe[]>>} setRecipes - State setter function for updating the recipe list.
+ * @param {Recipe} recipe - The recipe to be updated.
+ * @returns {Promise<UpdateState>} - A promise that resolves to the update state indicating success or failure.
+ */
 
 export const updateRecipeData = (
     recipes : Recipe[],

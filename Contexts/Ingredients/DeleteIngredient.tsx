@@ -1,3 +1,5 @@
+//2025-11-10 : Added improved documentation
+
 //2025-10-24 : Adding catch for fetch errors
 
 //2025-10-23 : Standardised to update state on response to fetch
@@ -10,6 +12,14 @@ import React from "react";
 import Ingredient from "../../Types/Ingredient";
 import { UpdateState } from "@/Types/DataLoadingState";
 
+/**
+ * Deletes an ingredient from the database and updates the local state.
+ * If the deletion is successful, the ingredient list state is updated to remove the deleted ingredient.
+ * @param {Ingredient[]} ingredients - The current list of ingredients.
+ * @param {React.Dispatch<React.SetStateAction<Ingredient[]>>} setIngredients - State setter function for updating the ingredient list.
+ * @param {number} ingredientID - The ID of the ingredient to be deleted.
+ * @returns {Promise<UpdateState>} - A promise that resolves to the update state indicating success or failure.
+ */
 export const deleteIngredientData = async (
     ingredients : Ingredient[],
     setIngredients : React.Dispatch<React.SetStateAction<Ingredient[]>>, 
