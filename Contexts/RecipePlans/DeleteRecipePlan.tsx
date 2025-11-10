@@ -1,3 +1,5 @@
+//2025-11-10 : Correcting fetch call
+
 //2025-10-27 : Updated to get server props inside functions
 
 //2025-10-14 : Initial Implementation of Recipe Plan Page
@@ -13,13 +15,12 @@ export const deleteRecipePlanData = async (
 ) => {
 
     const serverProps = {
-        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "localhost",
-        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5000"
+        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.183",
+        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     };
 
     const returnPromise = new Promise<UpdateState>((resolve) => {
         if(!recipePlanID) {
-            console.error("No recipe plan ID provided for deletion.");
             resolve(UpdateState.Failed);
         }
 

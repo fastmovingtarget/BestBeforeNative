@@ -1,3 +1,5 @@
+//2025-11-10 : Correcting fetch call
+
 //2025-10-27 : Updated to get server props inside functions
 
 //2025-10-14 : Initial Implementation of Recipe Plan Page
@@ -13,21 +15,25 @@ export const addRecipePlanData = async (
     recipePlan : Recipe_Plan, ) => {
 
     const serverProps = {
-        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "localhost",
-        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5000"
+        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.183",
+        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     };
+
+    const addBody = JSON.stringify({
+        ...recipePlan,
+        Plan_Date: recipePlan.Plan_Date ? new Date(recipePlan.Plan_Date).toISOString().slice(0, 10) : undefined, // Format date to YYYY-MM-DD, keep it undefined if not provided
+        User_ID: userID,
+    });
 
     const returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
-            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipe_plans/${userID}`, 
+            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipeplans/`, 
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body : JSON.stringify({
-                    Recipe_Plan: recipePlan,
-                })
+                body : addBody,
             }
         ).then((rawData) => {
             if(!rawData.ok) {
