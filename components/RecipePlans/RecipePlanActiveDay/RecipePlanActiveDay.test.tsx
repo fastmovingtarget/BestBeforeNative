@@ -1,3 +1,5 @@
+//2025-11-17 : Added Docs, corrected styles and naming
+
 //2025-10-31 : Implementation for the switcher between recipes list and recipe breakdown
 
 //2025-10-28 : Simple initial implementation
@@ -7,12 +9,12 @@ import {render, userEvent } from '@testing-library/react-native';
 import { Pressable, Text } from 'react-native';
 import RecipePlanActiveDay from './RecipePlanActiveDay';
 
-import { useRecipePlans } from '@/Contexts/RecipePlans/RecipePlanDataProvider';
+import { useRecipePlans } from '@/Contexts/RecipePlans/RecipePlansDataProvider';
 import { useRecipes } from '@/Contexts/Recipes/RecipesDataProvider';
 import RecipePlanActiveDayRecipes from './RecipePlanActiveDayRecipes/RecipePlanActiveDayRecipes';
-import RecipePlanActiveDayRecipeIngredients from './RecipePlanActiveDayRecipeIngredients/RecipePlanActiveDayRecipeIngredients';
+import RecipePlanIngredients from './RecipePlanIngredients/RecipePlanIngredients';
 
-jest.mock('@/Contexts/RecipePlans/RecipePlanDataProvider', () => {
+jest.mock('@/Contexts/RecipePlans/RecipePlansDataProvider', () => {
     return {
         __esModule: true,
         useRecipePlans: jest.fn()
@@ -30,7 +32,7 @@ jest.mock('./RecipePlanActiveDayRecipes/RecipePlanActiveDayRecipes', () => {
         default: jest.fn()
     };
 });
-jest.mock('./RecipePlanActiveDayRecipeIngredients/RecipePlanActiveDayRecipeIngredients', () => {
+jest.mock('./RecipePlanIngredients/RecipePlanIngredients', () => {
     return {
         __esModule: true,
         default: jest.fn()
@@ -67,7 +69,7 @@ beforeEach(() => {
             <Pressable onPress={() => setSelectedRecipePlan(mockRecipePlans[0])}><Text>Select Recipe</Text></Pressable>
             </>);
     });
-    (RecipePlanActiveDayRecipeIngredients as jest.Mock).mockImplementation(() => {
+    (RecipePlanIngredients as jest.Mock).mockImplementation(() => {
         return <Text>Active Day Recipe Ingredients Component</Text>;
     });
 });
