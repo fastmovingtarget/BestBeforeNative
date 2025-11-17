@@ -1,3 +1,5 @@
+//2025-11-17 : Adding Recipe Plan data provider
+
 //2025-10-24 : Adding shopping list data provider
 
 //2025-10-20 : Added Recipes Data Provider
@@ -17,6 +19,7 @@ import { AuthenticationDataProvider } from '@/Contexts/Authentication/Authentica
 import { IngredientsDataProvider } from '@/Contexts/Ingredients/IngredientsDataProvider';
 import { RecipesDataProvider } from '@/Contexts/Recipes/RecipesDataProvider';
 import { ShoppingListDataProvider } from '@/Contexts/ShoppingList/ShoppingListDataProvider';
+import { RecipePlansDataProvider } from '@/Contexts/RecipePlans/RecipePlansDataProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -43,11 +46,13 @@ export default function RootLayout() {
         <IngredientsDataProvider>
           <RecipesDataProvider>
             <ShoppingListDataProvider>
-              <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="+not-found" />
-              </Stack>
-              <StatusBar style="auto" />
+              <RecipePlansDataProvider>
+                <Stack>
+                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                  <Stack.Screen name="+not-found" />
+                </Stack>
+                <StatusBar style="auto" />
+              </RecipePlansDataProvider>
             </ShoppingListDataProvider>
           </RecipesDataProvider>
         </IngredientsDataProvider>
