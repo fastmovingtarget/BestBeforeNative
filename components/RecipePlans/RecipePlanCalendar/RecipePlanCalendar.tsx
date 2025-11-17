@@ -1,3 +1,5 @@
+//2025-11-17 : Added docs, recipe plan display to calendar day
+
 //2025-10-28 : More cohesive implementation of the calendar grid
 
 //2025-10-14 : Initial Implementation of Recipe Plan Page
@@ -8,6 +10,15 @@ import RecipePlanCalendarDay from './RecipePlanCalendarDay/RecipePlanCalendarDay
 import LabelText from '@/components/CustomComponents/LabelText';
 import ComponentView from '@/components/CustomComponents/ComponentView';
 import PressableComponent from '@/components/CustomComponents/PressableComponent';
+
+/**
+ * React Component for displaying the Recipe Plan Calendar
+ * Shows an array of RecipePlanCalendarDay components in a month view, 6x7 grid
+ * Has buttons to navigate between months
+ * 
+ * @param setSelectedDate Function to set the selected date in the parent component
+ * @returns React Component
+ */
 
 export default function RecipePlanCalendar({setSelectedDate} : {setSelectedDate: (date: Date) => void}) {
 
@@ -56,7 +67,6 @@ export default function RecipePlanCalendar({setSelectedDate} : {setSelectedDate:
                             <RecipePlanCalendarDay
                                 key={index}
                                 date={date}
-                                recipePlans={[]} // Replace with actual recipe plans for the date
                                 onPress={() => setSelectedDate(date)} // Replace with actual onPress function
                             />  
                         ))}
