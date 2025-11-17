@@ -1,3 +1,5 @@
+//2025-11-17 : Added recipe search, toggle button
+
 //2025-10-31 : SetSelectedRecipe now links correctly
 
 //2025-10-29 : Tests allow for devolved context, passing in setSelectedRecipe
@@ -5,7 +7,7 @@
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
 import {render, userEvent, screen} from '@testing-library/react-native';
-import {useRecipePlans} from '@/Contexts/RecipePlans/RecipePlanDataProvider';
+import {useRecipePlans} from '@/Contexts/RecipePlans/RecipePlansDataProvider';
 
 import RecipePlanActiveDayRecipes from './RecipePlanActiveDayRecipes';
 import Recipe from '@/Types/Recipe';
@@ -30,7 +32,7 @@ const mockDataContext = {
     deleteRecipePlan: jest.fn(),
 };
 
-jest.mock('@/Contexts/RecipePlans/RecipePlanDataProvider', () => ({
+jest.mock('@/Contexts/RecipePlans/RecipePlansDataProvider', () => ({
   useRecipePlans: jest.fn(),
 }));
 jest.mock('@/Contexts/Recipes/RecipesDataProvider', () => ({
@@ -64,16 +66,7 @@ describe("Recipe Plan Active Day Recipes Renders", () => {
 
         expect(getByText(/Planned Recipe 1/i)).toBeTruthy();
         expect(getByText(/Planned Recipe 2/i)).toBeTruthy();
-    });
-    test("The recipe list", () => {
-        const {getByText} = render(
-            <RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipePlan={jest.fn()} />
-        );
-
-        expect(getByText(/Test Recipe 1/i)).toBeTruthy();
-        expect(getByText(/Test Recipe 2/i)).toBeTruthy();
-    });
-    test("The View Ingredients button", () => {
+    });    test("The View Ingredients button", () => {
 
         const {getAllByText} = render(
             <RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipePlan={jest.fn()} />
@@ -91,23 +84,6 @@ describe("Recipe Plan Active Day Recipes Renders", () => {
     });
 });
 describe("Recipe Plan Active Day Recipes Interactions", () => {
-    test("Clicking on a recipe item calls to add planned recipes", async () => {
-        const user = userEvent.setup();
-        const expectedAddedRecipePlan = {
-            Plan_Date: new Date("2023-10-01"),
-            Recipe_ID: 1,
-            Recipe_Name: 'Test Recipe 1',
-        }
-
-        render(<RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipePlan={jest.fn()} />);
-
-        const recipeItem = screen.getByText(/Test Recipe 1/i);
-        await user.press(recipeItem);
-
-        expect(mockDataContext.addRecipePlan).toHaveBeenCalledTimes(1);
-
-        expect(mockDataContext.addRecipePlan).toHaveBeenCalledWith(expectedAddedRecipePlan);
-    });   
     test("Clicking Remove calls to delete planned recipes", async () => {
         const user = userEvent.setup();
 
@@ -120,4 +96,48 @@ describe("Recipe Plan Active Day Recipes Interactions", () => {
 
         expect(mockDataContext.deleteRecipePlan).toHaveBeenCalledWith(2);
     });
+    test("Clicking View Ingredients calls to set selected recipe plan", async () => {
+        const user = userEvent.setup();
+        const mockSetSelectedRecipePlan = jest.fn();
+        const {getAllByText} = render(<RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipePlan={mockSetSelectedRecipePlan} />);
+
+        const viewIngredientsButton = getAllByText(/View Ingredients/i)[0];
+        await user.press(viewIngredientsButton);
+        expect(mockSetSelectedRecipePlan).toHaveBeenCalledTimes(1);
+        expect(mockSetSelectedRecipePlan).toHaveBeenCalledWith({
+            Plan_ID: 1,
+            Plan_Date: new Date('2023-10-01'),
+            Recipe_ID: 1,
+            Recipe_Name: 'Planned Recipe 1'
+        });
+    });
+    test("Plan a Recipe button shows recipe list", async () => {
+        const user = userEvent.setup();
+        const {getByText} = render(<RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipePlan={jest.fn()} />);
+
+        const planRecipeButton = getByText(/Plan a Recipe/i);
+        await user.press(planRecipeButton);
+        expect(getByText(/Test Recipe 1/i)).toBeTruthy();
+        expect(getByText(/Test Recipe 2/i)).toBeTruthy();
+    });
+    test("Clicking on a recipe item calls to add planned recipes", async () => {
+        const user = userEvent.setup();
+        const expectedAddedRecipePlan = {
+            Plan_Date: new Date("2023-10-01"),
+            Recipe_ID: 1,
+            Recipe_Name: 'Test Recipe 1',
+        }
+
+        const {getByText} = render(<RecipePlanActiveDayRecipes date={new Date("2023-10-01")} setSelectedRecipePlan={jest.fn()} />);
+        
+        const planRecipeButton = getByText(/Plan a Recipe/i);
+        await user.press(planRecipeButton);
+
+        const recipeItem = screen.getByText(/Test Recipe 1/i);
+        await user.press(recipeItem);
+
+        expect(mockDataContext.addRecipePlan).toHaveBeenCalledTimes(1);
+
+        expect(mockDataContext.addRecipePlan).toHaveBeenCalledWith(expectedAddedRecipePlan);
+    });   
 });
