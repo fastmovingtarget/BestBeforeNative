@@ -1,3 +1,5 @@
+//2025-11-10 : Added improved documentation
+
 //2025-10-24 : Adding catch for fetch errors
 
 //2025-10-20 : Changed to use loading state enumerator, server props populated internally
@@ -5,6 +7,15 @@
 import React from "react";
 import Recipe, {RecipesSearchOptions} from "../../Types/Recipe";
 import { SyncState } from "@/Types/DataLoadingState";
+
+/**
+ * Fetches recipes from the database based on user ID and optional search criteria,
+ * then updates the local state with the retrieved recipes.
+ * @param {number} userID - The ID of the user whose recipes are to be fetched.
+ * @param {React.Dispatch<React.SetStateAction<Recipe[]>>} setRecipes - State setter function for updating the recipe list.
+ * @param {RecipesSearchOptions} [recipesSearchOptions={}] - Optional search criteria for filtering recipes.
+ * @returns {Promise<SyncState>} - A promise that resolves to the sync state indicating success or failure.
+ */
 
 export const getRecipesData = async (
     userID : number, 

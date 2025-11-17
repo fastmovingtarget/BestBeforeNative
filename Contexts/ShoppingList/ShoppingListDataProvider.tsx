@@ -1,3 +1,5 @@
+//2025-11-10 : Added improved documentation
+
 //2025-10-23 : Initial Commit
 
 import { createContext, useState, useContext, useEffect } from "react";
@@ -12,6 +14,22 @@ import { useAuthenticationData } from "../Authentication/AuthenticationDataProvi
 
 import Shopping_List_Item, { ShoppingListSearchOptions } from "@/Types/Shopping_List_Item";
 
+/**
+ * Shopping List Data Context
+ * Provides shopping list data and operations to manage shopping list items.
+ * Calling alteration functions will trigger a change to the shoppingListDataState,
+ * which will cause a re-fetch of the shopping list data.
+ * If getShoppingListData fails, a retry will be attempted after 5 seconds.
+ * If any of the alteration functions fail, the shoppingListDataState will be set to the respective failure state, but no retry will occur.
+ * @context ShoppingListDataContext
+ * @return {Shopping_List_Item[]} shoppingList - List of shopping list items, state.
+ * @return {function} deleteShoppingItem - Function to delete a shopping list item by ID.
+ * @return {function} addShoppingItem - Function to add a new shopping list item.
+ * @return {function} updateShoppingItem - Function to update an existing shopping list item.
+ * @return {ShoppingListSearchOptions} shoppingListSearchOptions - Current search options for filtering shopping list items.
+ * @return {function} setShoppingListSearchOptions - Function to update search options.
+ * @return {SyncState | UpdateState} shoppingListDataState - Current state of shopping list data loading or updating.
+ */
     
 const ShoppingListDataContext = createContext({
     shoppingList: [] as Shopping_List_Item[],

@@ -1,3 +1,5 @@
+//2025-11-10 : Added improved documentation
+
 //2025-10-24 : Adding catch for fetch errors
 
 //2025-10-23 : Server info now loads internally, Resolves using SyncState enum
@@ -7,6 +9,15 @@
 import React from "react";
 import Shopping_List_Item, { ShoppingListSearchOptions } from "../../Types/Shopping_List_Item";
 import { SyncState } from "@/Types/DataLoadingState";
+
+/**
+ * Fetches shopping list items from the database based on user ID and optional search criteria,
+ * then updates the local state with the retrieved shopping list items.
+ * @param {number} userID - The ID of the user whose shopping list items are to be fetched.
+ * @param {React.Dispatch<React.SetStateAction<Shopping_List_Item[]>>} setShoppingList - State setter function for updating the shopping list.
+ * @param {ShoppingListSearchOptions} [searchOptions={}] - Optional search criteria for filtering shopping list items.
+ * @returns {Promise<SyncState>} - A promise that resolves to the sync state indicating success or failure.
+ */
 
 export const getShoppingListData = (
     userID : number, 
@@ -41,10 +52,10 @@ export const getShoppingListData = (
                 rawData.json().then((data) => {
                     setShoppingList(                    
                         data.map((element: Shopping_List_Item) => {
-                            if(element.Plan_Date) 
+                            if(element.Item_Recipe_Plan_Date) 
                                 return {
                                     ...element,
-                                    Plan_Date: new Date(element.Plan_Date),//date comes in as a string and doesn't get properly parsed within .json()
+                                    Plan_Date: new Date(element.Item_Recipe_Plan_Date),//date comes in as a string and doesn't get properly parsed within .json()
                                 };
                             
                             return element

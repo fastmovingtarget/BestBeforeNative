@@ -1,3 +1,5 @@
+//2025-11-10 : Added improved documentation
+
 //2025-10-24 : Adding catch for fetch errors
 
 //2025-10-20 : Moved server properties into individual files, now return enum states
@@ -8,6 +10,16 @@ import React from "react";
 import Ingredient from "../../Types/Ingredient";
 import { UpdateState } from "@/Types/DataLoadingState";
 
+/**
+ * Adds a new ingredient to the database and updates the local state.
+ * If the addition is successful, the ingredient list state is updated to include the new ingredient.
+ * The Ingredient_Date field is formatted to 'YYYY-MM-DD' if provided; otherwise, it is set to null.
+ * @param {number} userID - The ID of the user adding the ingredient.
+ * @param {Ingredient[]} ingredients - The current list of ingredients.
+ * @param {React.Dispatch<React.SetStateAction<Ingredient[]>>} setIngredients - State setter function for updating the ingredient list.
+ * @param {Ingredient} ingredient - The ingredient to be added.
+ * @returns {Promise<UpdateState>} - A promise that resolves to the update state indicating success or failure.
+ */
 export const addIngredientData = async (
     userID : number,
     ingredients : Ingredient[],

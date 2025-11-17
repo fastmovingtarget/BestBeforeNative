@@ -1,3 +1,5 @@
+//2025-11-10 : Added matchIngredient, documentation
+
 //2025-10-22 : Tests for get, update, add and delete successful and unsuccessful queries
 
 //2025-10-20 : Separated ingredients data provider
@@ -14,6 +16,7 @@ import fetchMock from 'jest-fetch-mock';
 import Ingredient from "@/Types/Ingredient";
 import { Pressable, Text, View } from "react-native";
 import { SyncState, UpdateState } from "@/Types/DataLoadingState";
+import { Plan_Ingredient } from "@/Types/Recipe_Plan";
 
 fetchMock.enableMocks();
 
@@ -583,5 +586,232 @@ describe("Ingredients Data Provider", () => {
             /*Assert *******************************************************************/
             expect(getIngredientsData).toHaveBeenCalledTimes(1); //called on initial render and after delete triggering sync
         });
-    });    
+    });
+    describe("Match Ingredient Data", () => {
+        test("should add leftover ingredient and update original ingredient", async () => {
+            /*Arrange *******************************************************************/
+            const user = userEvent.setup();
+            const planIngredient : Plan_Ingredient = {
+                Recipe_Ingredient_ID: 1,
+                Ingredient_Name: 'Ingredient 2',
+                Ingredient_ID: 2,
+                Ingredient_Quantity: 1,
+                Item_ID: undefined,
+            };
+            const recipePlan = {
+                Recipe_ID: 1,
+                Plan_ID: 1,
+                Plan_Date: today,
+                Recipe_Name: "Recipe 1",
+            };
+            const MockChildComponent = () => {
+                const { ingredients, ingredientsDataState, matchIngredient } = useIngredients();
+                return ( 
+                    <View>
+                        <Text>{JSON.stringify(ingredients)}</Text>
+                        <Text>{ingredientsDataState}</Text>
+                        <Pressable onPress={async () => {
+                            await matchIngredient(ingredients[1], planIngredient, recipePlan);
+                        }}>
+                            <Text>Match Ingredient</Text>
+                        </Pressable>
+                    </View>
+                );
+            }
+
+            const { getByText } = render(
+                <IngredientsDataProvider>
+                    <MockChildComponent />
+                </IngredientsDataProvider>
+            );
+            /*Act **********************************************************************/
+            //wait for the next tick to allow useEffect to run
+            await waitFor(() => {
+                expect(getByText(`${SyncState.Successful}`)).toBeTruthy();
+            });
+
+            const matchButton = getByText(/Match Ingredient/i);
+            await user.press(matchButton); //simulate press
+            await waitFor(() => {
+                expect(addIngredientData).toHaveBeenCalledTimes(1);
+            });
+
+            await waitFor(() => {
+                expect(updateIngredientData).toHaveBeenCalledTimes(1);
+            });
+            await waitFor(() => {
+                expect(getByText(`${SyncState.Successful}`)).toBeTruthy();
+            });
+
+            /*Assert *******************************************************************/
+            expect(getIngredientsData).toHaveBeenCalledTimes(2); //Called on initial render, after add and update
+            expect(addIngredientData).toHaveBeenCalledWith(
+                1,
+                mockIngredients,
+                expect.any(Function),
+                {
+                    Ingredient_ID: undefined,
+                    Ingredient_Name: 'Ingredient 2',
+                    Ingredient_Date: today,
+                    Ingredient_Quantity: 1,
+                }
+            );
+            expect(updateIngredientData).toHaveBeenCalledWith(
+                mockIngredients,
+                expect.any(Function),
+                {
+                    Ingredient_ID: 2,
+                    Ingredient_Name: 'Ingredient 2',
+                    Ingredient_Date: today,
+                    Ingredient_Quantity: 1,
+                    Recipe_Ingredient_ID: 1,
+                    Recipe_ID: 1,
+                    Plan_ID: 1,
+                }
+            );
+        });
+        test("Should not update if add fails", async () => {
+            /*Arrange *******************************************************************/
+            const user = userEvent.setup();
+            const planIngredient : Plan_Ingredient = {
+                Recipe_Ingredient_ID: 1,
+                Ingredient_Name: 'Ingredient 2',
+                Ingredient_ID: 2,
+                Ingredient_Quantity: 1,
+                Item_ID: undefined,
+            };
+            const recipePlan = {
+                Recipe_ID: 1,
+                Plan_ID: 1,
+                Plan_Date: today,
+                Recipe_Name: "Recipe 1",
+            };
+            const MockChildComponent = () => {
+                const { ingredients, ingredientsDataState, matchIngredient } = useIngredients();
+                return ( 
+                    <View>
+                        <Text>{JSON.stringify(ingredients)}</Text>
+                        <Text>{ingredientsDataState}</Text>
+                        <Pressable onPress={async () => {
+                            await matchIngredient(ingredients[1], planIngredient, recipePlan);
+                        }}>
+                            <Text>Match Ingredient</Text>
+                        </Pressable>
+                    </View>
+                );
+            }
+            (addIngredientData as jest.Mock).mockImplementationOnce(
+                async (
+                    userID: number,
+                    currentIngredients: Ingredient[],
+                    setIngredients: (ingredients: Ingredient[]) => void,
+                    ingredientToAdd: Ingredient
+                ) => {
+                    let returnPromise = new Promise<UpdateState>((resolve) => {
+                        //do not update ingredients
+                        resolve(UpdateState.Failed);
+                    });
+                    return returnPromise;
+                }
+            );
+            const { getByText } = render(
+                <IngredientsDataProvider>
+                    <MockChildComponent />
+                </IngredientsDataProvider>
+            );
+            /*Act **********************************************************************/
+            //wait for the next tick to allow useEffect to run
+            await waitFor(() => {
+                expect(getByText(`${SyncState.Successful}`)).toBeTruthy();
+            });
+            const matchButton = getByText(/Match Ingredient/i);
+            await user.press(matchButton); //simulate press
+            await waitFor(() => {
+                expect(addIngredientData).toHaveBeenCalledTimes(1);
+            });
+            await waitFor(() => {
+                expect(getByText(`${UpdateState.Failed}`)).toBeTruthy();
+            });
+            /*Assert *******************************************************************/
+            expect(getIngredientsData).toHaveBeenCalledTimes(1); //Called on initial render only
+            expect(addIngredientData).toHaveBeenCalledWith(
+                1,
+                mockIngredients,
+                expect.any(Function),
+                {
+                    Ingredient_ID: undefined,
+                    Ingredient_Name: 'Ingredient 2',
+                    Ingredient_Date: today,
+                    Ingredient_Quantity: 1,
+                }
+            );
+            expect(updateIngredientData).toHaveBeenCalledTimes(0);
+        });
+        test("should only update original ingredient if no leftover", async () => {
+            /*Arrange *******************************************************************/
+            const user = userEvent.setup();
+            const planIngredient : Plan_Ingredient = {
+                Recipe_Ingredient_ID: 1,
+                Ingredient_Name: 'Ingredient 1',
+                Ingredient_ID: 1,
+                Ingredient_Quantity: 1,
+                Item_ID: undefined,
+            };
+            const recipePlan = {
+                Recipe_ID: 1,
+                Plan_ID: 1,
+                Plan_Date: today,
+                Recipe_Name: "Recipe 1",
+            };
+            const MockChildComponent = () => {
+                const { ingredients, ingredientsDataState, matchIngredient } = useIngredients();
+                return ( 
+                    <View>
+                        <Text>{JSON.stringify(ingredients)}</Text>
+                        <Text>{ingredientsDataState}</Text>
+                        <Pressable onPress={async () => {
+                            await matchIngredient(ingredients[0], planIngredient, recipePlan);
+                        }}>
+                            <Text>Match Ingredient</Text>
+                        </Pressable>
+                    </View>
+                );
+            }
+            const { getByText } = render(
+                <IngredientsDataProvider>
+                    <MockChildComponent />
+                </IngredientsDataProvider>
+            );
+            /*Act **********************************************************************/
+            //wait for the next tick to allow useEffect to run
+            await waitFor(() => {
+                expect(getByText(`${SyncState.Successful}`)).toBeTruthy();
+            });
+            const matchButton = getByText(/Match Ingredient/i);
+            await user.press(matchButton); //simulate press
+            await waitFor(() => {
+                expect(updateIngredientData).toHaveBeenCalledTimes(1);
+            });
+
+            await waitFor(() => {
+                expect(getByText(`${SyncState.Successful}`)).toBeTruthy();
+            });
+            /*Assert *******************************************************************/
+            expect(getIngredientsData).toHaveBeenCalledTimes(2);
+            expect(addIngredientData).toHaveBeenCalledTimes(0);
+            expect(updateIngredientData).toHaveBeenCalledWith(
+                mockIngredients,
+                expect.any(Function),
+                {
+                    Ingredient_ID: 1,
+                    Ingredient_Name: 'Ingredient 1',
+                    Ingredient_Date: today,
+                    Ingredient_Quantity: 1,
+                    Recipe_Ingredient_ID: 1,
+                    Recipe_ID: 1,
+                    Plan_ID: 1,
+                }
+            );
+        });
+    });  
 });

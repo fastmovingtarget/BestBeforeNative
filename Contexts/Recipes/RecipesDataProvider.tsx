@@ -1,3 +1,5 @@
+//2025-11-10 : Added improved documentation
+
 //2025-10-23 : Adding paths for sync and update failures
 
 //2025-10-20 : Recipes Data Context created
@@ -12,6 +14,22 @@ import { addRecipeData } from "./AddRecipe";
 import { updateRecipeData } from "./UpdateRecipe";
 import { useAuthenticationData } from "../Authentication/AuthenticationDataProvider";
 
+/**
+ * Recipes Data Context
+ * Provides recipe data and operations to manage recipes.
+ * Calling alteration functions will trigger a change to the recipesDataState,
+ * which will cause a re-fetch of the recipes data.
+ * If getRecipesData fails, a retry will be attempted after 5 seconds.
+ * If any of the alteration functions fail, the recipesDataState will be set to the respective failure state, but no retry will occur.
+ * @context RecipesDataContext
+ * @return {Recipe[]} recipes - List of recipes, state.
+ * @return {function} deleteRecipe - Function to delete a recipe by ID.
+ * @return {function} addRecipe - Function to add a new recipe.
+ * @return {function} updateRecipe - Function to update an existing recipe.
+ * @return {RecipesSearchOptions} recipesSearchOptions - Current search options for filtering recipes.
+ * @return {function} setRecipesSearchOptions - Function to update search options.
+ * @return {SyncState | UpdateState} recipesDataState - Current state of recipe data loading or updating.
+ */
     
 const RecipesDataContext = createContext({
     recipes: [] as Recipe[],
