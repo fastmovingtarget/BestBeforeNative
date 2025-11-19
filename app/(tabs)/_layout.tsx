@@ -1,3 +1,5 @@
+//2025-11-19 : Adjusting imports and calls to fit new naming convention
+
 //2025-05-27 : Adding Shopping list tab in to the app
 
 import { Tabs } from 'expo-router';
@@ -29,16 +31,9 @@ export default function TabLayout() {
         }),
       }}>
       <Tabs.Screen
-        name="index"
+        name="inventory"
         options={{
-          title: 'index',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="ingredients"
-        options={{
-          title: 'Ingredients',
+          title: 'Inventory',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />
@@ -50,9 +45,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="planner"
+        options={{
+          title: 'Planner',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="shoppinglist"
         options={{
-          title: 'shoppinglist',
+          title: 'Shopping List',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />
