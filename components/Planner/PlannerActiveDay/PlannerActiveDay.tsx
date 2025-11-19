@@ -1,3 +1,5 @@
+//2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
+
 //2025-11-17 : Added Docs, corrected styles and naming
 
 //2025-10-31 : Implementation for the switcher between recipes list and recipe breakdown
@@ -5,9 +7,9 @@
 //2025-10-28 : Simple initial implementation
 
 import React, { useState } from "react";
-import Recipe_Plan from "@/Types/Recipe_Plan";
-import RecipePlanActiveDayRecipes from "./RecipePlanActiveDayRecipes/RecipePlanActiveDayRecipes";
-import RecipePlanIngredients from "./RecipePlanIngredients/RecipePlanIngredients";
+import Recipe_Plan from "@/Types/Plan";
+import PlannerActiveDayRecipes from "./PlannerActiveDayRecipes/PlannerActiveDayRecipes";
+import PlannerIngredients from "./PlannerIngredients/PlannerIngredients";
 import ComponentView from "@/components/CustomComponents/ScrollableComponent";
 import LabelText from "@/components/CustomComponents/LabelText";
 
@@ -18,17 +20,17 @@ import LabelText from "@/components/CustomComponents/LabelText";
  * @param selectedDate The date selected in the calendar view
  * @states selectedRecipe/setSelectedRecipe The recipe selected from the list of recipes for the day
  * @returns React Component
- */
+ */ 
 
-export default function RecipePlanner({selectedDate}: {selectedDate: Date | null}) {
-    const [selectedRecipe, setSelectedRecipe] = useState<Recipe_Plan | null>(null);
+export default function PlannerActiveDay({selectedDate}: {selectedDate: Date | null}) {
+    const [selectedPlan, setSelectedPlan] = useState<Recipe_Plan | null>(null);
     
     return (
         <ComponentView style={{flex: 1, padding: 10}}>
             <LabelText>{selectedDate ? selectedDate.toDateString() : "No Date Selected"}</LabelText>
-            {selectedRecipe ? 
-            (<RecipePlanIngredients recipePlan={selectedRecipe} />) : 
-            (<RecipePlanActiveDayRecipes date={selectedDate ? selectedDate : new Date()} setSelectedRecipePlan={setSelectedRecipe} />)}
+            {selectedPlan ? 
+            (<PlannerIngredients recipePlan={selectedPlan} />) : 
+            (<PlannerActiveDayRecipes date={selectedDate ? selectedDate : new Date()} setSelectedPlan={setSelectedPlan} />)}
         </ComponentView>
     );
 }

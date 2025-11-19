@@ -1,3 +1,5 @@
+//2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
+
 //2025-11-17 : Correctly shows Recipe Plans for date
 
 //2025-10-28 : Improved styling
@@ -7,7 +9,7 @@
 import React from 'react';
 import LabelText from "@/components/CustomComponents/LabelText";
 import PressableComponent from "@/components/CustomComponents/PressableComponent";
-import { useRecipePlans } from '@/Contexts/RecipePlans/RecipePlansDataProvider';
+import { usePlans } from '@/Contexts/Plans/PlansDataProvider';
 
 /**
  * React Component for displaying a single day in the Recipe Plan Calendar
@@ -19,10 +21,10 @@ import { useRecipePlans } from '@/Contexts/RecipePlans/RecipePlansDataProvider';
  * @returns React Component
  */
 
-export default function RecipePlanCalendarDay({onPress, date} : {onPress:(date : number) => void, date: Date}) {
+export default function PlannerCalendarDay({onPress, date} : {onPress:(date : number) => void, date: Date}) {
 
-    const {recipePlans} = useRecipePlans();
-    const recipePlansForDate = recipePlans.filter(plan => {
+    const {plans} = usePlans();
+    const recipePlansForDate = plans.filter(plan => {
         const planDate = new Date(plan.Plan_Date);
         return planDate.getFullYear() === date.getFullYear() &&
                planDate.getMonth() === date.getMonth() &&

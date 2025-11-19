@@ -1,16 +1,18 @@
+//2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
+
 //2025-11-17 : Full initial implementation and documentation
 
 //2025-10-29 : Placeholder implementation
 
 import React, {useState} from "react";
-import Recipe_Plan, {Plan_Ingredient} from "@/Types/Recipe_Plan";
+import Recipe_Plan, {Plan_Ingredient} from "@/Types/Plan";
 import Shopping_List_Item from "@/Types/Shopping_List_Item";
-import Ingredient from "@/Types/Ingredient";
+import Inventory_Item from "@/Types/Inventory_Item";
 import PressableComponent from "@/components/CustomComponents/PressableComponent";
-import { useIngredients } from "@/Contexts/Ingredients/IngredientsDataProvider";
+import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 import { useShoppingList } from "@/Contexts/ShoppingList/ShoppingListDataProvider";
 import ListView from "@/components/CustomComponents/ListView";
-import { useRecipePlans } from "@/Contexts/RecipePlans/RecipePlansDataProvider";
+import { usePlans } from "@/Contexts/Plans/PlansDataProvider";
 import LabelText from "@/components/CustomComponents/LabelText";
 import ComponentView from "@/components/CustomComponents/ComponentView";
 
@@ -33,24 +35,24 @@ import ComponentView from "@/components/CustomComponents/ComponentView";
 export default function RecipePlanActiveDayRecipeIngredients({recipePlan}: {recipePlan: Recipe_Plan}) {
 
     const [selectedPlanIngredientIndex, setSelectedPlanIngredientIndex] = useState<number | null>(null);
-    const {ingredients, matchIngredient} = useIngredients();
+    const {inventory, matchInventoryItem} = useInventory();
     const {addShoppingItem} = useShoppingList();
-    const {updateRecipePlan} = useRecipePlans();
+    const {updatePlan} = usePlans();
 
 
-    const attachPlanIngredient = (ingredient: Ingredient ) => {
-        if(selectedPlanIngredientIndex === null || !recipePlan.Plan_Ingredients || !ingredient.Ingredient_ID) return;
+    const attachPlanIngredient = (inventoryItem: Inventory_Item ) => {
+        if(selectedPlanIngredientIndex === null || !recipePlan.Plan_Ingredients || !inventoryItem.Inventory_Item_ID) return;
 
-        matchIngredient(ingredient, recipePlan.Plan_Ingredients[selectedPlanIngredientIndex], recipePlan);
+        matchInventoryItem(inventoryItem, recipePlan.Plan_Ingredients[selectedPlanIngredientIndex], recipePlan);
 
         const newRecipePlanIngredient = recipePlan.Plan_Ingredients[selectedPlanIngredientIndex || 0];
-        newRecipePlanIngredient.Ingredient_ID = ingredient.Ingredient_ID;
+        newRecipePlanIngredient.Recipe_Ingredient_ID = inventoryItem.Inventory_Item_ID;
 
-        const newRecipePlan = {
+        const newPlan = {
             ...recipePlan,
             Plan_Ingredients: recipePlan.Plan_Ingredients.map((ing, index) => index === selectedPlanIngredientIndex ? newRecipePlanIngredient : ing)
         };
-        updateRecipePlan(newRecipePlan);
+        updatePlan(newPlan);
         setSelectedPlanIngredientIndex(null);
     }
 
@@ -59,18 +61,18 @@ export default function RecipePlanActiveDayRecipeIngredients({recipePlan}: {reci
         const planIngredient : Plan_Ingredient = recipePlan.Plan_Ingredients[index];
         
         const newShoppingListItem : Shopping_List_Item = {
-            Item_Name: planIngredient.Ingredient_Name,
-            Item_Quantity: planIngredient.Ingredient_Quantity,
-            Item_Recipe_Plan_Date: recipePlan.Plan_Date,
-            Item_Recipe_Name: recipePlan.Recipe_Name,
-            Item_Recipe_Plan_Ingredient: planIngredient.Recipe_Ingredient_ID,
-            Item_Recipe_Plan_ID : recipePlan.Plan_ID
+            Shopping_Item_Name: planIngredient.Recipe_Ingredient_Name,
+            Shopping_Item_Quantity: planIngredient.Recipe_Ingredient_Quantity,
+            Plan_Date: recipePlan.Plan_Date,
+            Plan_Recipe_Name: recipePlan.Recipe_Name,
+            Plan_Ingredient_ID: planIngredient.Recipe_Ingredient_ID,
+            Plan_ID : recipePlan.Plan_ID
         }
 
         //Add to shopping list context
         addShoppingItem(newShoppingListItem);
 
-        updateRecipePlan({
+        updatePlan({
             ...recipePlan,
             Plan_Ingredients: recipePlan.Plan_Ingredients.map((planIngredient : Plan_Ingredient, index) => {
                 if (index === selectedPlanIngredientIndex) {
@@ -90,18 +92,18 @@ export default function RecipePlanActiveDayRecipeIngredients({recipePlan}: {reci
             {/* Implementation for displaying ingredients goes here */}
             {
                 recipePlan.Plan_Ingredients?.map((planIngredient, index) => {
-                    const indicatorIcon = planIngredient.Ingredient_ID ? '✅' : (planIngredient.Item_ID ? '\u{1F6D2}' : '\u2757');//using the curly braces allows us to use unicode emojis with >4 characters
+                    const indicatorIcon = planIngredient.Inventory_Item_ID ? '✅' : (planIngredient.Shopping_Item_ID ? '\u{1F6D2}' : '\u2757');//using the curly braces allows us to use unicode emojis with >4 characters
                     return (
                         <ComponentView key={`plan-ingredient-container-${index}`} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-                            <LabelText>{indicatorIcon} {planIngredient.Ingredient_Name}</LabelText>
+                            <LabelText>{indicatorIcon} {planIngredient.Recipe_Ingredient_Name}</LabelText>
                             {
-                                !planIngredient.Item_ID && !planIngredient.Ingredient_ID && (
+                                !planIngredient.Shopping_Item_ID && !planIngredient.Inventory_Item_ID && (
                                 <>
-                                    <PressableComponent key={`plan-ingredient-${index}`} onPress={() => selectedPlanIngredientIndex !== index && setSelectedPlanIngredientIndex(index)}>
-                                            <LabelText>{'\u{1F517}'}</LabelText>
-                                        </PressableComponent>
-                                        <PressableComponent key={`add-to-shopping-list-${index}`} onPress={() => addToShoppingList(index)}>
-                                            <LabelText>{'\u{1F4CB}'}</LabelText>
+                                    <PressableComponent key={`plan-ingredient-${index}`} aria-label="attach-inventory-item" onPress={() => selectedPlanIngredientIndex !== index && setSelectedPlanIngredientIndex(index)}>
+                                        <LabelText>{'\u{1F517}'}</LabelText>
+                                    </PressableComponent>
+                                    <PressableComponent key={`add-to-shopping-list-${index}`} aria-label="add-to-shopping-list" onPress={() => addToShoppingList(index)}>
+                                        <LabelText>{'\u{1F4CB}'}</LabelText>
                                     </PressableComponent>
                                 </>
                             )}
@@ -112,9 +114,9 @@ export default function RecipePlanActiveDayRecipeIngredients({recipePlan}: {reci
             {selectedPlanIngredientIndex !== null && (
                 <ListView>
                     <LabelText>Available Ingredients:</LabelText>
-                    {ingredients.map((ingredient, index) => (
-                        <PressableComponent key={`available-ingredient-${index}`} onPress={() => attachPlanIngredient(ingredient)}>
-                            <LabelText>{ingredient.Ingredient_Name}</LabelText>
+                    {inventory.map((inventoryItem, index) => (
+                        <PressableComponent key={`available-ingredient-${index}`} onPress={() => attachPlanIngredient(inventoryItem)}>
+                            <LabelText>{inventoryItem.Inventory_Item_Name}</LabelText>
                         </PressableComponent>
                     ))}
                 </ListView>

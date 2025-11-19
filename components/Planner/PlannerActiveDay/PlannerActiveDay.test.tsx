@@ -1,3 +1,5 @@
+//2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
+
 //2025-11-17 : Added Docs, corrected styles and naming
 
 //2025-10-31 : Implementation for the switcher between recipes list and recipe breakdown
@@ -7,17 +9,17 @@
 
 import {render, userEvent } from '@testing-library/react-native';
 import { Pressable, Text } from 'react-native';
-import RecipePlanActiveDay from './RecipePlanActiveDay';
+import PlannerActiveDay from './PlannerActiveDay';
 
-import { useRecipePlans } from '@/Contexts/RecipePlans/RecipePlansDataProvider';
+import { usePlans } from '@/Contexts/Plans/PlansDataProvider';
 import { useRecipes } from '@/Contexts/Recipes/RecipesDataProvider';
-import RecipePlanActiveDayRecipes from './RecipePlanActiveDayRecipes/RecipePlanActiveDayRecipes';
-import RecipePlanIngredients from './RecipePlanIngredients/RecipePlanIngredients';
+import PlannerIngredients from './PlannerIngredients/PlannerIngredients';
+import PlannerActiveDayRecipes from './PlannerActiveDayRecipes/PlannerActiveDayRecipes';
 
-jest.mock('@/Contexts/RecipePlans/RecipePlansDataProvider', () => {
+jest.mock('@/Contexts/Plans/PlansDataProvider', () => {
     return {
         __esModule: true,
-        useRecipePlans: jest.fn()
+        usePlans: jest.fn()
     };
 });
 jest.mock('@/Contexts/Recipes/RecipesDataProvider', () => {
@@ -26,13 +28,13 @@ jest.mock('@/Contexts/Recipes/RecipesDataProvider', () => {
         useRecipes: jest.fn()
     };
 });
-jest.mock('./RecipePlanActiveDayRecipes/RecipePlanActiveDayRecipes', () => {
+jest.mock('./PlannerActiveDayRecipes/PlannerActiveDayRecipes', () => {
     return {
         __esModule: true,
         default: jest.fn()
     };
 });
-jest.mock('./RecipePlanIngredients/RecipePlanIngredients', () => {
+jest.mock('./PlannerIngredients/PlannerIngredients', () => {
     return {
         __esModule: true,
         default: jest.fn()
@@ -57,34 +59,34 @@ const mockRecipePlans = [
 
 beforeEach(() => {
     jest.resetAllMocks();
-    (useRecipePlans as jest.Mock).mockReturnValue({
-        recipePlans: mockRecipePlans
+    (usePlans as jest.Mock).mockReturnValue({
+        plans: mockRecipePlans
     });
     (useRecipes as jest.Mock).mockReturnValue({
         recipes: []
     });
-    (RecipePlanActiveDayRecipes as jest.Mock).mockImplementation(({setSelectedRecipePlan}) => {
+    (PlannerActiveDayRecipes as jest.Mock).mockImplementation(({setSelectedPlan}) => {
         return (<>
             <Text>Active Day Recipes Component</Text>
-            <Pressable onPress={() => setSelectedRecipePlan(mockRecipePlans[0])}><Text>Select Recipe</Text></Pressable>
+            <Pressable onPress={() => setSelectedPlan(mockRecipePlans[0])}><Text>Select Recipe</Text></Pressable>
             </>);
     });
-    (RecipePlanIngredients as jest.Mock).mockImplementation(() => {
+    (PlannerIngredients as jest.Mock).mockImplementation(() => {
         return <Text>Active Day Recipe Ingredients Component</Text>;
     });
 });
 
-describe("RecipePlanActiveDay Component Renders", () => {
+describe("PlannerActiveDay Component Renders", () => {
     test("The Correct Date", () => {
         const mockSelectedDate = new Date(2023, 9, 1); // October 1, 2023
-        (useRecipePlans as jest.Mock).mockReturnValue({
-            recipePlans: []
+        (usePlans as jest.Mock).mockReturnValue({
+            plans: []
         });
         (useRecipes as jest.Mock).mockReturnValue({
             recipes: []
         });
         const {getByText} = render(
-            <RecipePlanActiveDay
+            <PlannerActiveDay
                 selectedDate={mockSelectedDate}
             />
         );
@@ -92,14 +94,14 @@ describe("RecipePlanActiveDay Component Renders", () => {
     })
     test("Active Day Recipes when no recipe is selected", () => {
         const mockSelectedDate = new Date(2023, 9, 1); // October 1, 2023
-        (useRecipePlans as jest.Mock).mockReturnValue({
-            recipePlans: []
+        (usePlans as jest.Mock).mockReturnValue({
+            plans: []
         });
         (useRecipes as jest.Mock).mockReturnValue({
             recipes: []
         });
         const {getByText} = render(
-            <RecipePlanActiveDay
+            <PlannerActiveDay
                 selectedDate={mockSelectedDate}
             />
         );
@@ -108,14 +110,14 @@ describe("RecipePlanActiveDay Component Renders", () => {
     test("Active Day Recipe Ingredients only when a recipe is selected", async () => {
         const user = userEvent.setup();
         const mockSelectedDate = new Date(2023, 9, 1); // October 1, 2023
-        (useRecipePlans as jest.Mock).mockReturnValue({
-            recipePlans: []
+        (usePlans as jest.Mock).mockReturnValue({
+            plans: []
         });
         (useRecipes as jest.Mock).mockReturnValue({
             recipes: []
         });
         const {queryByText} = render(
-            <RecipePlanActiveDay
+            <PlannerActiveDay
                 selectedDate={mockSelectedDate}
             />
         );

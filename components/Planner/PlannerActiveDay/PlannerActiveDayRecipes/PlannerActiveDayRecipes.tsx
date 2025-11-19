@@ -1,3 +1,5 @@
+//2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
+
 //2025-11-17 : Added recipe search, toggle button
 
 //2025-10-31 : SetSelectedRecipe now links correctly
@@ -13,12 +15,12 @@ import ScrollableComponent from '@/components/CustomComponents/ScrollableCompone
 import ListView from '@/components/CustomComponents/ListView';
 
 import Recipe from '@/Types/Recipe';
-import Recipe_Plan from '@/Types/Recipe_Plan';
+import Plan from '@/Types/Plan';
 import LabelText from '@/components/CustomComponents/LabelText';
 import RecipesListItem from '@/components/Recipes/RecipesList/RecipesListItem/RecipesListItem'; 
 import FormFieldContainer from '@/components/CustomComponents/FormFieldContainer';
 import ButtonView from '@/components/CustomComponents/ButtonView';
-import { useRecipePlans } from '@/Contexts/RecipePlans/RecipePlansDataProvider';
+import { usePlans } from '@/Contexts/Plans/PlansDataProvider';
 import { useRecipes } from '@/Contexts/Recipes/RecipesDataProvider';
 import FormTextInput from '@/components/CustomComponents/FormTextInput';
 import ComponentView from '@/components/CustomComponents/ComponentView';
@@ -32,15 +34,15 @@ import { View } from 'react-native';
  * @returns React Component
  */
 
-export default function RecipePlanActiveDayRecipes({date, setSelectedRecipePlan}: {date: Date, setSelectedRecipePlan: (recipePlan: Recipe_Plan) => void}) {
+export default function PlanActiveDayRecipes({date, setSelectedPlan}: {date: Date, setSelectedPlan: (plan: Plan) => void}) {
 
-    const { recipePlans, addRecipePlan, deleteRecipePlan } = useRecipePlans();
+    const { plans, addPlan, deletePlan } = usePlans();
     const { recipes } = useRecipes();
     const [recipesVisible, setRecipesVisible] = useState<boolean>(false);
 
     //todo implement view Recipe Plan Ingredients
 
-    const todayRecipePlans = recipePlans.filter((plan: Recipe_Plan) => {
+    const todayPlans = plans.filter((plan: Plan) => {
         const planDate = new Date(plan.Plan_Date);
         return planDate.getFullYear() === date.getFullYear() &&
                planDate.getMonth() === date.getMonth() &&
@@ -50,21 +52,21 @@ export default function RecipePlanActiveDayRecipes({date, setSelectedRecipePlan}
     return (
         <View>
             <ScrollableComponent style={{maxHeight: 300, width: '100%', flex: 1}}>
-                {todayRecipePlans.map((plan: Recipe_Plan) => {
+                {todayPlans.map((plan: Plan) => {
                     return (
                         <FormFieldContainer
                                 key={`recipe-plan-${plan.Plan_ID}`}>
                             <LabelText>
                                 {plan.Recipe_Name}
                             </LabelText>
-                            <ButtonView onPress={() => setSelectedRecipePlan(plan)}>
+                            <ButtonView onPress={() => setSelectedPlan(plan)}>
                                 <LabelText>
                                     View Ingredients
                                 </LabelText>
                             </ButtonView>
                             <ButtonView onPress={() => {
                                 if(plan.Plan_ID !== undefined) 
-                                    deleteRecipePlan(plan.Plan_ID)
+                                    deletePlan(plan.Plan_ID)
                                 }}>
                                 <LabelText>
                                     Remove
@@ -93,7 +95,7 @@ export default function RecipePlanActiveDayRecipes({date, setSelectedRecipePlan}
                                     recipe={recipe}
                                     setSelectedRecipe={
                                         () => {
-                                            addRecipePlan({
+                                            addPlan({
                                                 Recipe_ID: recipe.Recipe_ID,
                                                 Recipe_Name: recipe.Recipe_Name,
                                                 Plan_Date: date,

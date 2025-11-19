@@ -1,3 +1,5 @@
+//2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
+
 //2025-11-17 : Correctly shows Recipe Plans for date
 
 //2025-10-28 : Improved styling
@@ -5,18 +7,18 @@
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
 import {render, userEvent } from '@testing-library/react-native';
-import RecipePlanCalendarDay from './RecipePlanCalendarDay';
-import { useRecipePlans } from '@/Contexts/RecipePlans/RecipePlansDataProvider';
+import { usePlans } from '@/Contexts/Plans/PlansDataProvider';
+import PlannerCalendarDay from './PlannerCalendarDay';
 
-
-jest.mock('@/Contexts/RecipePlans/RecipePlansDataProvider', () => {
+    
+jest.mock('@/Contexts/Plans/PlansDataProvider', () => {
     return {
         __esModule: true,
-        useRecipePlans: jest.fn()
+        usePlans: jest.fn()
     };
 });
 
-const mockRecipePlans = [
+const mockPlans = [
     {
         Plan_ID: 1,
         Plan_Date: new Date(2023, 9, 1), // October 1, 2023
@@ -31,18 +33,18 @@ const mockRecipePlans = [
     }];
 
 beforeEach(() => {
-    (useRecipePlans as jest.Mock).mockReturnValue({
-        recipePlans: mockRecipePlans
+    (usePlans as jest.Mock).mockReturnValue({
+        plans: mockPlans
     });
 });
 
 
 
-describe("RecipePlanCalendarDay Component Renders", () => {
+describe("PlannerCalendarDay Component Renders", () => {
     test("The Correct Date", () => {
         const mockDate = new Date(2023, 9, 1); // October 1, 2023
         const {getByText} = render(
-            <RecipePlanCalendarDay
+            <PlannerCalendarDay
                 date={mockDate}
                 onPress={() => {}}
             />
@@ -53,7 +55,7 @@ describe("RecipePlanCalendarDay Component Renders", () => {
     test("No Recipes when there are no recipes for that date", () => {
         const mockDate = new Date(2023, 9, 2); // October 1, 2023
         const {queryByLabelText} = render(
-            <RecipePlanCalendarDay
+            <PlannerCalendarDay
                 date={mockDate}
                 onPress={() => {}}
             />
@@ -64,7 +66,7 @@ describe("RecipePlanCalendarDay Component Renders", () => {
     test("The correct recipes when there are recipes for that date", () => {
         const mockDate = new Date(2023, 9, 1); // October 1, 2023
         const {getByText} = render(
-            <RecipePlanCalendarDay
+            <PlannerCalendarDay
                 date={mockDate}
                 onPress={() => {}}
             />
@@ -81,7 +83,7 @@ test("When clicked, the recipe plan day should call the onPress function", async
 
     const mockDate = new Date(2023, 9, 1); // October 1, 2023
     const {getByText} = render(
-        <RecipePlanCalendarDay
+        <PlannerCalendarDay
             date={mockDate}
             onPress={mockOnPress}
         />

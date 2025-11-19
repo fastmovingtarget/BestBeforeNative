@@ -1,3 +1,5 @@
+//2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
+
 //2025-11-17 : Added docs, recipe plan display to calendar day
 
 //2025-10-28 : More cohesive implementation of the calendar grid
@@ -6,21 +8,21 @@
 
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import RecipePlanCalendarDay from './RecipePlanCalendarDay/RecipePlanCalendarDay';
+import PlannerCalendarDay from './PlannerCalendarDay/PlannerCalendarDay';
 import LabelText from '@/components/CustomComponents/LabelText';
 import ComponentView from '@/components/CustomComponents/ComponentView';
 import PressableComponent from '@/components/CustomComponents/PressableComponent';
 
 /**
- * React Component for displaying the Recipe Plan Calendar
- * Shows an array of RecipePlanCalendarDay components in a month view, 6x7 grid
+ * React Component for displaying the Planner Calendar
+ * Shows an array of PlannerCalendarDay components in a month view, 6x7 grid
  * Has buttons to navigate between months
  * 
  * @param setSelectedDate Function to set the selected date in the parent component
  * @returns React Component
  */
 
-export default function RecipePlanCalendar({setSelectedDate} : {setSelectedDate: (date: Date) => void}) {
+export default function PlannerCalendar({setSelectedDate} : {setSelectedDate: (date: Date) => void}) {
 
     const [monthIndex, setMonthIndex] = useState(0); // 0 for current month, -1 for last month, 1 for next month
 
@@ -64,7 +66,7 @@ export default function RecipePlanCalendar({setSelectedDate} : {setSelectedDate:
                 weeksArray.map((week, weekIndex) => (
                     <View style={{flexDirection: "row", width: "100%", flex:1}} key={weekIndex}>
                         {week.map((date, index) => (
-                            <RecipePlanCalendarDay
+                            <PlannerCalendarDay
                                 key={index}
                                 date={date}
                                 onPress={() => setSelectedDate(date)} // Replace with actual onPress function
