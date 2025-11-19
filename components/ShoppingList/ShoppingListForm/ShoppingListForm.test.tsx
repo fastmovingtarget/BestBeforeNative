@@ -1,3 +1,5 @@
+//2025-11-19 : Item_... fields now have Shopping_ as a prefix
+
 //2025-10-24 : mock data context names fixed
 
 //2025-10-23 : Converted to use Shopping List Context
@@ -49,8 +51,8 @@ describe('Shopping List Form renders correctly', () => {
   it('when given an input item', () => {
     const {getByText, getByLabelText} = render(
       <ShoppingListForm item={{
-            Item_Name: "Test Item",
-            Item_Quantity: 1,
+            Shopping_Item_Name: "Test Item",
+            Shopping_Item_Quantity: 1,
         }} 
         onCancel={onCancelMock}
         isFormVisible={true}
@@ -106,8 +108,8 @@ describe('ShoppingListForm input registers correct change', () => {
     
             const {getByLabelText} = render(
                 <ShoppingListForm item={{
-                    Item_Name: 'Test Ingredient',
-                    Item_Quantity: 1
+                    Shopping_Item_Name: 'Test Ingredient',
+                    Shopping_Item_Quantity: 1
                 }} 
                 onCancel={onCancelMock}
                 isFormVisible={true}
@@ -127,8 +129,8 @@ describe('ShoppingListForm input registers correct change', () => {
     
             const {getByLabelText} = render(
                 <ShoppingListForm item={{
-                    Item_Name: 'Test Ingredient',
-                    Item_Quantity: 1,
+                    Shopping_Item_Name: 'Test Ingredient',
+                    Shopping_Item_Quantity: 1,
                 }} 
                 onCancel={onCancelMock}
                 isFormVisible={true}
@@ -172,8 +174,8 @@ describe("When Submit button is pressed", () => {
             );
 
             const testItem : Shopping_List_Item = {
-                    Item_Name: 'Test Item 1',
-                    Item_Quantity: 1,
+                    Shopping_Item_Name: 'Test Item 1',
+                    Shopping_Item_Quantity: 1,
                 };
 
             const submitButton = getByText(/Submit/i);
@@ -201,9 +203,9 @@ describe("When Submit button is pressed", () => {
             const user = userEvent.setup();
 
             const testItem : Shopping_List_Item = {
-                    Item_ID: 1,
-                    Item_Name: 'Test Item 1',
-                    Item_Quantity: 1,
+                    Shopping_Item_ID: 1,
+                    Shopping_Item_Name: 'Test Item 1',
+                    Shopping_Item_Quantity: 1,
                 };
 
 
@@ -227,9 +229,9 @@ describe("When Submit button is pressed", () => {
         test("With changed values when changed", async () => { 
             const user = userEvent.setup();
             const testItem : Shopping_List_Item = {
-                    Item_ID: 1,
-                    Item_Name: 'Test Item 1',
-                    Item_Quantity: 1,
+                    Shopping_Item_ID: 1,
+                    Shopping_Item_Name: 'Test Item 1',
+                    Shopping_Item_Quantity: 1,
                 };
 
 
@@ -238,9 +240,9 @@ describe("When Submit button is pressed", () => {
             );
 
             const expectedIngredient : Shopping_List_Item = {
-                Item_ID: 1,
-                Item_Name: 'Test Item 1 Input Test',
-                Item_Quantity: 12,
+                Shopping_Item_ID: 1,
+                Shopping_Item_Name: 'Test Item 1 Input Test',
+                Shopping_Item_Quantity: 12,
             };
 
             const submitButton = getByText(/Submit/i);
