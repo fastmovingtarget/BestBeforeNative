@@ -1,3 +1,5 @@
+//2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
+
 //2025-10-23 : Updated to use UpdateState enum, improved visual formatting
 
 import { updateRecipeData } from './UpdateRecipe';
@@ -14,13 +16,13 @@ const existingRecipes: Recipe[] = [
         Recipe_Instructions: 'Instructions for Existing Recipe 1',
         Recipe_Ingredients: [{
             Recipe_Ingredient_ID: 11,
-            Ingredient_Name: 'Existing Recipe 1 Ingredient 1',
-            Ingredient_Quantity: 2,
+            Recipe_Ingredient_Name: 'Existing Recipe 1 Ingredient 1',
+            Recipe_Ingredient_Quantity: 2,
         },
         {
             Recipe_Ingredient_ID: 12,
-            Ingredient_Name: 'Existing Recipe 1 Ingredient 2',
-            Ingredient_Quantity: 2,
+            Recipe_Ingredient_Name: 'Existing Recipe 1 Ingredient 2',
+            Recipe_Ingredient_Quantity: 2,
         }],
     },
     {
@@ -31,13 +33,13 @@ const existingRecipes: Recipe[] = [
         Recipe_Instructions: 'Instructions for Existing Recipe 2',
         Recipe_Ingredients: [{
             Recipe_Ingredient_ID: 121,
-            Ingredient_Name: 'Existing Recipe 2 Ingredient 1',
-            Ingredient_Quantity: 2,
+            Recipe_Ingredient_Name: 'Existing Recipe 2 Ingredient 1',
+            Recipe_Ingredient_Quantity: 2,
         },
         {
             Recipe_Ingredient_ID: 122,
-            Ingredient_Name: 'Existing Recipe 2 Ingredient 2',
-            Ingredient_Quantity: 2,
+            Recipe_Ingredient_Name: 'Existing Recipe 2 Ingredient 2',
+            Recipe_Ingredient_Quantity: 2,
         }],
     }
 ]
@@ -49,13 +51,13 @@ const recipe_changed : Recipe = {
     Recipe_Instructions: 'Instructions for Updating Recipe 1',
     Recipe_Ingredients: [{
         Recipe_Ingredient_ID: 11,
-        Ingredient_Name: 'Updating Recipe 1 Ingredient 1',
-        Ingredient_Quantity: 2,
+        Recipe_Ingredient_Name: 'Updating Recipe 1 Ingredient 1',
+        Recipe_Ingredient_Quantity: 2,
     },
     {
         Recipe_Ingredient_ID: 12,
-        Ingredient_Name: 'Updating Recipe 1 Ingredient 2',
-        Ingredient_Quantity: 2,
+        Recipe_Ingredient_Name: 'Updating Recipe 1 Ingredient 2',
+        Recipe_Ingredient_Quantity: 2,
     }],
 };
 
@@ -82,13 +84,13 @@ test('should fetch recipes data and update state', async () => {
             Recipe_Instructions: 'Instructions for Updating Recipe 1',
             Recipe_Ingredients: [{
                 Recipe_Ingredient_ID: 11,
-                Ingredient_Name: 'Updating Recipe 1 Ingredient 1',
-                Ingredient_Quantity: 2,
+                Recipe_Ingredient_Name: 'Updating Recipe 1 Ingredient 1',
+                Recipe_Ingredient_Quantity: 2,
             },
             {
                 Recipe_Ingredient_ID: 12,
-                Ingredient_Name: 'Updating Recipe 1 Ingredient 2',
-                Ingredient_Quantity: 2,
+                Recipe_Ingredient_Name: 'Updating Recipe 1 Ingredient 2',
+                Recipe_Ingredient_Quantity: 2,
             }],
         },
         {
@@ -100,13 +102,13 @@ test('should fetch recipes data and update state', async () => {
             Recipe_Ingredients: [
                 {
                     Recipe_Ingredient_ID: 121,
-                    Ingredient_Name: 'Existing Recipe 2 Ingredient 1',
-                    Ingredient_Quantity: 2,
+                    Recipe_Ingredient_Name: 'Existing Recipe 2 Ingredient 1',
+                    Recipe_Ingredient_Quantity: 2,
                 },
                 {
                     Recipe_Ingredient_ID: 122,
-                    Ingredient_Name: 'Existing Recipe 2 Ingredient 2',
-                    Ingredient_Quantity: 2,
+                    Recipe_Ingredient_Name: 'Existing Recipe 2 Ingredient 2',
+                    Recipe_Ingredient_Quantity: 2,
                 }
             ],
         }

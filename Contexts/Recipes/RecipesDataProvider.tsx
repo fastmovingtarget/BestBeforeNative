@@ -1,3 +1,5 @@
+//2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
+
 //2025-11-10 : Added improved documentation
 
 //2025-10-23 : Adding paths for sync and update failures
@@ -71,7 +73,10 @@ export const RecipesDataProvider = ({children}:{children:React.ReactNode}) => {
 
     const setRecipesSearchOptions = (options: RecipesSearchOptions) => {setRecipesSearchOptionsState((oldOptions) => {return {...oldOptions, ...options}}); checkStartSync(UpdateState.Successful);};
     const deleteRecipe = (recipeID: number) => deleteRecipeData(recipes, setRecipes, recipeID).then((result) => checkStartSync(result));
-    const addRecipe = (recipe: Recipe) => addRecipeData(userId, recipes, setRecipes, recipe).then((result) => checkStartSync(result));
+    const addRecipe = (recipe: Recipe) => {
+        console.log("RecipesDataProvider: addRecipe called with recipe:", recipe);
+        addRecipeData(userId, recipes, setRecipes, recipe).then((result) => checkStartSync(result))
+    };
     const updateRecipe = (recipe: Recipe) => updateRecipeData(recipes, setRecipes, recipe).then((result) => checkStartSync(result));
 
     return (

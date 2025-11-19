@@ -1,3 +1,5 @@
+//2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
+
 //2025-11-10 : Added improved documentation
 
 //2025-10-24 : Adding catch for fetch errors
@@ -23,11 +25,19 @@ export const addRecipeData = (
     recipes : Recipe[],
     setRecipes : React.Dispatch<React.SetStateAction<Recipe[]>>, 
     recipe : Recipe,) => {
+        console.log("addRecipeData called with recipe:", recipe);
 
     const serverProps = {
         DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.183",
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     }
+
+    const requestBody = {
+        ...recipe,
+        Recipe_User_ID: userId,
+    } as Recipe;
+
+    console.log("Adding recipe:", requestBody);
 
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
@@ -37,10 +47,7 @@ export const addRecipeData = (
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body : JSON.stringify({
-                    ...recipe,
-                    Recipe_User_ID: userId,
-                } as Recipe),
+                body : JSON.stringify(requestBody),
             }
         ).then((rawData) => {
             if(!rawData.ok) {

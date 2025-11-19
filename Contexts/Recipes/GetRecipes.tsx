@@ -1,3 +1,5 @@
+//2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
+
 //2025-11-10 : Added improved documentation
 
 //2025-10-24 : Adding catch for fetch errors
@@ -55,6 +57,7 @@ export const getRecipesData = async (
                 })
             }
         }).catch(() => {
+            console.error("Error fetching recipes data");
             resolve(SyncState.Failed);
         });
     })
