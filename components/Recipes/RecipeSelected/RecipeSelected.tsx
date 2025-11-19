@@ -1,3 +1,5 @@
+//2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
+
 //2025-10-20 : Removed unnecessary imports
 
 import React from "react";
@@ -14,7 +16,7 @@ export default function RecipeSelected({recipe}: { recipe: Recipe}) {
             <LabelText >Ingredients:</LabelText>
             {recipe.Recipe_Ingredients?.map((ingredient) => (
                 <LabelText key={ingredient.Recipe_Ingredient_ID}>
-                    {ingredient.Ingredient_Name}: {ingredient.Ingredient_Quantity}
+                    {ingredient.Recipe_Ingredient_Name}: {ingredient.Recipe_Ingredient_Quantity}
                 </LabelText>
             ))}
             <LabelText >Instructions:</LabelText>

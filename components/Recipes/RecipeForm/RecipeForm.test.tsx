@@ -1,3 +1,5 @@
+//2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
+
 //2025-10-24 : Fixing import and mock to use correct context provider
 
 import {render, userEvent, screen} from '@testing-library/react-native';
@@ -30,12 +32,12 @@ const mockRecipe: Recipe = {
     Recipe_Ingredients:
     [{
         Recipe_Ingredient_ID: 1,
-        Ingredient_Name: 'Test Ingredient 1',
-        Ingredient_Quantity: 2,
+        Recipe_Ingredient_Name: 'Test Ingredient 1',
+        Recipe_Ingredient_Quantity: 2,
     }, {
         Recipe_Ingredient_ID: 2,
-        Ingredient_Name: 'Test Ingredient 2',
-        Ingredient_Quantity: 1,
+        Recipe_Ingredient_Name: 'Test Ingredient 2',
+        Recipe_Ingredient_Quantity: 1,
     }],
     Recipe_Instructions: 'Test Instructions',
 }

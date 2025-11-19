@@ -1,3 +1,5 @@
+//2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
+
 //2025-10-20 : Switched to using Recipes Data Context
 
 //Wed, May 21, 2025 11:23:24 AM : Switching Cancel and Submit buttons for consistency
@@ -44,8 +46,8 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
         const newIngredients = [
             ...(currentRecipe.Recipe_Ingredients || []),
             {
-                Ingredient_Name: "",
-                Ingredient_Quantity: 0,
+                Recipe_Ingredient_Name: "",
+                Recipe_Ingredient_Quantity: 0,
             } as Recipe_Ingredient
         ];
         setCurrentRecipe({
@@ -116,11 +118,11 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
                             aria-label={`recipe-ingredient-name-${index}`}
                             onChangeText={(text) => {
                                 const newIngredients = [...currentRecipe.Recipe_Ingredients || []];
-                                newIngredients[index].Ingredient_Name = text;
+                                newIngredients[index].Recipe_Ingredient_Name = text;
                                 setCurrentRecipe({...currentRecipe, Recipe_Ingredients: newIngredients});
                             }}
                             style={{flex: 1}}
-                            defaultValue={ingredient.Ingredient_Name || ""}
+                            defaultValue={ingredient.Recipe_Ingredient_Name || ""}
                         />
                         <FormTextInput
                             placeholder="Enter ingredient"
@@ -128,11 +130,11 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
                             inputMode="numeric"
                             onChangeText={(text) => {
                                 const newIngredients = [...currentRecipe.Recipe_Ingredients || []];
-                                newIngredients[index].Ingredient_Quantity = Number(text);
+                                newIngredients[index].Recipe_Ingredient_Quantity = Number(text);
                                 setCurrentRecipe({...currentRecipe, Recipe_Ingredients: newIngredients});
                             }}
                             style={{flex: 1}}
-                            defaultValue={`${ingredient.Ingredient_Quantity}` || ""}
+                            defaultValue={`${ingredient.Recipe_Ingredient_Quantity}` || ""}
                         />
                         <ButtonView 
                             onPress={() => deleteRecipeIngredient(index)}
