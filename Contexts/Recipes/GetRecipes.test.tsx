@@ -1,3 +1,5 @@
+//2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
+
 //2025-10-23 : Updated to use UpdateState enum, improved visual formatting
 
 
@@ -26,13 +28,13 @@ test('should fetch recipes and add to empty recipes array', async () => {
             Recipe_Instructions: 'Instructions for Recipe 1',
             Recipe_Ingredients: [{
                 Recipe_Ingredient_ID: 11,
-                Ingredient_Name: 'Recipe 1 Ingredient 1',
-                Ingredient_Quantity: 2,
+                Recipe_Ingredient_Name: 'Recipe 1 Ingredient 1',
+                Recipe_Ingredient_Quantity: 2,
             },
             {
                 Recipe_Ingredient_ID: 12,
-                Ingredient_Name: 'Recipe 1 Ingredient 2',
-                Ingredient_Quantity: 2,
+                Recipe_Ingredient_Name: 'Recipe 1 Ingredient 2',
+                Recipe_Ingredient_Quantity: 2,
             }],
         },
         {
@@ -43,13 +45,13 @@ test('should fetch recipes and add to empty recipes array', async () => {
             Recipe_Instructions: 'Instructions for Recipe 2',
             Recipe_Ingredients: [{
                 Recipe_Ingredient_ID: 121,
-                Ingredient_Name: 'Recipe 2 Ingredient 1',
-                Ingredient_Quantity: 2,
+                Recipe_Ingredient_Name: 'Recipe 2 Ingredient 1',
+                Recipe_Ingredient_Quantity: 2,
             },
             {
                 Recipe_Ingredient_ID: 122,
-                Ingredient_Name: 'Recipe 2 Ingredient 2',
-                Ingredient_Quantity: 2,
+                Recipe_Ingredient_Name: 'Recipe 2 Ingredient 2',
+                Recipe_Ingredient_Quantity: 2,
             }],
         }
     ]; // Assuming recipes is an array of Recipe type
@@ -110,7 +112,7 @@ describe("Should be called with options: ", () => {
         expect(mockSetRecipes).toHaveBeenCalledWith(fetchedRecipes);
 
         expect(fetchMock).toHaveBeenCalledWith(
-            `http://${mockServerProps.DatabaseServer}:${mockServerProps.DatabasePort}/recipes/${userID}?searchText=Recipe%201`, 
+            `https://${mockServerProps.DatabaseServer}:${mockServerProps.DatabasePort}/recipes/${userID}?searchText=Recipe%201`, 
             {
                 method: 'GET',
                 headers: {
@@ -151,7 +153,7 @@ describe("Should be called with options: ", () => {
         expect(mockSetRecipes).toHaveBeenCalledWith(fetchedRecipes);
 
         expect(fetchMock).toHaveBeenCalledWith(
-            `http://${mockServerProps.DatabaseServer}:${mockServerProps.DatabasePort}/recipes/${userID}?searchText=Recipe%201&sortBy=Recipe_Name&sortOrder=asc&amount=10`, 
+            `https://${mockServerProps.DatabaseServer}:${mockServerProps.DatabasePort}/recipes/${userID}?searchText=Recipe%201&sortBy=Recipe_Name&sortOrder=asc&amount=10`, 
             {
                 method: 'GET',
                 headers: {

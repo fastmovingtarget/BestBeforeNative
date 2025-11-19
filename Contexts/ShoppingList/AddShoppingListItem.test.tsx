@@ -1,3 +1,5 @@
+//2025-11-19 : Item_(...) now have Shopping_ Prefix
+
 //2025-10-23 : Updated to use UpdateState enum, improved visual formatting
 
 //2025-05-28 : Asynchronous fetch implementation
@@ -10,20 +12,20 @@ fetchMock.enableMocks();
 
 const shoppingList : Shopping_List_Item[] = [
     {
-        Item_ID: 1,
-        Item_Name: 'Item 1',
-        Item_Quantity: 1,
+        Shopping_Item_ID: 1,
+        Shopping_Item_Name: 'Item 1',
+        Shopping_Item_Quantity: 1,
     },
     {
-        Item_ID: 2,
-        Item_Name: 'Item 2',
-        Item_Quantity: 2,
+        Shopping_Item_ID: 2,
+        Shopping_Item_Name: 'Item 2',
+        Shopping_Item_Quantity: 2,
     },
 ]; 
 
 const shoppingListItem : Shopping_List_Item = {
-    Item_Name: 'New Item 1',
-    Item_Quantity: 3,
+    Shopping_Item_Name: 'New Item 1',
+    Shopping_Item_Quantity: 3,
 };
 
 // Mocking the fetch function
@@ -35,26 +37,26 @@ test('should fetch item data and update state', async () => {
 
     /*Arrange *******************************************************************/
     const mockSetShoppingList = jest.fn();
-    const expectedShoppingList = [
+    const expectedShoppingList : Shopping_List_Item[] = [
         {
-            Item_ID: 1,
-            Item_Name: 'Item 1',
-            Item_Quantity: 1,
+            Shopping_Item_ID: 1,
+            Shopping_Item_Name: 'Item 1',
+            Shopping_Item_Quantity: 1,
         },{
-            Item_ID: 2,
-            Item_Name: 'Item 2',
-            Item_Quantity: 2,
+            Shopping_Item_ID: 2,
+            Shopping_Item_Name: 'Item 2',
+            Shopping_Item_Quantity: 2,
         },{
-            Item_ID: 3,
-            Item_Name: 'New Item 1',
-            Item_Quantity: 3,
+            Shopping_Item_ID: 3,
+            Shopping_Item_Name: 'New Item 1',
+            Shopping_Item_Quantity: 3,
         }
     ]; 
 
     fetchMock.mockResponseOnce(JSON.stringify(
             {
                 ...shoppingListItem,
-                Item_ID: 3,
+                Shopping_Item_ID: 3,
             },
         )
     );

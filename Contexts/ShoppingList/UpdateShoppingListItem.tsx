@@ -1,3 +1,5 @@
+//2025-11-19 : Item_(...) now have Shopping_ Prefix
+
 //2025-11-10 : Added improved documentation
 
 //2025-10-24 : Fixed fetch to call correct address, method, body. Added catch and fixed setState  name
@@ -32,7 +34,7 @@ export const updateShoppingListItemData = async (
 
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
-            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/shoppinglist/${shoppingListItem.Item_ID}`, 
+            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/shoppinglist/${shoppingListItem.Shopping_Item_ID}`, 
             {
                 method: "PUT",
                 headers: {
@@ -46,7 +48,7 @@ export const updateShoppingListItemData = async (
             }
             else{
                 setShoppingList(shoppingList.map(element => {
-                    if (element.Item_ID !== shoppingListItem.Item_ID)//if the element's ID isn't the input ingredient's then no change
+                    if (element.Shopping_Item_ID !== shoppingListItem.Shopping_Item_ID)//if the element's ID isn't the input ingredient's then no change
                         return element;
                     else //otherwise return the ingredient that was input
                         return shoppingListItem;

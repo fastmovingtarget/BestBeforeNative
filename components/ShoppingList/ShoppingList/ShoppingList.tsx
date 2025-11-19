@@ -1,3 +1,5 @@
+//2025-11-19 : Item_... fields now have Shopping_ as a prefix
+
 //2025-10-23 : Converted to use Shopping List Context
 
 //2025-05-22 : Initial implementation and basic tests
@@ -15,12 +17,12 @@ export default function ShoppingList({onEdit}: {onEdit: () => void}) {
     return (
         <ListView >
             {useShoppingList().shoppingList.map((item: Shopping_List_Item) => (
-                editId !== item.Item_ID ?
-                    <ShoppingListItem key={`item-${item.Item_ID}`} item={item} onEdit={(id) => {
+                editId !== item.Shopping_Item_ID ?
+                    <ShoppingListItem key={`item-${item.Shopping_Item_ID}`} item={item} onEdit={(id) => {
                         setEditId(id);
                         onEdit();
                     }}/> :
-                    <ShoppingListForm key={`item-form-${item.Item_ID}`} item={item} onCancel={() => {setEditId(undefined)}} isFormVisible={true}/>
+                    <ShoppingListForm key={`item-form-${item.Shopping_Item_ID}`} item={item} onCancel={() => {setEditId(undefined)}} isFormVisible={true}/>
             ))}
         </ListView>
     );

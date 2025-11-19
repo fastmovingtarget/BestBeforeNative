@@ -1,3 +1,5 @@
+//2025-11-19 : Item_(...) now have Shopping_ Prefix
+
 //2025-11-10 : Added improved documentation
 
 //2025-10-24 : adding catch, fixing names
@@ -52,12 +54,12 @@ export const addShoppingListItemData = (
                 resolve(UpdateState.Failed);
             }
             else{
-                rawData.json().then((data) => {//the data returned should be the ingredient that was added including the id
+                rawData.json().then((data) => {//the data returned should be the shopping item that was added including the id
                     setShoppingList([
                         ...shoppingList,
                         {
                             ...shoppingListItem,
-                            Item_ID: data.Item_ID, // Set the ID from the response
+                            Shopping_Item_ID: data.Shopping_Item_ID, // Set the ID from the response
                         }
                     ]);
                     resolve(UpdateState.Successful);

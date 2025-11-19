@@ -1,3 +1,5 @@
+//2025-11-19 : Adjusting imports and calls to fit new naming convention
+
 //2025-11-17 : Adding Recipe Plan data provider
 
 //2025-10-24 : Adding shopping list data provider
@@ -16,10 +18,10 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { AuthenticationDataProvider } from '@/Contexts/Authentication/AuthenticationDataProvider';
-import { IngredientsDataProvider } from '@/Contexts/Ingredients/IngredientsDataProvider';
+import { InventoryDataProvider } from '@/Contexts/Inventory/InventoryDataProvider';
 import { RecipesDataProvider } from '@/Contexts/Recipes/RecipesDataProvider';
 import { ShoppingListDataProvider } from '@/Contexts/ShoppingList/ShoppingListDataProvider';
-import { RecipePlansDataProvider } from '@/Contexts/RecipePlans/RecipePlansDataProvider';
+import { PlansDataProvider } from '@/Contexts/Plans/PlansDataProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -43,19 +45,19 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AuthenticationDataProvider>
-        <IngredientsDataProvider>
+        <InventoryDataProvider>
           <RecipesDataProvider>
             <ShoppingListDataProvider>
-              <RecipePlansDataProvider>
+              <PlansDataProvider>
                 <Stack>
                   <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                   <Stack.Screen name="+not-found" />
                 </Stack>
                 <StatusBar style="auto" />
-              </RecipePlansDataProvider>
+              </PlansDataProvider>
             </ShoppingListDataProvider>
           </RecipesDataProvider>
-        </IngredientsDataProvider>
+        </InventoryDataProvider>
       </AuthenticationDataProvider>
     </ThemeProvider>
   );

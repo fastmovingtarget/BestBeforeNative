@@ -1,3 +1,5 @@
+//2025-11-19 : Item_... fields now have Shopping_ as a prefix
+
 //2025-10-23 : Converted to use Shopping List Context
 
 //2025-05-27 : Text and comment edits for accuracy
@@ -15,19 +17,19 @@ import { useShoppingList } from '@/Contexts/ShoppingList/ShoppingListDataProvide
 // No need to test things we've already tested in the ShoppingListItem test, just a basic array of items to test the list rendering
 const mockShoppingList : Shopping_List_Item[] = [
     {
-        Item_ID: 1,
-        Item_Name: "Test Item 1",
-        Item_Quantity: 1,
+        Shopping_Item_ID: 1,
+        Shopping_Item_Name: "Test Item 1",
+        Shopping_Item_Quantity: 1,
     },
     {
-        Item_ID: 2,
-        Item_Name: "Test Item 2",
-        Item_Quantity: 2,
+        Shopping_Item_ID: 2,
+        Shopping_Item_Name: "Test Item 2",
+        Shopping_Item_Quantity: 2,
     },
     {
-        Item_ID: 3,
-        Item_Name: "Test Item 3",
-        Item_Quantity: 3,
+        Shopping_Item_ID: 3,
+        Shopping_Item_Name: "Test Item 3",
+        Shopping_Item_Quantity: 3,
     }
 ]
 
@@ -38,9 +40,9 @@ const mockdataContext = {
 // Not exactly a unit test if it's using ShoppingListItem, so I'm adding in a basic mock of it here
 const mockShoppingListItem = ({item, onEdit} : {item : Shopping_List_Item, onEdit : (id : number | undefined) => void}) =>
   <>
-    <Text>{item.Item_Name}</Text>
-    <Text>{item.Item_Quantity ? item.Item_Quantity + "g" : "??g"}</Text>
-    <Pressable onPress={() => onEdit(item.Item_ID)}>
+    <Text>{item.Shopping_Item_Name}</Text>
+    <Text>{item.Shopping_Item_Quantity ? item.Shopping_Item_Quantity + "g" : "??g"}</Text>
+    <Pressable onPress={() => onEdit(item.Shopping_Item_ID)}>
       <Text>Edit</Text>
     </Pressable>
   </>
@@ -48,7 +50,7 @@ const mockShoppingListItem = ({item, onEdit} : {item : Shopping_List_Item, onEdi
 const mockShoppingListForm = ({item, onCancel} : {item : Shopping_List_Item, onCancel : () => void}) => {
   return (
     <>  
-      <Text>{`Form for : ${item.Item_Name}`}</Text>    
+      <Text>{`Form for : ${item.Shopping_Item_Name}`}</Text>    
       <Pressable onPress={() => onCancel()}>
         <Text>Cancel</Text>
       </Pressable>

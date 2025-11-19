@@ -1,3 +1,5 @@
+//2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
+
 //2025-10-23 : Removed unneccessary fetch mocks
 
 //2025-10-23 : Basic success and failure tests for load, sync and update states
@@ -52,13 +54,13 @@ const mockRecipes : Recipe[] = [
             Recipe_Instructions: 'Instructions for Recipe 1',
             Recipe_Ingredients: [{
                 Recipe_Ingredient_ID: 11,
-                Ingredient_Name: 'Recipe 1 Ingredient 1',
-                Ingredient_Quantity: 2,
+                Recipe_Ingredient_Name: 'Recipe 1 Ingredient 1',
+                Recipe_Ingredient_Quantity: 2,
             },
             {
                 Recipe_Ingredient_ID: 12,
-                Ingredient_Name: 'Recipe 1 Ingredient 2',
-                Ingredient_Quantity: 2,
+                Recipe_Ingredient_Name: 'Recipe 1 Ingredient 2',
+                Recipe_Ingredient_Quantity: 2,
             }],
         },
         {
@@ -69,13 +71,13 @@ const mockRecipes : Recipe[] = [
             Recipe_Instructions: 'Instructions for Recipe 2',
             Recipe_Ingredients: [{
                 Recipe_Ingredient_ID: 121,
-                Ingredient_Name: 'Recipe 2 Ingredient 1',
-                Ingredient_Quantity: 2,
+                Recipe_Ingredient_Name: 'Recipe 2 Ingredient 1',
+                Recipe_Ingredient_Quantity: 2,
             },
             {
                 Recipe_Ingredient_ID: 122,
-                Ingredient_Name: 'Recipe 2 Ingredient 2',
-                Ingredient_Quantity: 2,
+                Recipe_Ingredient_Name: 'Recipe 2 Ingredient 2',
+                Recipe_Ingredient_Quantity: 2,
             }],
         }
     ];
@@ -177,8 +179,8 @@ describe("Recipes Data Provider get", () => {
         expect(getByText(/"Recipe_Time":22/i)).toBeTruthy();
         expect(getByText(/"Recipe_Ingredient_ID":11/i)).toBeTruthy();
         expect(getByText(/"Recipe_Ingredient_ID":121/i)).toBeTruthy();
-        expect(getByText(/"Ingredient_Name":"Recipe 1 Ingredient 1"/i)).toBeTruthy();
-        expect(getByText(/"Ingredient_Name":"Recipe 2 Ingredient 1"/i)).toBeTruthy();
+        expect(getByText(/"Recipe_Ingredient_Name":"Recipe 1 Ingredient 1"/i)).toBeTruthy();
+        expect(getByText(/"Recipe_Ingredient_Name":"Recipe 2 Ingredient 1"/i)).toBeTruthy();
     });
     test("should retry fetching recipes data on failure", async () => {
         /*Arrange *******************************************************************/
@@ -241,8 +243,8 @@ describe("Recipes Data Provider add", () => {
             Recipe_Instructions: 'Instructions for Recipe 3',
             Recipe_Ingredients: [{
                 Recipe_Ingredient_ID: 13,
-                Ingredient_Name: 'Recipe 3 Ingredient 1',
-                Ingredient_Quantity: 3,
+                Recipe_Ingredient_Name: 'Recipe 3 Ingredient 1',
+                Recipe_Ingredient_Quantity: 3,
             }]
         };
 
@@ -304,8 +306,8 @@ describe("Recipes Data Provider add", () => {
             Recipe_Instructions: 'Instructions for Recipe 3',
             Recipe_Ingredients: [{
                 Recipe_Ingredient_ID: 13,
-                Ingredient_Name: 'Recipe 3 Ingredient 1',
-                Ingredient_Quantity: 3,
+                Recipe_Ingredient_Name: 'Recipe 3 Ingredient 1',
+                Recipe_Ingredient_Quantity: 3,
             }]
         };
         const TestComponent = () => {
@@ -390,8 +392,8 @@ describe("Recipes Data Provider update", () => {
             Recipe_Instructions: 'Updated Instructions for Recipe 2',
             Recipe_Ingredients: [{
                 Recipe_Ingredient_ID: 121,
-                Ingredient_Name: 'Updated Recipe 2 Ingredient 1',
-                Ingredient_Quantity: 4,
+                Recipe_Ingredient_Name: 'Updated Recipe 2 Ingredient 1',
+                Recipe_Ingredient_Quantity: 4,
             }]
         };
         const TestComponent = () => {
@@ -437,7 +439,7 @@ describe("Recipes Data Provider update", () => {
         expect(getByText(/"Recipe_Name":"Updated Recipe 2"/i)).toBeTruthy();
         expect(getByText(/"Recipe_Difficulty":3/i)).toBeTruthy();
         expect(getByText(/"Recipe_Time":25/i)).toBeTruthy();
-        expect(getByText(/"Ingredient_Name":"Updated Recipe 2 Ingredient 1"/i)).toBeTruthy();
+        expect(getByText(/"Recipe_Ingredient_Name":"Updated Recipe 2 Ingredient 1"/i)).toBeTruthy();
     });
     test("should handle update recipe failure", async () => {
         const user = userEvent.setup();
@@ -450,8 +452,8 @@ describe("Recipes Data Provider update", () => {
             Recipe_Instructions: 'Updated Instructions for Recipe 2',   
             Recipe_Ingredients: [{
                 Recipe_Ingredient_ID: 121,
-                Ingredient_Name: 'Updated Recipe 2 Ingredient 1',
-                Ingredient_Quantity: 4,
+                Recipe_Ingredient_Name: 'Updated Recipe 2 Ingredient 1',
+                Recipe_Ingredient_Quantity: 4,
             }]
         };
         const TestComponent = () => {

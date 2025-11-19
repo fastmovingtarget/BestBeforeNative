@@ -1,3 +1,5 @@
+//2025-11-19 : Item_(...) now have Shopping_ Prefix
+
 //2025-11-10 : Added improved documentation
 
 //2025-10-24 : Adding catch for fetch errors
@@ -52,10 +54,10 @@ export const getShoppingListData = (
                 rawData.json().then((data) => {
                     setShoppingList(                    
                         data.map((element: Shopping_List_Item) => {
-                            if(element.Item_Recipe_Plan_Date) 
+                            if(element.Plan_Date) 
                                 return {
                                     ...element,
-                                    Plan_Date: new Date(element.Item_Recipe_Plan_Date),//date comes in as a string and doesn't get properly parsed within .json()
+                                    Plan_Date: new Date(element.Plan_Date),//date comes in as a string and doesn't get properly parsed within .json()
                                 };
                             
                             return element
@@ -65,6 +67,7 @@ export const getShoppingListData = (
                 })
             }
         }).catch(() => {
+            console.error("Error fetching shopping list data");
             resolve(SyncState.Failed);
         });
     })

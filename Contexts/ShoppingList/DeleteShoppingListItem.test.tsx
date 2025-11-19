@@ -1,3 +1,5 @@
+//2025-11-19 : Item_(...) now have Shopping_ Prefix
+
 //2025-10-23 : Updated to use UpdateState enum, improved visual formatting
 
 //2025-05-28 : Now tests the Asynchronous Delete implementation
@@ -20,14 +22,14 @@ test('should fetch ingredients data and update state', async () => {
 
     const shoppingList : Shopping_List_Item[] = [
         {
-            Item_ID: 1,
-            Item_Name: 'Item 1',
-            Item_Quantity: 1,
+            Shopping_Item_ID: 1,
+            Shopping_Item_Name: 'Item 1',
+            Shopping_Item_Quantity: 1,
         },
         {
-            Item_ID: 2,
-            Item_Name: 'Item 2',
-            Item_Quantity: 2,
+            Shopping_Item_ID: 2,
+            Shopping_Item_Name: 'Item 2',
+            Shopping_Item_Quantity: 2,
         },
     ]; 
 
@@ -46,9 +48,9 @@ test('should fetch ingredients data and update state', async () => {
     /*Assert *******************************************************************/
 
     expect(mockSetShoppingList).toHaveBeenCalledWith([{
-        Item_ID: 2,
-        Item_Name: 'Item 2',
-        Item_Quantity: 2,
+        Shopping_Item_ID: 2,
+        Shopping_Item_Name: 'Item 2',
+        Shopping_Item_Quantity: 2,
     }]);
 })
 
@@ -59,14 +61,14 @@ test("should not update state if fetch fails", async () => {
 
     const shoppingList : Shopping_List_Item[] = [
         {
-            Item_ID: 1,
-            Item_Name: 'Item 1',
-            Item_Quantity: 1,
+            Shopping_Item_ID: 1,
+            Shopping_Item_Name: 'Item 1',
+            Shopping_Item_Quantity: 1,
         },
         {
-            Item_ID: 2,
-            Item_Name: 'Item 2',
-            Item_Quantity: 2,
+            Shopping_Item_ID: 2,
+            Shopping_Item_Name: 'Item 2',
+            Shopping_Item_Quantity: 2,
         },
     ]; 
 
