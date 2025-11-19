@@ -1,3 +1,5 @@
+//2025-11-19 : Item_(...) now have Shopping_ Prefix
+
 //2025-10-23 : Updated to use UpdateState enum, improved visual formatting
 
 //2025-05-28 : Changed to work with promise return and asynchronous fetch
@@ -19,21 +21,21 @@ test('should fetch ingredients data and update state', async () => {
     const mockSetShoppingList = jest.fn();
     const shoppingList : Shopping_List_Item[] = [
         {
-            Item_ID: 1,
-            Item_Name: 'Item 1',
-            Item_Quantity: 1,
+            Shopping_Item_ID: 1,
+            Shopping_Item_Name: 'Item 1',
+            Shopping_Item_Quantity: 1,
         },
         {
-            Item_ID: 2,
-            Item_Name: 'Item 2',
-            Item_Quantity: 2,
+            Shopping_Item_ID: 2,
+            Shopping_Item_Name: 'Item 2',
+            Shopping_Item_Quantity: 2,
         },
     ]; 
 
     const shoppingListItem : Shopping_List_Item = {
-        Item_ID: 1,
-        Item_Name: 'Updated Item 1',
-        Item_Quantity: 3,
+        Shopping_Item_ID: 1,
+        Shopping_Item_Name: 'Updated Item 1',
+        Shopping_Item_Quantity: 3,
     };
 
     fetchMock.mockResponseOnce(JSON.stringify(
@@ -60,20 +62,20 @@ test("should not update state if fetch fails", async () => {
     const mockSetShoppingList = jest.fn();
     const shoppingList : Shopping_List_Item[] = [
         {
-            Item_ID: 1,
-            Item_Name: 'Item 1',
-            Item_Quantity: 1,
+            Shopping_Item_ID: 1,
+            Shopping_Item_Name: 'Item 1',
+            Shopping_Item_Quantity: 1,
         },
         {
-            Item_ID: 2,
-            Item_Name: 'Item 2',
-            Item_Quantity: 2,
+            Shopping_Item_ID: 2,
+            Shopping_Item_Name: 'Item 2',
+            Shopping_Item_Quantity: 2,
         },
     ]; 
 
     const shoppingListItem : Shopping_List_Item = {
-        Item_Name: 'New Item 1',
-        Item_Quantity: 3,
+        Shopping_Item_Name: 'New Item 1',
+        Shopping_Item_Quantity: 3,
     };
 
     fetchMock.mockResponseOnce(

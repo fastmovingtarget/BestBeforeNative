@@ -1,3 +1,5 @@
+//2025-11-19 : Item_(...) now have Shopping_ Prefix
+
 //2025-11-10 : Added improved documentation
 
 //2025-10-24 : Adding catch for fetch errors
@@ -43,7 +45,7 @@ export const deleteShoppingListItemData = async (
                 resolve(UpdateState.Failed);
             }
             else {
-                setRecipes(shoppingList.filter((item) => item.Item_ID !== shoppingListItem_ID));//remove the deleted recipe from the list
+                setRecipes(shoppingList.filter((item) => item.Shopping_Item_ID !== shoppingListItem_ID));//remove the deleted recipe from the list
                 resolve(UpdateState.Successful);
             }
         }).catch(() => {

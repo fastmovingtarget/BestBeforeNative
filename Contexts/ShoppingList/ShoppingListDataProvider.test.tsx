@@ -1,3 +1,5 @@
+//2025-11-19 : Item_(...) now have Shopping_ Prefix
+
 //2025-10-23 : Initial Commit
 
 import { render, waitFor, userEvent } from "@testing-library/react-native";
@@ -38,16 +40,16 @@ jest.mock("./UpdateShoppingListItem", () =>{
     }
 });
 
-const mockShoppingList = [
+const mockShoppingList : Shopping_List_Item[] = [
     {
-        Item_ID: 1,
-        Item_Name: 'Item 1',
-        Item_Quantity: 1,
+        Shopping_Item_ID: 1,
+        Shopping_Item_Name: 'Item 1',
+        Shopping_Item_Quantity: 1,
     },
     {
-        Item_ID: 2,
-        Item_Name: 'Item 2',
-        Item_Quantity: 2,
+        Shopping_Item_ID: 2,
+        Shopping_Item_Name: 'Item 2',
+        Shopping_Item_Quantity: 2,
     },
 ];
 
@@ -66,7 +68,7 @@ beforeEach(() => {
     (addShoppingListItemData as jest.Mock).mockImplementation(
         (userId: number, currentList: Shopping_List_Item[], setShoppingList: (items: Shopping_List_Item[]) => void, itemToAdd: Shopping_List_Item) => {
             let returnPromise = new Promise<UpdateState>((resolve) => {
-                setShoppingList([...currentList, {...itemToAdd, Item_ID: 3}]);
+                setShoppingList([...currentList, {...itemToAdd, Shopping_Item_ID: 3}]);
                 resolve(UpdateState.Successful);
             });
             return returnPromise;
@@ -75,7 +77,7 @@ beforeEach(() => {
     (deleteShoppingListItemData as jest.Mock).mockImplementation(
         (currentList: Shopping_List_Item[], setShoppingList: (items: Shopping_List_Item[]) => void, itemID: number) => {
             let returnPromise = new Promise<UpdateState>((resolve) => {
-                setShoppingList(currentList.filter(item => item.Item_ID !== itemID));
+                setShoppingList(currentList.filter(item => item.Shopping_Item_ID !== itemID));
                 resolve(UpdateState.Successful);
             });
             return returnPromise;
@@ -84,7 +86,7 @@ beforeEach(() => {
     (updateShoppingListItemData as jest.Mock).mockImplementation(
         (currentList: Shopping_List_Item[], setShoppingList: (items: Shopping_List_Item[]) => void, itemToUpdate: Shopping_List_Item) => {
             let returnPromise = new Promise<UpdateState>((resolve) => {
-                setShoppingList(currentList.map(item => item.Item_ID === itemToUpdate.Item_ID ? itemToUpdate : item));
+                setShoppingList(currentList.map(item => item.Shopping_Item_ID === itemToUpdate.Shopping_Item_ID ? itemToUpdate : item));
                 resolve(UpdateState.Successful);
             });
             return returnPromise;
@@ -116,12 +118,12 @@ describe("ShoppingListDataProvider get", () => {
             expect(getByText(SyncState.Successful)).toBeTruthy();
         });
 
-        expect(getByText(/"Item_ID":1/i)).toBeTruthy();
-        expect(getByText(/"Item_ID":2/i)).toBeTruthy();
-        expect(getByText(/"Item_Name":"Item 1"/i)).toBeTruthy();
-        expect(getByText(/"Item_Name":"Item 2"/i)).toBeTruthy();
-        expect(getByText(/"Item_Quantity":1/i)).toBeTruthy();
-        expect(getByText(/"Item_Quantity":2/i)).toBeTruthy();
+        expect(getByText(/"Shopping_Item_ID":1/i)).toBeTruthy();
+        expect(getByText(/"Shopping_Item_ID":2/i)).toBeTruthy();
+        expect(getByText(/"Shopping_Item_Name":"Item 1"/i)).toBeTruthy();
+        expect(getByText(/"Shopping_Item_Name":"Item 2"/i)).toBeTruthy();
+        expect(getByText(/"Shopping_Item_Quantity":1/i)).toBeTruthy();
+        expect(getByText(/"Shopping_Item_Quantity":2/i)).toBeTruthy();
     });
     test("should not update state if fetch fails", async () => {
         /*Arrange *******************************************************************/
@@ -167,8 +169,8 @@ describe("ShoppingListDataProvider on add", () => {
         jest.useFakeTimers();
         const user = userEvent.setup();
         const newItem : Shopping_List_Item = {
-            Item_Name: 'Item 3',
-            Item_Quantity: 3,
+            Shopping_Item_Name: 'Item 3',
+            Shopping_Item_Quantity: 3,
         };
         const TestComponent = () => {
             const {shoppingList, addShoppingItem, shoppingListDataState} = useShoppingList();
@@ -207,9 +209,9 @@ describe("ShoppingListDataProvider on add", () => {
             expect(addShoppingListItemData).toHaveBeenCalled();
         });
 
-        expect(getByText(/"Item_ID":3/i)).toBeTruthy();
-        expect(getByText(/"Item_Name":"Item 3"/i)).toBeTruthy();
-        expect(getByText(/"Item_Quantity":3/i)).toBeTruthy();
+        expect(getByText(/"Shopping_Item_ID":3/i)).toBeTruthy();
+        expect(getByText(/"Shopping_Item_Name":"Item 3"/i)).toBeTruthy();
+        expect(getByText(/"Shopping_Item_Quantity":3/i)).toBeTruthy();
         expect(getByText(SyncState.Failed)).toBeTruthy();
 
         /*Assert 2 *******************************************************************/
@@ -222,8 +224,8 @@ describe("ShoppingListDataProvider on add", () => {
         /*Arrange *******************************************************************/
         const user = userEvent.setup();
         const newItem : Shopping_List_Item = {
-            Item_Name: 'Item 3',
-            Item_Quantity: 3,
+            Shopping_Item_Name: 'Item 3',
+            Shopping_Item_Quantity: 3,
         };
         const TestComponent = () => {
             const {shoppingList, addShoppingItem, shoppingListDataState} = useShoppingList();
@@ -259,9 +261,9 @@ describe("ShoppingListDataProvider on add", () => {
         await waitFor(() => {
             expect(addShoppingListItemData).toHaveBeenCalled();
         });
-        expect(queryByText(/"Item_ID":3/i)).toBeFalsy();
-        expect(queryByText(/"Item_Name":"Item 3"/i)).toBeFalsy();
-        expect(queryByText(/"Item_Quantity":3/i)).toBeFalsy();
+        expect(queryByText(/"Shopping_Item_ID":3/i)).toBeFalsy();
+        expect(queryByText(/"Shopping_Item_Name":"Item 3"/i)).toBeFalsy();
+        expect(queryByText(/"Shopping_Item_Quantity":3/i)).toBeFalsy();
     });
 });
 describe("ShoppingListDataProvider on update", () => {
@@ -269,9 +271,9 @@ describe("ShoppingListDataProvider on update", () => {
         /*Arrange *******************************************************************/
         jest.useFakeTimers();
         const shoppingListItem : Shopping_List_Item = {
-            Item_ID: 1,
-            Item_Name: 'Updated Item 1',
-            Item_Quantity: 3,
+            Shopping_Item_ID: 1,
+            Shopping_Item_Name: 'Updated Item 1',
+            Shopping_Item_Quantity: 3,
         };
 
         const TestComponent = () => {
@@ -313,9 +315,9 @@ describe("ShoppingListDataProvider on update", () => {
         await waitFor(() => {
             expect(updateShoppingListItemData).toHaveBeenCalled();
         });
-        expect(getByText(/"Item_ID":1/i)).toBeTruthy();
-        expect(getByText(/"Item_Name":"Updated Item 1"/i)).toBeTruthy();
-        expect(getByText(/"Item_Quantity":3/i)).toBeTruthy();
+        expect(getByText(/"Shopping_Item_ID":1/i)).toBeTruthy();
+        expect(getByText(/"Shopping_Item_Name":"Updated Item 1"/i)).toBeTruthy();
+        expect(getByText(/"Shopping_Item_Quantity":3/i)).toBeTruthy();
         expect(getByText(SyncState.Failed)).toBeTruthy();
 
         /*Assert 2 *******************************************************************/
@@ -327,9 +329,9 @@ describe("ShoppingListDataProvider on update", () => {
     test("should not update state if update fails", async () => {
         /*Arrange *******************************************************************/
         const shoppingListItem : Shopping_List_Item = {
-            Item_ID: 1,
-            Item_Name: 'Updated Item 1',
-            Item_Quantity: 3,
+            Shopping_Item_ID: 1,
+            Shopping_Item_Name: 'Updated Item 1',
+            Shopping_Item_Quantity: 3,
         };
         const TestComponent = () => {
             const {shoppingList, updateShoppingItem, shoppingListDataState} = useShoppingList();
@@ -366,9 +368,9 @@ describe("ShoppingListDataProvider on update", () => {
         await waitFor(() => {
             expect(updateShoppingListItemData).toHaveBeenCalled();
         });
-        expect(queryByText(/"Item_ID":1/i)).toBeTruthy();
-        expect(queryByText(/"Item_Name":"Updated Item 1"/i)).toBeFalsy();
-        expect(queryByText(/"Item_Quantity":3/i)).toBeFalsy();
+        expect(queryByText(/"Shopping_Item_ID":1/i)).toBeTruthy();
+        expect(queryByText(/"Shopping_Item_Name":"Updated Item 1"/i)).toBeFalsy();
+        expect(queryByText(/"Shopping_Item_Quantity":3/i)).toBeFalsy();
         expect(getByText(UpdateState.Failed)).toBeTruthy();
     });
 });
@@ -412,9 +414,9 @@ describe("ShoppingListDataProvider on delete", () => {
         await waitFor(() => {
             expect(deleteShoppingListItemData).toHaveBeenCalled();
         });
-        expect(queryByText(/"Item_ID":1/i)).toBeFalsy();
-        expect(queryByText(/"Item_Name":"Item 1"/i)).toBeFalsy();
-        expect(queryByText(/"Item_Quantity":1/i)).toBeFalsy();
+        expect(queryByText(/"Shopping_Item_ID":1/i)).toBeFalsy();
+        expect(queryByText(/"Shopping_Item_Name":"Item 1"/i)).toBeFalsy();
+        expect(queryByText(/"Shopping_Item_Quantity":1/i)).toBeFalsy();
         expect(getByText(SyncState.Failed)).toBeTruthy();
 
         /*Assert 2 *******************************************************************/
@@ -461,9 +463,9 @@ describe("ShoppingListDataProvider on delete", () => {
         await waitFor(() => {
             expect(deleteShoppingListItemData).toHaveBeenCalled();
         });
-        expect(queryByText(/"Item_ID":1/i)).toBeTruthy();
-        expect(queryByText(/"Item_Name":"Item 1"/i)).toBeTruthy();
-        expect(queryByText(/"Item_Quantity":1/i)).toBeTruthy();
+        expect(queryByText(/"Shopping_Item_ID":1/i)).toBeTruthy();
+        expect(queryByText(/"Shopping_Item_Name":"Item 1"/i)).toBeTruthy();
+        expect(queryByText(/"Shopping_Item_Quantity":1/i)).toBeTruthy();
         expect(getByText(UpdateState.Failed)).toBeTruthy();
     });
 });
