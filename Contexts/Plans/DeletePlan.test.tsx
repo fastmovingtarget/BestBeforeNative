@@ -1,11 +1,13 @@
+//2025-11-19 : Renamed RecipePlan(s) to just Plan(s)
+
 //2025-10-27 : Updated to get server props inside functions
 
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
-import { deleteRecipePlanData } from './DeleteRecipePlan';
-import Recipe_Plan from '../../Types/Recipe_Plan'; // Adjust the import path as necessary
+import { deletePlanData } from './DeletePlan';
 import fetchMock from 'jest-fetch-mock';
 import { UpdateState } from '@/Types/DataLoadingState';
+import Plan from '../../Types/Plan';
 fetchMock.enableMocks();
 
 // Mocking the fetch function
@@ -14,12 +16,12 @@ beforeEach(() => {
 })
 
 
-test('should fetch ingredients data and update state', async () => {
+test('should fetch plan data and update state', async () => {
 
     /*Arrange *******************************************************************/
-    const mockSetRecipePlans = jest.fn();
-    //input recipes
-    const recipePlans: Recipe_Plan[] = [
+    const mockSetPlans = jest.fn();
+    //input plans
+    const Plans: Plan[] = [
         {
             Plan_ID: 1,
             Recipe_ID: 1,
@@ -35,7 +37,7 @@ test('should fetch ingredients data and update state', async () => {
     ];
 
     //output recipe plans
-    const recipePlansOut: Recipe_Plan[] = [
+    const plansOut: Plan[] = [
         {
             Plan_ID: 2,
             Recipe_ID: 2,
@@ -50,23 +52,23 @@ test('should fetch ingredients data and update state', async () => {
     );
 
     /*Act **********************************************************************/
-    await deleteRecipePlanData(
-        recipePlans,
-        mockSetRecipePlans,
+    await deletePlanData(
+        Plans,
+        mockSetPlans,
         1
     );
 
     /*Assert *******************************************************************/
 
-    expect(mockSetRecipePlans).toHaveBeenCalledWith(recipePlansOut);
+    expect(mockSetPlans).toHaveBeenCalledWith(plansOut);
 })
 
 test("should not update state if fetch fails", async () => {
 
     /*Arrange *******************************************************************/
-    const mockSetRecipePlans = jest.fn();
-    //input recipes
-    const recipePlans: Recipe_Plan[] = [
+    const mockSetPlans = jest.fn();
+    //input plans
+    const Plans: Plan[] = [
         {
             Plan_ID: 1,
             Recipe_ID: 1,
@@ -87,9 +89,9 @@ test("should not update state if fetch fails", async () => {
     );
 
     /*Act **********************************************************************/
-    const returnValue = await deleteRecipePlanData(
-        recipePlans,
-        mockSetRecipePlans,
+    const returnValue = await deletePlanData(
+        Plans,
+        mockSetPlans,
         1
     );
 

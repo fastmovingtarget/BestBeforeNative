@@ -1,10 +1,12 @@
+//2025-11-19 : Renamed RecipePlan(s) to just Plan(s)
+
 //2025-10-27 : Updated to get server props inside functions
 
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
-import { addRecipePlanData } from './AddRecipePlan';
-import Recipe_Plan from '../../Types/Recipe_Plan'; // Adjust the import path as necessary
+import { addPlanData } from './AddPlan';
 import fetchMock from 'jest-fetch-mock';
+import Plan from '../../Types/Plan';
 fetchMock.enableMocks();
 
 // Mocking the fetch function
@@ -15,9 +17,9 @@ beforeEach(() => {
 test('should fetch Recipe Plan data and update state', async () => {
 
     /*Arrange *******************************************************************/
-    const mockSetRecipePlans = jest.fn();
+    const mockSetPlans = jest.fn();
 
-    const recipePlans: Recipe_Plan[] = [
+    const Plans: Plan[] = [
         {
             Plan_ID: 1,
             Recipe_ID: 1,
@@ -32,7 +34,7 @@ test('should fetch Recipe Plan data and update state', async () => {
         },
     ];
 
-    const newRecipePlan: Recipe_Plan = {
+    const newPlan: Plan = {
         Recipe_ID: 3,
         Recipe_Name: 'Test Recipe',
         Plan_Date: new Date()
@@ -40,36 +42,36 @@ test('should fetch Recipe Plan data and update state', async () => {
 
     fetchMock.mockResponseOnce(JSON.stringify(
                 {
-                    ...newRecipePlan,
-                    Recipe_Plan_ID: 3,
+                    ...newPlan,
+                    Plan_ID: 3,
                 },
             )
         );
     
         /*Act **********************************************************************/
-        await addRecipePlanData(
+        await addPlanData(
             1,
-            recipePlans,
-            mockSetRecipePlans,
-            newRecipePlan
+            Plans,
+            mockSetPlans,
+            newPlan
         );
     
         /*Assert *******************************************************************/
     
-        expect(mockSetRecipePlans).toHaveBeenCalledWith([
-            ...recipePlans,
+        expect(mockSetPlans).toHaveBeenCalledWith([
+            ...Plans,
             {
-                ...newRecipePlan,
-                Recipe_Plan_ID: 3,
+                ...newPlan,
+                Plan_ID: 3,
             },
         ]);
 });
 test("should not update state if fetch fails", async () => {
     
     /*Arrange *******************************************************************/
-    const mockSetRecipePlans = jest.fn();
+    const mockSetPlans = jest.fn();
 
-    const recipePlans: Recipe_Plan[] = [
+    const Plans: Plan[] = [
         {
             Plan_ID: 1,
             Recipe_ID: 1,
@@ -84,7 +86,7 @@ test("should not update state if fetch fails", async () => {
         },
     ];
 
-    const newRecipePlan: Recipe_Plan = {
+    const newPlan: Plan = {
         Recipe_ID: 3,
         Recipe_Name: 'Test Recipe',
         Plan_Date: new Date()
@@ -96,16 +98,16 @@ test("should not update state if fetch fails", async () => {
     );
     
     /*Act **********************************************************************/
-    await addRecipePlanData(
+    await addPlanData(
         1,
-        recipePlans,
-        mockSetRecipePlans,
-        newRecipePlan
+        Plans,
+        mockSetPlans,
+        newPlan
     );
 
     
     /*Assert *******************************************************************/
 
-    expect(mockSetRecipePlans).not.toHaveBeenCalled();
+    expect(mockSetPlans).not.toHaveBeenCalled();
 
 })

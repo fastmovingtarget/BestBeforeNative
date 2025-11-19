@@ -1,3 +1,5 @@
+//2025-11-19 : Renamed RecipePlan(s) to just Plan(s)
+
 //2025-11-10 : Added improved documentation
 
 //2025-11-10 : Correcting fetch call
@@ -7,19 +9,19 @@
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
 import React from "react";
-import Recipe_Plan from "../../Types/Recipe_Plan";
+import Plan from "../../Types/Plan";
 import { SyncState } from "@/Types/DataLoadingState";
 
 /**
  * Fetches recipe plans from the database based on user ID and updates the local state.
  * @param {number} userID - The ID of the user whose recipe plans are to be fetched.
- * @param {React.Dispatch<React.SetStateAction<Recipe_Plan[]>>} setRecipePlans - State setter function for updating the recipe plan list.
+ * @param {React.Dispatch<React.SetStateAction<Plan[]>>} setPlans - State setter function for updating the recipe plan list.
  * @returns {Promise<SyncState>} - A promise that resolves to the sync state indicating success or failure.
  */
 
-export const getRecipePlansData = async (
+export const getPlansData = async (
     userID : number, 
-    setRecipePlans : React.Dispatch<React.SetStateAction<Recipe_Plan[]>>
+    setPlans : React.Dispatch<React.SetStateAction<Plan[]>>
 ) => {
 
     const serverProps = {
@@ -29,7 +31,7 @@ export const getRecipePlansData = async (
 
     const returnPromise = new Promise<SyncState>((resolve) => {
         fetch(
-            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipeplans/${userID}`, 
+            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/plans/${userID}`, 
             {
                 method: "GET",
                 headers: {
@@ -42,18 +44,21 @@ export const getRecipePlansData = async (
             }
             else {
                 rawData.json().then((data) => {
-                    setRecipePlans(
-                        data.map((recipePlan : Recipe_Plan) => {
-                            if(recipePlan.Plan_Date) 
+                    setPlans(
+                        data.map((plan : Plan) => {
+                            if(plan.Plan_Date) 
                                 return {
-                                    ...recipePlan,
-                                    Plan_Date: new Date(recipePlan.Plan_Date),//date comes in as a string and doesn't get properly parsed within .json()
+                                    ...plan,
+                                    Plan_Date: new Date(plan.Plan_Date),//date comes in as a string and doesn't get properly parsed within .json()
                                 };
                             })
                         );
                     resolve(SyncState.Successful);
                 })
             }
+        }).catch(() => {
+            console.error("Error fetching plans data");
+            resolve(SyncState.Failed);
         });
     })
     return returnPromise;
