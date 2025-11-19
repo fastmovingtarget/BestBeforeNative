@@ -1,17 +1,19 @@
+//2025-11-19 : Renamed "Ingredient(s)" to "Inventory(_Items)"
+
 //2025-10-24 : Fixing import and mock to use correct context provider
 
 import {render, userEvent} from '@testing-library/react-native';
-import IngredientComponent from './IngredientComponent';
-import {useIngredients} from '@/Contexts/Ingredients/IngredientsDataProvider';
+import InventoryItemComponent from './InventoryItemComponent';
+import {useInventory} from '@/Contexts/Inventory/InventoryDataProvider';
 
 const mockdataContext = {
-  deleteIngredient: jest.fn(),
+  deleteInventoryItem: jest.fn(),
 };
 
-jest.mock("@/Contexts/Ingredients/IngredientsDataProvider", () => {
+jest.mock("@/Contexts/Inventory/InventoryDataProvider", () => {
   return {
     __esModule: true,
-    useIngredients: jest.fn(),
+    useInventory: jest.fn(),
   };
 });
 
@@ -19,19 +21,19 @@ const onEditMock = jest.fn();
 
 beforeEach(() => {
   jest.resetAllMocks();
-  const useIngredientsMock = useIngredients as jest.Mock;
-  useIngredientsMock.mockReturnValue(mockdataContext);
+  const useInventoryMock = useInventory as jest.Mock;
+  useInventoryMock.mockReturnValue(mockdataContext);
 });
 
 describe('Ingredient renders correctly', () => {
   it('when given all basic ingredient data', () => {
     const {getByText} = render(
-      <IngredientComponent
-        ingredient={{
-          Ingredient_ID: 1,
-          Ingredient_Name: 'Test Ingredient',
-          Ingredient_Quantity: 1,
-          Ingredient_Date: new Date('2023-10-01'),
+      <InventoryItemComponent
+        inventoryItem={{
+          Inventory_Item_ID: 1,
+          Inventory_Item_Name: 'Test Ingredient',
+          Inventory_Item_Quantity: 1,
+          Inventory_Item_Date: new Date('2023-10-01'),
         }}
         onEdit={onEditMock}
       />,
@@ -43,16 +45,16 @@ describe('Ingredient renders correctly', () => {
   });
   it('when given all basic ingredient data and plan data', () => {
     const {getByText} = render(
-      <IngredientComponent
-        ingredient={{
-          Ingredient_ID: 1,
-          Ingredient_Name: 'Test Ingredient',
-          Ingredient_Quantity: 1,
-          Ingredient_Date: new Date('2023-10-01'),
+      <InventoryItemComponent
+        inventoryItem={{
+          Inventory_Item_ID: 1,
+          Inventory_Item_Name: 'Test Ingredient',
+          Inventory_Item_Quantity: 1,
+          Inventory_Item_Date: new Date('2023-10-01'),
           Plan_ID: 1,
           Plan_Date: new Date('2023-10-01'),
-          Recipe_Name: 'Test Recipe',
-          Recipe_Ingredient_ID: 1,
+          Plan_Recipe_Name: 'Test Recipe',
+          Plan_Ingredient_ID: 1,
         }}
         onEdit={onEditMock}
       />,
@@ -67,17 +69,17 @@ describe('Ingredient renders correctly', () => {
   });
   it('when given all basic ingredient data, date frozen and plan data', () => {
     const {getByText, queryByText} = render(
-      <IngredientComponent
-        ingredient={{
-          Ingredient_ID: 1,
-          Ingredient_Name: 'Test Ingredient',
-          Ingredient_Quantity: 1,
-          Ingredient_Date: new Date('2023-10-01'),
-          Ingredient_Frozen: new Date('2024-10-01'),
+      <InventoryItemComponent
+        inventoryItem={{
+          Inventory_Item_ID: 1,
+          Inventory_Item_Name: 'Test Ingredient',
+          Inventory_Item_Quantity: 1,
+          Inventory_Item_Date: new Date('2023-10-01'),
+          Inventory_Item_Frozen: new Date('2024-10-01'),
           Plan_ID: 1,
           Plan_Date: new Date('2023-10-01'),
-          Recipe_Name: 'Test Recipe',
-          Recipe_Ingredient_ID: 1,
+          Plan_Recipe_Name: 'Test Recipe',
+          Plan_Ingredient_ID: 1,
         }}
         onEdit={onEditMock}
       />,
@@ -93,9 +95,9 @@ describe('Ingredient renders correctly', () => {
   });
   it('when given only name data', () => {
     const {getByText} = render(
-      <IngredientComponent
-        ingredient={{
-          Ingredient_Name: 'Test Ingredient',
+      <InventoryItemComponent
+        inventoryItem={{
+          Inventory_Item_Name: 'Test Ingredient',
         }}
         onEdit={onEditMock}
       />,
@@ -111,10 +113,10 @@ describe('Ingredient calls correctly', () => {
     const user = userEvent.setup();
 
     const {getByText} = render(
-      <IngredientComponent
-        ingredient={{
-          Ingredient_ID: 123,
-          Ingredient_Name: 'Test Ingredient',
+      <InventoryItemComponent
+        inventoryItem={{
+          Inventory_Item_ID: 123,
+          Inventory_Item_Name: 'Test Ingredient',
         }}
         onEdit={onEditMock}
       />,
@@ -132,10 +134,10 @@ describe('Ingredient calls correctly', () => {
     const user = userEvent.setup();
 
     const {getByText} = render(
-      <IngredientComponent
-        ingredient={{
-          Ingredient_ID: 123,
-          Ingredient_Name: 'Test Ingredient',
+      <InventoryItemComponent
+        inventoryItem={{
+          Inventory_Item_ID: 123,
+          Inventory_Item_Name: 'Test Ingredient',
         }}
         onEdit={onEditMock}
       />,
@@ -146,16 +148,16 @@ describe('Ingredient calls correctly', () => {
 
     await user.press(deleteButton);
 
-    expect(mockdataContext.deleteIngredient).toHaveBeenCalledTimes(1);
-    expect(mockdataContext.deleteIngredient).toHaveBeenCalledWith(123)
+    expect(mockdataContext.deleteInventoryItem).toHaveBeenCalledTimes(1);
+    expect(mockdataContext.deleteInventoryItem).toHaveBeenCalledWith(123)
   })
-  it("when delete button is pressed but no Ingredient_ID exists (impossible in normal program flow)", async () => {
+  it("when delete button is pressed but no Inventory_Item_ID exists (impossible in normal program flow)", async () => {
     const user = userEvent.setup();
 
     const {getByText} = render(
-      <IngredientComponent
-        ingredient={{
-          Ingredient_Name: 'Test Ingredient',
+      <InventoryItemComponent
+        inventoryItem={{
+          Inventory_Item_Name: 'Test Ingredient',
         }}
         onEdit={onEditMock}
       />,
@@ -166,7 +168,7 @@ describe('Ingredient calls correctly', () => {
 
     await user.press(deleteButton);
 
-    expect(mockdataContext.deleteIngredient).toHaveBeenCalledTimes(1);
-    expect(mockdataContext.deleteIngredient).toHaveBeenCalledWith(-1)
+    expect(mockdataContext.deleteInventoryItem).toHaveBeenCalledTimes(1);
+    expect(mockdataContext.deleteInventoryItem).toHaveBeenCalledWith(-1)
   })
 })

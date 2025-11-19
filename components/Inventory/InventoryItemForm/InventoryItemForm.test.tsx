@@ -1,22 +1,24 @@
+//2025-11-19 : Renamed "Ingredient(s)" to "Inventory(_Items)"
+
 //2025-10-24 : Fixing import and mock to use correct context provider
 
 import {render, userEvent, fireEvent} from '@testing-library/react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import IngredientForm from './IngredientForm';
-import {useIngredients} from '@/Contexts/Ingredients/IngredientsDataProvider';
-import Ingredient from '@/Types/Ingredient';
+import InventoryItemForm from './InventoryItemForm';
+import {useInventory} from '@/Contexts/Inventory/InventoryDataProvider';
+import Inventory_Item from '@/Types/Inventory_Item';
+
 
 const mockdataContext = {
-  deleteIngredient: jest.fn(),
-  addIngredient : jest.fn(),
-  updateIngredient: jest.fn(),
+  deleteInventoryItem: jest.fn(),
+  addInventoryItem : jest.fn(),
+  updateInventoryItem: jest.fn(),
 };
 
-
-jest.mock("@/Contexts/Ingredients/IngredientsDataProvider", () => {
+jest.mock("@/Contexts/Inventory/InventoryDataProvider", () => {
   return {
     __esModule: true,
-    useIngredients: jest.fn(),
+    useInventory: jest.fn(),
   };
 });
 
@@ -34,8 +36,8 @@ const onCancelMock = jest.fn();
 
 beforeEach(() => {
     jest.resetAllMocks();
-    const useIngredientsMock = useIngredients as jest.Mock;
-    useIngredientsMock.mockReturnValue(mockdataContext);
+    const useInventoryMock = useInventory as jest.Mock;
+    useInventoryMock.mockReturnValue(mockdataContext);
     mockDateTimePicker.mockImplementation(originalModule.default);
 });
 
@@ -43,7 +45,7 @@ describe('Ingredient renders correctly', () => {
   it('when given no ingredient', () => {
 
     const {getByText, getByLabelText} = render(
-      <IngredientForm isFormVisible={true}/>,
+      <InventoryItemForm isFormVisible={true}/>,
     );
 
     expect(getByText(/Ingredient:/i)).toBeTruthy();
@@ -62,10 +64,10 @@ describe('Ingredient renders correctly', () => {
     mockDateTimePicker.mockImplementation(originalModule.default);
 
     const {getByText, getByLabelText} = render(
-      <IngredientForm ingredient={{
-            Ingredient_Name: 'Test Ingredient',
-            Ingredient_Quantity: 1,
-            Ingredient_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
+      <InventoryItemForm inventoryItem={{
+            Inventory_Item_Name: 'Test Ingredient',
+            Inventory_Item_Quantity: 1,
+            Inventory_Item_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
         }} 
         onCancel={onCancelMock}
         isFormVisible={true}
@@ -90,7 +92,7 @@ describe('IngredientForm input registers correct change', () => {
             const user = userEvent.setup();
     
             const {getByLabelText} = render(
-                <IngredientForm isFormVisible={true}/>,
+                <InventoryItemForm isFormVisible={true}/>,
             );
     
             const nameInput = getByLabelText(/name-input/i);
@@ -106,7 +108,7 @@ describe('IngredientForm input registers correct change', () => {
             const testDate = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7); // 1 week from now
     
             const {getByLabelText, getByText} = render(
-                <IngredientForm isFormVisible={true}/>,
+                <InventoryItemForm isFormVisible={true}/>,
             );
     
             const dateInputButton = getByLabelText("date-input-button");
@@ -129,7 +131,7 @@ describe('IngredientForm input registers correct change', () => {
             const user = userEvent.setup();
     
             const {getByLabelText} = render(
-                <IngredientForm isFormVisible={true}/>,
+                <InventoryItemForm isFormVisible={true}/>,
             );
     
             const quantityInput = getByLabelText(/quantity-input/i);
@@ -146,10 +148,10 @@ describe('IngredientForm input registers correct change', () => {
             const user = userEvent.setup();
     
             const {getByLabelText} = render(
-                <IngredientForm ingredient={{
-                    Ingredient_Name: 'Test Ingredient',
-                    Ingredient_Quantity: 1,
-                    Ingredient_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
+                <InventoryItemForm inventoryItem={{
+                    Inventory_Item_Name: 'Test Ingredient',
+                    Inventory_Item_Quantity: 1,
+                    Inventory_Item_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
                 }} 
                 onCancel={onCancelMock}
                 isFormVisible={true}
@@ -168,10 +170,10 @@ describe('IngredientForm input registers correct change', () => {
             const user = userEvent.setup();
     
             const {getByLabelText} = render(
-                <IngredientForm ingredient={{
-                    Ingredient_Name: 'Test Ingredient',
-                    Ingredient_Quantity: 1,
-                    Ingredient_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
+                <InventoryItemForm inventoryItem={{
+                    Inventory_Item_Name: 'Test Ingredient',
+                    Inventory_Item_Quantity: 1,
+                    Inventory_Item_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
                 }} 
                 onCancel={onCancelMock}
                 isFormVisible={true}
@@ -193,7 +195,7 @@ describe("When Submit button is pressed", () => {
         test("With initial values when unchanged", async () => {
             const user = userEvent.setup();
             const {getByText, getByLabelText} = render(
-                <IngredientForm isFormVisible={true}/>,
+                <InventoryItemForm isFormVisible={true}/>,
             );
 
             const submitButton = getByText(/Submit/i);
@@ -206,19 +208,19 @@ describe("When Submit button is pressed", () => {
 
             await user.press(submitButton);
 
-            expect(mockdataContext.addIngredient).toHaveBeenCalledTimes(1);
-            expect(mockdataContext.updateIngredient).toHaveBeenCalledTimes(0);
+            expect(mockdataContext.addInventoryItem).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.updateInventoryItem).toHaveBeenCalledTimes(0);
         })
         test("With changed values when changed", async () => {
             const user = userEvent.setup();
             const {getByText, getByLabelText} = render(
-                <IngredientForm isFormVisible={true}/>,
+                <InventoryItemForm isFormVisible={true}/>,
             );
 
-            const testIngredient : Ingredient = {
-                Ingredient_Name: 'Test Ingredient 1',
-                Ingredient_Quantity: 1,
-                Ingredient_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
+            const testIngredient : Inventory_Item = {
+                Inventory_Item_Name: 'Test Ingredient 1',
+                Inventory_Item_Quantity: 1,
+                Inventory_Item_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
             };
 
             const submitButton = getByText(/Submit/i);
@@ -236,7 +238,7 @@ describe("When Submit button is pressed", () => {
             fireEvent(dateInput, 'onChange', {
                 type: 'set',
                 nativeEvent: {
-                    timestamp: testIngredient.Ingredient_Date?.getTime(),
+                    timestamp: testIngredient.Inventory_Item_Date?.getTime(),
                     utcOffset: 0,
                 }}, dateInput);
 
@@ -244,10 +246,10 @@ describe("When Submit button is pressed", () => {
 
             await user.press(submitButton);
 
-            expect(mockdataContext.addIngredient).toHaveBeenCalledTimes(1);
-            expect(mockdataContext.updateIngredient).toHaveBeenCalledTimes(0);
+            expect(mockdataContext.addInventoryItem).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.updateInventoryItem).toHaveBeenCalledTimes(0);
 
-            expect(mockdataContext.addIngredient).toHaveBeenCalledWith(testIngredient);
+            expect(mockdataContext.addInventoryItem).toHaveBeenCalledWith(testIngredient);
         })
 
     })
@@ -255,15 +257,15 @@ describe("When Submit button is pressed", () => {
         test("With initial values when unchanged", async () => {
             const user = userEvent.setup();
 
-            const testIngredient = {
-                Ingredient_ID: 1,
-                Ingredient_Name: 'Test Ingredient',
-                Ingredient_Quantity: 1,
-                Ingredient_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
+            const testInventoryItem : Inventory_Item = {
+                Inventory_Item_ID: 1,
+                Inventory_Item_Name: 'Test Ingredient',
+                Inventory_Item_Quantity: 1,
+                Inventory_Item_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
             };
 
             const {getByText, getByLabelText} = render(
-                <IngredientForm ingredient={testIngredient} isFormVisible={true} />,
+                <InventoryItemForm inventoryItem={testInventoryItem} isFormVisible={true} />,
             );
 
             const submitButton = getByText(/Submit/i);
@@ -276,28 +278,28 @@ describe("When Submit button is pressed", () => {
 
             await user.press(submitButton);
 
-            expect(mockdataContext.addIngredient).toHaveBeenCalledTimes(0);
-            expect(mockdataContext.updateIngredient).toHaveBeenCalledTimes(1);
-            expect(mockdataContext.updateIngredient).toHaveBeenCalledWith(testIngredient);
+            expect(mockdataContext.addInventoryItem).toHaveBeenCalledTimes(0);
+            expect(mockdataContext.updateInventoryItem).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.updateInventoryItem).toHaveBeenCalledWith(testInventoryItem);
         })
         test("With changed values when changed", async () => { 
             const user = userEvent.setup();
-            const testIngredient = {
-                Ingredient_ID: 1,
-                Ingredient_Name: 'Test Ingredient 1',
-                Ingredient_Quantity: 1,
-                Ingredient_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
+            const testInventoryItem : Inventory_Item = {
+                Inventory_Item_ID: 1,
+                Inventory_Item_Name: 'Test Ingredient 1',
+                Inventory_Item_Quantity: 1,
+                Inventory_Item_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
             };
 
             const {getByText, getByLabelText} = render(
-                <IngredientForm ingredient={testIngredient} isFormVisible={true}/>,
+                <InventoryItemForm inventoryItem={testInventoryItem} isFormVisible={true}/>,
             );
 
-            const expectedIngredient : Ingredient = {
-                Ingredient_ID: 1,
-                Ingredient_Name: 'Test Ingredient 1 Input Test',
-                Ingredient_Quantity: 12,
-                Ingredient_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 4), // 1 week from now
+            const expectedInventoryItem : Inventory_Item = {
+                Inventory_Item_ID: 1,
+                Inventory_Item_Name: 'Test Ingredient 1 Input Test',
+                Inventory_Item_Quantity: 12,
+                Inventory_Item_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 4), // 1 week from now
             };
 
             const submitButton = getByText(/Submit/i);
@@ -316,7 +318,7 @@ describe("When Submit button is pressed", () => {
             fireEvent(dateInput, 'onChange', {
                 type: 'set',
                 nativeEvent: {
-                    timestamp: expectedIngredient.Ingredient_Date?.getTime(),
+                    timestamp: expectedInventoryItem.Inventory_Item_Date?.getTime(),
                     utcOffset: 0,
                 }}, dateInput);
 
@@ -324,17 +326,17 @@ describe("When Submit button is pressed", () => {
 
             await user.press(submitButton);
 
-            expect(mockdataContext.addIngredient).toHaveBeenCalledTimes(0);
-            expect(mockdataContext.updateIngredient).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.addInventoryItem).toHaveBeenCalledTimes(0);
+            expect(mockdataContext.updateInventoryItem).toHaveBeenCalledTimes(1);
 
-            expect(mockdataContext.updateIngredient).toHaveBeenCalledWith(expectedIngredient);
+            expect(mockdataContext.updateInventoryItem).toHaveBeenCalledWith(expectedInventoryItem);
         })
     })
 })
 describe("Form Visibility is", () => {
     test("Visble when isFormVisible is true", () => {
         const { getByLabelText} = render(
-            <IngredientForm isFormVisible={true}/>,
+            <InventoryItemForm isFormVisible={true}/>,
         );
 
         const form = getByLabelText("formContainer");
@@ -342,7 +344,7 @@ describe("Form Visibility is", () => {
     })
     test("Invisible when isFormVisible is false", () => {
         const {queryByLabelText} = render(
-            <IngredientForm isFormVisible={false}/>,
+            <InventoryItemForm isFormVisible={false}/>,
         );
 
         const form = queryByLabelText("formContainer");

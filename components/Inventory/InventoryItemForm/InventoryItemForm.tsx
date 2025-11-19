@@ -1,32 +1,33 @@
+//2025-11-19 : Renamed "Ingredient(s)" to "Inventory(_Items)"
+
 //2025-10-20 : Updated to useIngredient context, simplified a terary operator
 
 import React, {useState} from 'react'
 import { StyleSheet } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import Ingredient from "@/Types/Ingredient";
+import Inventory_Item from "@/Types/Inventory_Item";
 import ComponentView from '@/components/CustomComponents/ComponentView';
 import ButtonView from '@/components/CustomComponents/ButtonView';
 import FormFieldContainer from '@/components/CustomComponents/FormFieldContainer';
 import LabelText from '@/components/CustomComponents/LabelText';
 import FormTextInput from '@/components/CustomComponents/FormTextInput';
-import { useIngredients } from "@/Contexts/Ingredients/IngredientsDataProvider";
+import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 
-export default function IngredientForm({ingredient, onCancel, isFormVisible = false} : {ingredient?: Ingredient, onCancel?: () => void, isFormVisible?: boolean}) {
+export default function InventoryItemForm({inventoryItem, onCancel, isFormVisible = false} : {inventoryItem?: Inventory_Item, onCancel?: () => void, isFormVisible?: boolean}) {
 
-    const blankIngredient = {
-        Ingredient_Name: "",
-        Ingredient_Quantity: 0,
-        Ingredient_Date: new Date(),
+    const blankInventoryItem : Inventory_Item = {
+        Inventory_Item_Name: "",
+        Inventory_Item_Quantity: 0,
+        Inventory_Item_Date: new Date(),
     }
-    const [formIngredient, setFormIngredient] = useState<Ingredient>( ingredient || blankIngredient);
+    const [formInventoryItem, setFormInventoryItem] = useState<Inventory_Item>( inventoryItem || blankInventoryItem);
     const [pickerVisible, setPickerVisible] = useState(false);
-    const {addIngredient, updateIngredient} = useIngredients();
-
+    const {addInventoryItem, updateInventoryItem} = useInventory();
     const cancelHandler = () => {
-        if(formIngredient.Ingredient_ID) 
-            setFormIngredient(ingredient || blankIngredient);
+        if(formInventoryItem.Inventory_Item_ID) 
+            setFormInventoryItem(inventoryItem || blankInventoryItem);
         else
-            setFormIngredient(blankIngredient);
+            setFormInventoryItem(blankInventoryItem);
 
         if (onCancel) {
             onCancel();
@@ -34,11 +35,11 @@ export default function IngredientForm({ingredient, onCancel, isFormVisible = fa
     }
 
     const submitHandler = () => {
-        if(formIngredient?.Ingredient_ID)  
-            updateIngredient(formIngredient) 
+        if(formInventoryItem?.Inventory_Item_ID)  
+            updateInventoryItem(formInventoryItem) 
         else{ 
-            addIngredient(formIngredient);
-            setFormIngredient(blankIngredient);
+            addInventoryItem(formInventoryItem);
+            setFormInventoryItem(blankInventoryItem);
         }
         if (onCancel) {
             onCancel();
@@ -50,9 +51,9 @@ export default function IngredientForm({ingredient, onCancel, isFormVisible = fa
             <FormFieldContainer  >
                 <LabelText >Ingredient: </LabelText> 
                 <FormTextInput
-                    defaultValue={formIngredient.Ingredient_Name || ""}
+                    defaultValue={formInventoryItem.Inventory_Item_Name || ""}
                     inputMode='text'
-                    onChange={(event) => setFormIngredient({...formIngredient, Ingredient_Name: event.nativeEvent.text})}
+                    onChange={(event) => setFormInventoryItem({...formInventoryItem, Inventory_Item_Name: event.nativeEvent.text})}
                     aria-label="name-input"
                 />
             </FormFieldContainer>
@@ -64,24 +65,24 @@ export default function IngredientForm({ingredient, onCancel, isFormVisible = fa
                     style={{width: "70%", padding:0}}
                 >
                     <LabelText aria-label="date-input-button">
-                        {formIngredient.Ingredient_Date?.toLocaleDateString("en-UK", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                        {formInventoryItem.Inventory_Item_Date?.toLocaleDateString("en-UK", { year: "numeric", month: "2-digit", day: "2-digit" })}
                     </LabelText>
                 </ButtonView>
                 {pickerVisible ? <DateTimePicker
-                    value={formIngredient.Ingredient_Date || new Date()}
+                    value={formInventoryItem.Inventory_Item_Date || new Date()}
                     minimumDate={new Date()}
                     mode="date"
                     display="default"
-                    onChange={(event, date) => {setFormIngredient({...formIngredient, Ingredient_Date: date}); setPickerVisible(false)}}
+                    onChange={(event, date) => {setFormInventoryItem({...formInventoryItem, Inventory_Item_Date: date}); setPickerVisible(false)}}
                     aria-label="date-input"
                 /> : null}
             </FormFieldContainer>
             <FormFieldContainer  >
                 <LabelText >Quantity: </LabelText>
                 <FormTextInput
-                    defaultValue={formIngredient.Ingredient_Quantity?.toString() || ""}
+                    defaultValue={formInventoryItem.Inventory_Item_Quantity?.toString() || ""}
                     inputMode='numeric'
-                    onChange={(event) => setFormIngredient({...formIngredient, Ingredient_Quantity: parseInt(event.nativeEvent.text)})}
+                    onChange={(event) => setFormInventoryItem({...formInventoryItem, Inventory_Item_Quantity: parseInt(event.nativeEvent.text)})}
                     aria-label="quantity-input"
                 />
             </FormFieldContainer>

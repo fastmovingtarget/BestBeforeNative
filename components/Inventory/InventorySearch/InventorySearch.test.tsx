@@ -1,37 +1,39 @@
+//2025-11-19 : Renamed "Ingredient(s)" to "Inventory(_Items)"
+
 //2025-10-24 : Fixing import and mock to use correct context provider
 
 import {render, userEvent} from '@testing-library/react-native';
-import {useIngredients} from '@/Contexts/Ingredients/IngredientsDataProvider';
-import IngredientSearch from './IngredientSearch';
+import {useInventory} from '@/Contexts/Inventory/InventoryDataProvider';
+import IngredientSearch from './InventorySearch';
 
 
 
 const mockDataContext = {
-    setIngredientsSearchOptions: jest.fn(),
+    setInventorySearchOptions: jest.fn(),
   };
 
-jest.mock('@/Contexts/Ingredients/IngredientsDataProvider', () => ({
-  useIngredients: jest.fn(),
+jest.mock('@/Contexts/Inventory/InventoryDataProvider', () => ({
+  useInventory: jest.fn(),
 }));
 
 beforeEach(() => {
   jest.resetAllMocks();
-  const mockUseIngredients = useIngredients as jest.Mock;
-  mockUseIngredients.mockReturnValue(mockDataContext);
+  const mockUseInventory = useInventory as jest.Mock;
+  mockUseInventory.mockReturnValue(mockDataContext);
 });
 
-describe("Ingredient Search Renders", () => {
+describe("Inventory Search Renders", () => {
     test("The Search box", () => {
         const {getByLabelText} = render(<IngredientSearch />);
         expect(getByLabelText(/search-input/i)).toBeTruthy();
     })
 })
 describe("The Search box", () => {
-    test("The Search box starts empty", () => {
+    test("starts empty", () => {
         const {getByLabelText} = render(<IngredientSearch />);
         expect(getByLabelText(/search-input/i)).toHaveDisplayValue("");
     })
-    test("The Search box can be typed into", async () => {
+    test("can be typed into", async () => {
         const user = userEvent.setup();
 
         const {getByLabelText} = render(<IngredientSearch />);
@@ -39,7 +41,7 @@ describe("The Search box", () => {
         await user.type(searchInput, "Test Ingredient 1");
         expect(searchInput).toHaveDisplayValue("Test Ingredient 1");
     })
-    test("The Search box changes the search options when submitted", async () => {
+    test("changes the search options when submitted", async () => {
         const user = userEvent.setup();
 
         const {getByLabelText} = render(<IngredientSearch />);
@@ -49,7 +51,7 @@ describe("The Search box", () => {
         await user.type(searchInput, "Test Ingredient 1", {submitEditing: true})
         expect(searchInput).toHaveDisplayValue("Test Ingredient 1");
 
-        expect(mockDataContext.setIngredientsSearchOptions).toHaveBeenCalledWith({
+        expect(mockDataContext.setInventorySearchOptions).toHaveBeenCalledWith({
             searchText: "Test Ingredient 1",
         });
     })
