@@ -1,3 +1,5 @@
+//2025-11-19 : Renamed Ingredients to Inventory
+
 //2025-11-10 : Added improved documentation
 
 //2025-10-24 : Adding catch for fetch errors
@@ -7,21 +9,21 @@
 //2025-05-28 : When null Ingredient Date comes in, retains null value
 
 import React from "react";
-import Ingredient, {IngredientSearchOptions} from "../../Types/Ingredient";
+import Inventory_Item, {InventorySearchOptions} from "../../Types/Inventory_Item";
 import { SyncState } from "@/Types/DataLoadingState";
 /**
- * Fetches ingredients from the database based on user ID and optional search criteria,
- * then updates the local state with the retrieved ingredients.
- * @param {number} userID - The ID of the user whose ingredients are to be fetched.
- * @param {React.Dispatch<React.SetStateAction<Ingredient[]>>} setIngredients - State setter function for updating the ingredient list.
- * @param {IngredientSearchOptions} [searchOptions={}] - Optional search criteria for filtering ingredients.
+ * Fetches inventory from the database based on user ID and optional search criteria,
+ * then updates the local state with the retrieved inventory.
+ * @param {number} userID - The ID of the user whose inventory is to be fetched.
+ * @param {React.Dispatch<React.SetStateAction<Inventory_Item[]>>} setInventory - State setter function for updating the inventory list.
+ * @param {InventorySearchOptions} [searchOptions={}] - Optional search criteria for filtering inventory items.
  * @returns {Promise<SyncState>} - A promise that resolves to the sync state indicating success or failure.
  */
 
-export const getIngredientsData = async (
+export const getInventoryData = async (
     userID : number, 
-    setIngredients : React.Dispatch<React.SetStateAction<Ingredient[]>>, 
-    searchOptions : IngredientSearchOptions = {},
+    setInventory : React.Dispatch<React.SetStateAction<Inventory_Item[]>>, 
+    searchOptions : InventorySearchOptions = {},
 ) => {
     
     const serverProps = {
@@ -36,7 +38,7 @@ export const getIngredientsData = async (
 
     let returnPromise = new Promise<SyncState>((resolve) => {
         fetch(
-            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/ingredients/${userID}?${optionsString}`, 
+            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/inventory/${userID}?${optionsString}`, 
             {
                 method: "GET",
                 headers: {
@@ -48,13 +50,13 @@ export const getIngredientsData = async (
                 resolve(SyncState.Failed);
             }
             else {
-                rawData.json().then((data : Ingredient[]) => {
-                    setIngredients(
-                        data.map((element: Ingredient) => {
-                            if(element.Ingredient_Date) 
+                rawData.json().then((data : Inventory_Item[]) => {
+                    setInventory(
+                        data.map((element: Inventory_Item) => {
+                            if(element.Inventory_Item_Date) 
                                 return {
                                     ...element,
-                                    Ingredient_Date: element.Ingredient_Date ? new Date(element.Ingredient_Date) : undefined,//date comes in as a string and doesn't get properly parsed within .json()
+                                    Inventory_Item_Date: element.Inventory_Item_Date ? new Date(element.Inventory_Item_Date) : undefined,//date comes in as a string and doesn't get properly parsed within .json()
                                 };
                             
                             return element
@@ -63,7 +65,8 @@ export const getIngredientsData = async (
                     resolve(SyncState.Successful);
                 })
             }
-        }).catch(() => {
+        }).catch((error) => {
+            console.error("Error fetching inventory data", error);
             resolve(SyncState.Failed);
         });
     });
