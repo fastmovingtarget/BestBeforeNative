@@ -1,3 +1,5 @@
+//2025-11-20 : Cleanup of debug logs
+
 //2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
 
 //2025-11-10 : Added improved documentation
@@ -25,7 +27,6 @@ export const addRecipeData = (
     recipes : Recipe[],
     setRecipes : React.Dispatch<React.SetStateAction<Recipe[]>>, 
     recipe : Recipe,) => {
-        console.log("addRecipeData called with recipe:", recipe);
 
     const serverProps = {
         DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.183",
@@ -36,8 +37,6 @@ export const addRecipeData = (
         ...recipe,
         Recipe_User_ID: userId,
     } as Recipe;
-
-    console.log("Adding recipe:", requestBody);
 
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
