@@ -1,3 +1,5 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Item_... fields now have Shopping_ as a prefix
 
 //2025-10-23 : Converted to use Shopping List Context
@@ -8,7 +10,7 @@ import Shopping_List_Item from "@/Types/Shopping_List_Item";
 import { useState } from "react";
 import ShoppingListForm from "../ShoppingListForm/ShoppingListForm";
 import ShoppingListItem from "./ShoppingListItem/ShoppingListItem";
-import ListView from "@/components/CustomComponents/ListView";
+import ListView from "@/ui/ListView";
 import { useShoppingList } from "@/Contexts/ShoppingList/ShoppingListDataProvider";
 
 export default function ShoppingList({onEdit}: {onEdit: () => void}) {

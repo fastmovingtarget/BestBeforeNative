@@ -1,3 +1,5 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
 
 //2025-11-17 : Addeed a help/navigation button for the calendar
@@ -5,12 +7,12 @@
 //2025-10-28 : Filling out some initial implementation and tests
 
 import React, { useState } from "react";
-import ButtonView from "../CustomComponents/ButtonView";
-import LabelText from "../CustomComponents/LabelText";
-import PageView from "../CustomComponents/PageView";
+import ButtonView from "../../ui/ButtonView";
+import LabelText from "../../ui/LabelText";
+import PageView from "../../ui/PageView";
 import RecipePlanCalendar from "./PlannerCalendar/PlannerCalendar";
 import RecipePlanActiveDay from "./PlannerActiveDay/PlannerActiveDay";
-import ComponentView from "../CustomComponents/ComponentView";
+import ComponentView from "../../ui/ComponentView";
 
 export default function RecipePlanner() {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);

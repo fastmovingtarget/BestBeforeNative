@@ -1,3 +1,5 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Renamed "Ingredient(s)" to "Inventory(_Items)"
 
 //2025-10-20 : Updated to useIngredient context, simplified a terary operator
@@ -6,11 +8,11 @@ import React, {useState} from 'react'
 import { StyleSheet } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Inventory_Item from "@/Types/Inventory_Item";
-import ComponentView from '@/components/CustomComponents/ComponentView';
-import ButtonView from '@/components/CustomComponents/ButtonView';
-import FormFieldContainer from '@/components/CustomComponents/FormFieldContainer';
-import LabelText from '@/components/CustomComponents/LabelText';
-import FormTextInput from '@/components/CustomComponents/FormTextInput';
+import ComponentView from '@/ui/ComponentView';
+import ButtonView from '@/ui/ButtonView';
+import FormFieldContainer from '@/ui/FormFieldContainer';
+import LabelText from '@/ui/LabelText';
+import FormTextInput from '@/ui/FormTextInput';
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 
 export default function InventoryItemForm({inventoryItem, onCancel, isFormVisible = false} : {inventoryItem?: Inventory_Item, onCancel?: () => void, isFormVisible?: boolean}) {

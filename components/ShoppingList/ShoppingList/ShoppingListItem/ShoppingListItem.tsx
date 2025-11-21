@@ -1,3 +1,5 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Item_... fields now have Shopping_ as a prefix
 
 //2025-10-23 : Converted to use Shopping List and Ingredients contexts
@@ -9,9 +11,9 @@
 
 import { View } from "react-native";
 import type Shopping_List_Item from "@/Types/Shopping_List_Item";
-import ComponentView from "@/components/CustomComponents/ComponentView";
-import LabelText from "@/components/CustomComponents/LabelText";
-import ButtonView from "@/components/CustomComponents/ButtonView";
+import ComponentView from "@/ui/ComponentView";
+import LabelText from "@/ui/LabelText";
+import ButtonView from "@/ui/ButtonView";
 import { useShoppingList } from "@/Contexts/ShoppingList/ShoppingListDataProvider";
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 

@@ -1,12 +1,14 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Renamed "Ingredient(s)" to "Inventory(_Items)"
 
 //2025-10-20 : Changed to use Ingredients Context
 
 import {  View } from "react-native";
 import Inventory_Item from "@/Types/Inventory_Item";
-import ComponentView from "@/components/CustomComponents/ComponentView";
-import LabelText from "@/components/CustomComponents/LabelText";
-import ButtonView from "@/components/CustomComponents/ButtonView";
+import ComponentView from "@/ui/ComponentView";
+import LabelText from "@/ui/LabelText";
+import ButtonView from "@/ui/ButtonView";
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 
 export default function InventoryItemComponent({ inventoryItem, onEdit } : { inventoryItem: Inventory_Item, onEdit: (ingredientID: number) => void }) {

@@ -1,3 +1,5 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Item_... fields now have Shopping_ as a prefix
 
 //2025-10-23 : Converted to use Shopping List Context
@@ -6,11 +8,11 @@
 
 import { StyleSheet } from 'react-native';
 import Shopping_List_Item from '@/Types/Shopping_List_Item';
-import FormFieldContainer from '@/components/CustomComponents/FormFieldContainer';
-import LabelText from '@/components/CustomComponents/LabelText';
-import FormTextInput from '@/components/CustomComponents/FormTextInput';
-import ButtonView from '@/components/CustomComponents/ButtonView';
-import ComponentView from '@/components/CustomComponents/ComponentView';
+import FormFieldContainer from '@/ui/FormFieldContainer';
+import LabelText from '@/ui/LabelText';
+import FormTextInput from '@/ui/FormTextInput';
+import ButtonView from '@/ui/ButtonView';
+import ComponentView from '@/ui/ComponentView';
 import { useState } from 'react';
 import { useShoppingList } from '@/Contexts/ShoppingList/ShoppingListDataProvider';
 

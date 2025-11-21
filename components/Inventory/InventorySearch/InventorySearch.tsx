@@ -1,9 +1,11 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Renamed "Ingredient(s)" to "Inventory(_Items)"
 
 //2025-10-20 : Removed extra imports, changed to use ingredients context
 
-import ComponentView from "@/components/CustomComponents/ComponentView";
-import FormTextInput from "@/components/CustomComponents/FormTextInput";
+import ComponentView from "@/ui/ComponentView";
+import FormTextInput from "@/ui/FormTextInput";
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 
 export default function IngredientSearch() {

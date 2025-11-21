@@ -1,9 +1,11 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-10-20 : Switched to using recipes context, added key to stop list complaining
 
 import React from "react";
 import Recipe from "@/Types/Recipe";
 import RecipesListItem from "./RecipesListItem/RecipesListItem";
-import ListView from "@/components/CustomComponents/ListView";
+import ListView from "@/ui/ListView";
 import { useRecipes } from "@/Contexts/Recipes/RecipesDataProvider";
 
 export default function RecipesList({ setSelectedRecipe }: { setSelectedRecipe: (recipe: Recipe) => void }) {

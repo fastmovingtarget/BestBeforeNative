@@ -1,3 +1,5 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
 
 //2025-11-17 : Added recipe search, toggle button
@@ -11,19 +13,19 @@
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
 import React, {useState} from 'react';
-import ScrollableComponent from '@/components/CustomComponents/ScrollableComponent';
-import ListView from '@/components/CustomComponents/ListView';
+import ScrollableComponent from '@/ui/ScrollableComponent';
+import ListView from '@/ui/ListView';
 
 import Recipe from '@/Types/Recipe';
 import Plan from '@/Types/Plan';
-import LabelText from '@/components/CustomComponents/LabelText';
+import LabelText from '@/ui/LabelText';
 import RecipesListItem from '@/components/Recipes/RecipesList/RecipesListItem/RecipesListItem'; 
-import FormFieldContainer from '@/components/CustomComponents/FormFieldContainer';
-import ButtonView from '@/components/CustomComponents/ButtonView';
+import FormFieldContainer from '@/ui/FormFieldContainer';
+import ButtonView from '@/ui/ButtonView';
 import { usePlans } from '@/Contexts/Plans/PlansDataProvider';
 import { useRecipes } from '@/Contexts/Recipes/RecipesDataProvider';
-import FormTextInput from '@/components/CustomComponents/FormTextInput';
-import ComponentView from '@/components/CustomComponents/ComponentView';
+import FormTextInput from '@/ui/FormTextInput';
+import ComponentView from '@/ui/ComponentView';
 import { View } from 'react-native';
 
 /**

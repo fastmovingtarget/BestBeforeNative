@@ -1,4 +1,6 @@
-import {View} from "react-native";
+//2025-11-21 : Moving common UI elements into their own folder
+
+import {ScrollView} from "react-native";
 import type { PropsWithChildren } from "react";
 import type { ViewStyle } from "react-native";
 
@@ -9,14 +11,14 @@ type ComponentViewProps = {
 
 const ComponentView = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildren<ComponentViewProps>) => {
     return (
-        <View 
-            style={{ 
+        <ScrollView 
+            contentContainerStyle={{ 
                 ...componentViewStyles,
                 ...style,
             }}
             aria-label={ariaLabel}>
             {children}
-        </View>
+        </ScrollView>
     );
 }
 
@@ -32,6 +34,5 @@ const componentViewStyles = {
     padding: 10,
     margin: 5,
 } as ViewStyle;
-
 
 export default ComponentView;

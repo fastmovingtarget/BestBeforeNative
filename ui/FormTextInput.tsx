@@ -1,3 +1,5 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 import {Text, TextInput, NativeSyntheticEvent, TextInputSubmitEditingEventData} from "react-native";
 import type { PropsWithChildren } from "react";
 import type { TextInputChangeEventData, TextStyle} from "react-native";

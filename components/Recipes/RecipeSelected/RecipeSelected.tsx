@@ -1,10 +1,12 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
 
 //2025-10-20 : Removed unnecessary imports
 
 import React from "react";
-import ScrollableComponent from "@/components/CustomComponents/ScrollableComponent";
-import LabelText from "@/components/CustomComponents/LabelText";
+import ScrollableComponent from "@/ui/ScrollableComponent";
+import LabelText from "@/ui/LabelText";
 import Recipe from "@/Types/Recipe";
 
 export default function RecipeSelected({recipe}: { recipe: Recipe}) {

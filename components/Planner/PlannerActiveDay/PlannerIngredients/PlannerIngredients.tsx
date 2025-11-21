@@ -1,3 +1,5 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
 
 //2025-11-17 : Full initial implementation and documentation
@@ -8,13 +10,13 @@ import React, {useState} from "react";
 import Recipe_Plan, {Plan_Ingredient} from "@/Types/Plan";
 import Shopping_List_Item from "@/Types/Shopping_List_Item";
 import Inventory_Item from "@/Types/Inventory_Item";
-import PressableComponent from "@/components/CustomComponents/PressableComponent";
+import PressableComponent from "@/ui/PressableComponent";
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 import { useShoppingList } from "@/Contexts/ShoppingList/ShoppingListDataProvider";
-import ListView from "@/components/CustomComponents/ListView";
+import ListView from "@/ui/ListView";
 import { usePlans } from "@/Contexts/Plans/PlansDataProvider";
-import LabelText from "@/components/CustomComponents/LabelText";
-import ComponentView from "@/components/CustomComponents/ComponentView";
+import LabelText from "@/ui/LabelText";
+import ComponentView from "@/ui/ComponentView";
 
 /**
  * React Component for displaying the ingredients of a selected recipe plan

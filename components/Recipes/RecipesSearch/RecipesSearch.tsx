@@ -1,8 +1,10 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-10-20 : Using Recipes context rather than Data context
 
 import React from "react";
-import ComponentView from "@/components/CustomComponents/ComponentView";
-import FormTextInput from "@/components/CustomComponents/FormTextInput";
+import ComponentView from "@/ui/ComponentView";
+import FormTextInput from "@/ui/FormTextInput";
 import {useRecipes} from "@/Contexts/Recipes/RecipesDataProvider";
 
 export default function RecipesSearch() {

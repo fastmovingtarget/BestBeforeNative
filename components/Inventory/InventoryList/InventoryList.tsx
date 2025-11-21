@@ -1,3 +1,5 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Renamed "Ingredient(s)" to "Inventory(_Items)"
 
 //2025-10-20 : Changed to use Ingredients Context
@@ -7,7 +9,7 @@ import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 import { useState } from "react";
 import InventoryItemComponent from "./InventoryItemComponent/InventoryItemComponent";
 import InventoryItemForm from "../InventoryItemForm/InventoryItemForm";
-import ListView from "@/components/CustomComponents/ListView";
+import ListView from "@/ui/ListView";
 
 export default function IngredientsList({onEdit}: {onEdit: () => void}) {
     const [editId, setEditId] = useState<number | undefined>(undefined);

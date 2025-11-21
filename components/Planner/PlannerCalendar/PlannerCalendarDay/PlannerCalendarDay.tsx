@@ -1,3 +1,5 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
 
 //2025-11-17 : Correctly shows Recipe Plans for date
@@ -7,8 +9,8 @@
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
 import React from 'react';
-import LabelText from "@/components/CustomComponents/LabelText";
-import PressableComponent from "@/components/CustomComponents/PressableComponent";
+import LabelText from "@/ui/LabelText";
+import PressableComponent from "@/ui/PressableComponent";
 import { usePlans } from '@/Contexts/Plans/PlansDataProvider';
 
 /**

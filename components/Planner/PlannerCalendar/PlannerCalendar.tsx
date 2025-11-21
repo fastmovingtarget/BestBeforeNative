@@ -1,3 +1,5 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
 
 //2025-11-17 : Added docs, recipe plan display to calendar day
@@ -9,9 +11,9 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import PlannerCalendarDay from './PlannerCalendarDay/PlannerCalendarDay';
-import LabelText from '@/components/CustomComponents/LabelText';
-import ComponentView from '@/components/CustomComponents/ComponentView';
-import PressableComponent from '@/components/CustomComponents/PressableComponent';
+import LabelText from '@/ui/LabelText';
+import ComponentView from '@/ui/ComponentView';
+import PressableComponent from '@/ui/PressableComponent';
 
 /**
  * React Component for displaying the Planner Calendar

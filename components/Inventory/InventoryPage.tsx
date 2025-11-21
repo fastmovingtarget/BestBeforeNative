@@ -1,12 +1,14 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Renamed "Ingredient(s)" to "Inventory(_Items)"
 
 //2025-10-28 : Removing extraneous import
 
 import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import ButtonView from "../CustomComponents/ButtonView";
-import LabelText from "../CustomComponents/LabelText";
-import PageView from "../CustomComponents/PageView";
+import ButtonView from "../../ui/ButtonView";
+import LabelText from "../../ui/LabelText";
+import PageView from "../../ui/PageView";
 import InventorySearch from "./InventorySearch/InventorySearch";
 import InventoryList from "./InventoryList/InventoryList";
 import InventoryItemForm from "./InventoryItemForm/InventoryItemForm";

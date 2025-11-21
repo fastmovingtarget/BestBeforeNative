@@ -1,3 +1,5 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
 
 //2025-10-20 : Switched to using Recipes Data Context
@@ -5,15 +7,15 @@
 //Wed, May 21, 2025 11:23:24 AM : Switching Cancel and Submit buttons for consistency
 
 import React from 'react';
-import LabelText from '@/components/CustomComponents/LabelText';
-import FormFieldContainer from '@/components/CustomComponents/FormFieldContainer';
-import FormTextInput from '@/components/CustomComponents/FormTextInput';
-import ScrollableComponent from '@/components/CustomComponents/ScrollableComponent';
-import ButtonView from '@/components/CustomComponents/ButtonView';
+import LabelText from '@/ui/LabelText';
+import FormFieldContainer from '@/ui/FormFieldContainer';
+import FormTextInput from '@/ui/FormTextInput';
+import ScrollableComponent from '@/ui/ScrollableComponent';
+import ButtonView from '@/ui/ButtonView';
 import Recipe from '@/Types/Recipe';
 import { useRecipes } from "@/Contexts/Recipes/RecipesDataProvider"
 import Recipe_Ingredient from '@/Types/Recipe_Ingredient';
-import ComponentView from '@/components/CustomComponents/ComponentView';
+import ComponentView from '@/ui/ComponentView';
 
 const blankRecipe = {
     Recipe_Name: "",

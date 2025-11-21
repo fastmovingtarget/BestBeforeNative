@@ -1,16 +1,18 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-10-20 : Changed to using recipes context
 
 import { useState } from "react"
 import type Recipe from "@/Types/Recipe"
-import PageView from "../CustomComponents/PageView"
+import PageView from "../../ui/PageView"
 import RecipeForm from "./RecipeForm/RecipeForm"
 import RecipesList from "./RecipesList/RecipesList"
 import RecipesSearch from "./RecipesSearch/RecipesSearch"
 import RecipeSelected from "./RecipeSelected/RecipeSelected"
-import FormFieldContainer from "../CustomComponents/FormFieldContainer"
-import ComponentView from "../CustomComponents/ComponentView"
-import ButtonView from "../CustomComponents/ButtonView"
-import LabelText from "../CustomComponents/LabelText"
+import FormFieldContainer from "../../ui/FormFieldContainer"
+import ComponentView from "../../ui/ComponentView"
+import ButtonView from "../../ui/ButtonView"
+import LabelText from "../../ui/LabelText"
 import { useRecipes } from "../../Contexts/Recipes/RecipesDataProvider";
 
 export default function RecipesPage() {

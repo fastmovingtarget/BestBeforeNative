@@ -1,3 +1,5 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
 
 //2025-11-17 : Added Docs, corrected styles and naming
@@ -10,8 +12,8 @@ import React, { useState } from "react";
 import Recipe_Plan from "@/Types/Plan";
 import PlannerActiveDayRecipes from "./PlannerActiveDayRecipes/PlannerActiveDayRecipes";
 import PlannerIngredients from "./PlannerIngredients/PlannerIngredients";
-import ComponentView from "@/components/CustomComponents/ScrollableComponent";
-import LabelText from "@/components/CustomComponents/LabelText";
+import ComponentView from "@/ui/ScrollableComponent";
+import LabelText from "@/ui/LabelText";
 
 /**
  * React Component for displaying the active day view of the Recipe Planner
