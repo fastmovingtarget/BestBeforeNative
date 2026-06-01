@@ -1,3 +1,5 @@
+//2026-06-01 : updating local IP Address
+
 //2025-11-19 : Item_(...) now have Shopping_ Prefix
 
 //2025-11-10 : Added improved documentation
@@ -32,7 +34,7 @@ export const addShoppingListItemData = (
 ) => {
     
     const serverProps = {
-        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.183",
+        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     }
 
