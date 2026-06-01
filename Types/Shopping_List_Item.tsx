@@ -1,3 +1,5 @@
+//2026-06-01 : Field name tweaking
+
 //2025-11-19 : Item_... fields now have Shopping_ as a prefix
 
 //2025-05-27 : Adding Shopping List Search Options
@@ -13,7 +15,7 @@ interface Shopping_List_Item {
 }
 
 export interface ShoppingListSearchOptions {
-    searchString?: string;
+    searchText?: string;
     sortBy?: "Shopping_Item_Name" | "Shopping_Item_Quantity";
     sortOrder?: "asc" | "desc";
     amount?: number;
