@@ -1,8 +1,11 @@
+//2026-06-01 : UI Tweaking
+
 //2025-11-21 : Moving common UI elements into their own folder
 
-import {Text, TextInput, NativeSyntheticEvent, TextInputSubmitEditingEventData} from "react-native";
+import { TextInput, NativeSyntheticEvent, } from "react-native";
 import type { PropsWithChildren } from "react";
 import type { TextInputChangeEventData, TextStyle} from "react-native";
+import { Colours } from "@/constants/Colors";
 
 type InputTextProps = {
     style?: TextStyle,
@@ -29,7 +32,7 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onCha
             onChangeText={onChangeText}
             aria-label={ariaLabel}
             placeholder={placeholder}
-            placeholderTextColor={"#e3dccf"}
+            placeholderTextColor={Colours.placeholderText}
             multiline={multiline}
             numberOfLines={numberOfLines}
         >
@@ -43,8 +46,8 @@ const inputTextStyles = {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: "#111111",
-        color: "#e3dccf",
+        backgroundColor: Colours.inputBackground,
+        color: Colours.text,
         borderRadius: 5,
         textAlignVertical: "center",
         width: "70%",

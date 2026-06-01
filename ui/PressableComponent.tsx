@@ -1,8 +1,11 @@
+//2026-06-01 : UI Tweaking
+
 //2025-11-21 : Moving common UI elements into their own folder
 
 import {Pressable} from "react-native";
 import type { PropsWithChildren } from "react";
 import type { ViewStyle, AccessibilityProps } from "react-native";
+import { Colours } from "@/constants/Colors";
 
 type PressableViewProps = PropsWithChildren<{
     style? : ViewStyle, 
@@ -14,9 +17,18 @@ type PressableViewProps = PropsWithChildren<{
 const PressableComponent : React.FC<PressableViewProps> = ({style, children, onPress, "aria-label" : ariaLabel, accessibilityRole} : PressableViewProps ) => {
     return (
         <Pressable 
-            style={{ 
-                ...pressableViewStyles,
-                ...style,
+            style={({pressed}) => {
+                if(pressed) 
+                    return {
+                        ...pressableViewStyles,
+                        ...style,
+                        backgroundColor: Colours.buttonBackgroundPressed,
+                    }  
+                else 
+                    return {    
+                        ...pressableViewStyles,
+                        ...style,
+                    }
             }}
             onPress={onPress}
             accessibilityRole={accessibilityRole}
@@ -33,8 +45,9 @@ const pressableViewStyles = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#191f2b",
-    color: "#e6e0d4",
+    width: "100%",
+    backgroundColor: Colours.primary,
+    color: Colours.text,
     borderRadius: 10,
     padding: 10,
     margin: 5,

@@ -1,8 +1,11 @@
+//2026-06-01 : UI Tweaking
+
 //2025-11-21 : Moving common UI elements into their own folder
 
 import {Text} from "react-native";
 import type { PropsWithChildren } from "react";
 import type { TextStyle } from "react-native";
+import { Colours } from "@/constants/Colors";
 
 type LabelTextProps = {
     style?: TextStyle,
@@ -28,7 +31,7 @@ const labelTextStyles = {
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 5,
-    color: "#e3dccf",
+    color: Colours.text,
     padding: 10,
     margin:0,
     textAlignVertical: "center",
