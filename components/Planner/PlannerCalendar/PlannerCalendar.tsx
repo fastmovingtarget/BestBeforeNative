@@ -1,3 +1,5 @@
+//2026-06-01 : Calendar Grid code moved to separate file
+
 //2025-11-21 : Moving common UI elements into their own folder
 
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
@@ -9,11 +11,9 @@
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
 import React, { useState } from 'react';
-import { View } from 'react-native';
-import PlannerCalendarDay from './PlannerCalendarDay/PlannerCalendarDay';
-import LabelText from '@/ui/LabelText';
-import ComponentView from '@/ui/ComponentView';
-import PressableComponent from '@/ui/PressableComponent';
+import PlannerCalendarDay from './PlannerCalendarGrid/PlannerCalendarDay/PlannerCalendarDay';
+import {ColumnContainer, FadeComponent, LabelText, PressableComponent, RowContainer} from '@/ui/BestBeforeUI';
+import PlannerCalendarGrid from './PlannerCalendarGrid/PlannerCalendarGrid';
 
 /**
  * React Component for displaying the Planner Calendar
@@ -28,7 +28,7 @@ export default function PlannerCalendar({setSelectedDate} : {setSelectedDate: (d
 
     const [monthIndex, setMonthIndex] = useState(0); // 0 for current month, -1 for last month, 1 for next month
 
-    const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const daysOfWeek = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
     const today = new Date();
 
@@ -44,40 +44,19 @@ export default function PlannerCalendar({setSelectedDate} : {setSelectedDate: (d
     });
 
     return (
-        <>
-            <ComponentView style={{flexDirection:"row", justifyContent: "space-between", alignItems: "center", padding: 0, height:"0%"}}>
-                <PressableComponent onPress={() => setMonthIndex(monthIndex - 1)}>
+        <ColumnContainer style={{flex:1, padding: 5, marginHorizontal:0}}>
+            <FadeComponent style={{flexDirection:"row", justifyContent: "space-between", alignItems: "center", padding: 0}}>
+                <PressableComponent onPress={() => setMonthIndex(monthIndex - 1)} style={{flex:1}}>
                     <LabelText style={{fontSize: 18, fontWeight: "bold"}}>{"<"}</LabelText>
                 </PressableComponent>
                 <LabelText style={{fontSize: 18, fontWeight: "bold"}}>
                     {monthStartDate.toLocaleString('default', { month: 'long' })}
                 </LabelText>
-                <PressableComponent onPress={() => setMonthIndex(monthIndex + 1)}>
+                <PressableComponent onPress={() => setMonthIndex(monthIndex + 1)} style={{flex:1}}>
                     <LabelText style={{fontSize: 18, fontWeight: "bold"}}>{">"}</LabelText>
                 </PressableComponent>
-            </ComponentView>
-            <View style={{flexDirection: "row"}}>
-                {daysOfWeek.map((day, index) => (
-                    <LabelText key={index} style={{textAlign: "center", fontWeight: "bold", paddingVertical: 5, flex: 1, marginHorizontal:0, marginVertical:3, padding:0}}>
-                        {day}
-                    </LabelText>
-                ))}
-            </View>
-            <View style={{flexDirection: "column", flex:6}}>
-            {
-                weeksArray.map((week, weekIndex) => (
-                    <View style={{flexDirection: "row", width: "100%", flex:1}} key={weekIndex}>
-                        {week.map((date, index) => (
-                            <PlannerCalendarDay
-                                key={index}
-                                date={date}
-                                onPress={() => setSelectedDate(date)} // Replace with actual onPress function
-                            />  
-                        ))}
-                    </View>
-                ))
-            }
-            </View>
-        </>
+            </FadeComponent>
+            <PlannerCalendarGrid monthIndex={monthIndex} setSelectedDate={setSelectedDate} />
+        </ColumnContainer>
     );
 }
