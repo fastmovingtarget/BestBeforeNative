@@ -1,3 +1,5 @@
+//2026-06-01 : feat: use FadeComponent, consolidate UI
+
 //2025-11-21 : Moving common UI elements into their own folder
 
 //2025-11-19 : Renamed "Ingredient(s)" to "Inventory(_Items)"
@@ -8,12 +10,9 @@ import React, {useState} from 'react'
 import { StyleSheet } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Inventory_Item from "@/Types/Inventory_Item";
-import ComponentView from '@/ui/ComponentView';
-import ButtonView from '@/ui/ButtonView';
-import FormFieldContainer from '@/ui/FormFieldContainer';
-import LabelText from '@/ui/LabelText';
-import FormTextInput from '@/ui/FormTextInput';
+import { ButtonView, LabelText, FormTextInput, RowContainer, FadeComponent } from '@/ui/BestBeforeUI';
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
+import { MountState } from '@/ui/Types/MountState';
 
 export default function InventoryItemForm({inventoryItem, onCancel, isFormVisible = false} : {inventoryItem?: Inventory_Item, onCancel?: () => void, isFormVisible?: boolean}) {
 
@@ -25,15 +24,14 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
     const [formInventoryItem, setFormInventoryItem] = useState<Inventory_Item>( inventoryItem || blankInventoryItem);
     const [pickerVisible, setPickerVisible] = useState(false);
     const {addInventoryItem, updateInventoryItem} = useInventory();
+    const [mountState, setMountState] = useState<MountState>(MountState.Mount);
     const cancelHandler = () => {
         if(formInventoryItem.Inventory_Item_ID) 
             setFormInventoryItem(inventoryItem || blankInventoryItem);
         else
             setFormInventoryItem(blankInventoryItem);
 
-        if (onCancel) {
-            onCancel();
-        }
+        setMountState(MountState.Unmount);
     }
 
     const submitHandler = () => {
@@ -43,14 +41,13 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
             addInventoryItem(formInventoryItem);
             setFormInventoryItem(blankInventoryItem);
         }
-        if (onCancel) {
-            onCancel();
-        }
+        
+        setMountState(MountState.Unmount);
     }
 
     return (
-        <ComponentView aria-label="formContainer" style={isFormVisible ? styles.formVisible : styles.formInvisible} >
-            <FormFieldContainer  >
+        <FadeComponent aria-label="formContainer" style={isFormVisible ? styles.formVisible : styles.formInvisible} mountState={mountState} onUnmountAnimationEnd={() => {if(onCancel) onCancel()}} >
+            <RowContainer  >
                 <LabelText >Ingredient: </LabelText> 
                 <FormTextInput
                     defaultValue={formInventoryItem.Inventory_Item_Name || ""}
@@ -58,9 +55,9 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
                     onChange={(event) => setFormInventoryItem({...formInventoryItem, Inventory_Item_Name: event.nativeEvent.text})}
                     aria-label="name-input"
                 />
-            </FormFieldContainer>
+            </RowContainer>
                 
-            <FormFieldContainer  >
+            <RowContainer  >
                 <LabelText aria-label="date-input-label" >Use By: </LabelText>
                 <ButtonView
                     onPress={() => setPickerVisible(!pickerVisible)}
@@ -78,8 +75,8 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
                     onChange={(event, date) => {setFormInventoryItem({...formInventoryItem, Inventory_Item_Date: date}); setPickerVisible(false)}}
                     aria-label="date-input"
                 /> : null}
-            </FormFieldContainer>
-            <FormFieldContainer  >
+            </RowContainer>
+            <RowContainer  >
                 <LabelText >Quantity: </LabelText>
                 <FormTextInput
                     defaultValue={formInventoryItem.Inventory_Item_Quantity?.toString() || ""}
@@ -87,17 +84,16 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
                     onChange={(event) => setFormInventoryItem({...formInventoryItem, Inventory_Item_Quantity: parseInt(event.nativeEvent.text)})}
                     aria-label="quantity-input"
                 />
-            </FormFieldContainer>
-            <FormFieldContainer style={{justifyContent:"space-around"}} >
+            </RowContainer>
+            <RowContainer style={{justifyContent:"space-around"}} >
                 <ButtonView onPress={cancelHandler}>
                     <LabelText >Cancel</LabelText>
                 </ButtonView>
                 <ButtonView onPress={submitHandler}>
                     <LabelText >Submit</LabelText>
                 </ButtonView>
-            </FormFieldContainer>
-
-        </ComponentView>
+            </RowContainer>
+        </FadeComponent>
     )
 }
 
