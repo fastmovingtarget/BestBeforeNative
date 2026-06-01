@@ -1,3 +1,5 @@
+//2026-06-01 : File location changed
+
 //2025-11-21 : Moving common UI elements into their own folder
 
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
@@ -9,9 +11,9 @@
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
 import React from 'react';
-import LabelText from "@/ui/LabelText";
-import PressableComponent from "@/ui/PressableComponent";
 import { usePlans } from '@/Contexts/Plans/PlansDataProvider';
+
+import {Component, FadeComponent, LabelText, PressableComponent} from '@/ui/BestBeforeUI';
 
 /**
  * React Component for displaying a single day in the Recipe Plan Calendar
@@ -23,7 +25,7 @@ import { usePlans } from '@/Contexts/Plans/PlansDataProvider';
  * @returns React Component
  */
 
-export default function PlannerCalendarDay({onPress, date} : {onPress:(date : number) => void, date: Date}) {
+export default function PlannerCalendarDay({onPress, date, greyOut} : {onPress:(date : number) => void, date: Date, greyOut?: boolean}) {
 
     const {plans} = usePlans();
     const recipePlansForDate = plans.filter(plan => {
@@ -31,31 +33,38 @@ export default function PlannerCalendarDay({onPress, date} : {onPress:(date : nu
         return planDate.getFullYear() === date.getFullYear() &&
                planDate.getMonth() === date.getMonth() &&
                planDate.getDate() === date.getDate();
-    }).map(plan => plan.Recipe_Name);
+    })
 
     return (
         <PressableComponent
             onPress={() => onPress(date.getDate())}
-            style={{flexDirection: "column", flex:1, margin: 1, padding: 0, justifyContent: "flex-start", alignItems: "center"}}
+            style={{flexDirection: "column", flex:1, margin: 1, padding: 0, justifyContent: "flex-start", alignItems: "center", height:"100%", overflow: "hidden"}}
             >
-            <LabelText style={{textAlign: "center", fontSize: 14, fontWeight: "bold", verticalAlign: "top"}}>
+            <LabelText style={{textAlign: "center", fontSize: 14, fontWeight: "bold", verticalAlign: "top", marginVertical: 0, padding: 0}}>
                     {date.getDate()}
             </LabelText>
+            <Component style={{flex:1, width: "100%", justifyContent: "flex-start", alignItems: "center", margin:0, padding:0, overflow: "hidden", flexShrink:1,}}>
             {recipePlansForDate.map(recipePlan => {
                 return (
                     <LabelText
-                        key={"recipe-plan-" + recipePlan}
-                        aria-label={"recipe-plan-" + recipePlan}
+                        key={"recipe-plan-" + recipePlan.Plan_ID}
+                        aria-label={"recipe-plan-" + recipePlan.Plan_ID}
                         style={{
                             textAlign: "center",
                             fontSize: 12,
-                            marginVertical: 2,
+                            marginVertical: 1,
+                            padding:0,
+                            flexShrink:1,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            opacity: greyOut ? 0.5 : 1,
                         }}
                     >
-                        {recipePlan}
+                        {recipePlan.Recipe_Name}
                     </LabelText>
                 );
             })}
+            </Component>
         </PressableComponent>
     );
 }
