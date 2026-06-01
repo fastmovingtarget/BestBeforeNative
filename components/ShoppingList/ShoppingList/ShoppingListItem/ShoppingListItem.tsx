@@ -1,3 +1,5 @@
+//2026-06-01 : Using FadeComponent and RowContainer
+
 //2025-11-21 : Moving common UI elements into their own folder
 
 //2025-11-19 : Item_... fields now have Shopping_ as a prefix
@@ -8,14 +10,10 @@
 
 //2025-05-21 : Basic Implementation of list item
 
-
-import { View } from "react-native";
 import type Shopping_List_Item from "@/Types/Shopping_List_Item";
-import ComponentView from "@/ui/ComponentView";
-import LabelText from "@/ui/LabelText";
-import ButtonView from "@/ui/ButtonView";
 import { useShoppingList } from "@/Contexts/ShoppingList/ShoppingListDataProvider";
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
+import {RowContainer, ButtonView, LabelText, FadeComponent} from "@/ui/BestBeforeUI";
 
 export default function ShoppingListItem({ item, onEdit } : { item: Shopping_List_Item, onEdit: (itemID: number) => void }) {
     const { deleteShoppingItem } = useShoppingList();
@@ -33,13 +31,15 @@ export default function ShoppingListItem({ item, onEdit } : { item: Shopping_Lis
     }
 
     return (
-        <ComponentView >
-            <LabelText>{item.Shopping_Item_Name}</LabelText>
-            <LabelText>{item.Shopping_Item_Quantity ? item.Shopping_Item_Quantity + "g" : "??g"}</LabelText>
+        <FadeComponent >
+            <RowContainer>
+                <LabelText>{item.Shopping_Item_Name}</LabelText>
+                <LabelText>{item.Shopping_Item_Quantity ? item.Shopping_Item_Quantity + "g" : "??g"}</LabelText>
+            </RowContainer>
             {item.Plan_Date && item.Plan_Recipe_Name ? (
                 <LabelText>Buy By: {item.Plan_Date.toLocaleDateString()} for {item.Plan_Recipe_Name}</LabelText>
             ) : null}
-            <View style={{flexDirection: "row", justifyContent: "space-around", width: "100%"}}>
+            <RowContainer style={{justifyContent: "space-around", width: "100%"}}>
                 <ButtonView onPress={onPurchase}>
                     <LabelText>Purchase</LabelText>
                 </ButtonView>
@@ -49,7 +49,7 @@ export default function ShoppingListItem({ item, onEdit } : { item: Shopping_Lis
                 <ButtonView onPress={() => {deleteShoppingItem(item.Shopping_Item_ID || -1)}}>
                     <LabelText>Delete</LabelText>
                 </ButtonView>
-            </View>
-        </ComponentView>
+            </RowContainer>
+        </FadeComponent>
     )
 }
