@@ -1,3 +1,5 @@
+//2026-06-02 : changed location of PlannerCalendarDay
+
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
@@ -13,7 +15,7 @@ import {render, userEvent} from '@testing-library/react-native';
 import { Text } from 'react-native';
 
 import PlannerCalendar from '@/components/Planner/PlannerCalendar/PlannerCalendar';
-import PlannerCalendarDay from '@/components/Planner/PlannerCalendar/PlannerCalendarDay/PlannerCalendarDay';
+import PlannerCalendarDay from '@/components/Planner/PlannerCalendar/PlannerCalendarGrid/PlannerCalendarDay/PlannerCalendarDay';
 
 jest.mock("@/components/Planner/PlannerCalendar/PlannerCalendarDay/PlannerCalendarDay", () => {
     return {
