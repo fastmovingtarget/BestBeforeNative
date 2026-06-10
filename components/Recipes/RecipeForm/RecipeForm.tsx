@@ -1,3 +1,5 @@
+//2026-06-10 : console.log removed
+
 //2026-06-01 : Using FadeComponent and RowContainer
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -67,7 +69,6 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
     }
 
     const exitFormWrapper = () => {
-        console.log("exiting form wrapper");
         exitForm();
     }
 
