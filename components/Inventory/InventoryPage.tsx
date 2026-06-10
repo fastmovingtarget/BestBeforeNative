@@ -1,3 +1,5 @@
+//2026-06-10 : Style format no longer used
+
 //2026-06-01 : FadeComponent with removal
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -7,7 +9,6 @@
 //2025-10-28 : Removing extraneous import
 
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
 import InventorySearch from "./InventorySearch/InventorySearch";
 import InventoryList from "./InventoryList/InventoryList";
 import InventoryItemForm from "./InventoryItemForm/InventoryItemForm";
@@ -26,7 +27,7 @@ export default function InventoryPage() {
                 <InventoryItemForm onCancel={() =>{ setMountState(MountState.Mount); setIsFormVisible(false); }} isFormVisible={isFormVisible} />
                 :
                 <FadeComponent mountState={mountState} onUnmountAnimationEnd={() =>  setIsFormVisible(true) } >
-                    <ButtonView accessibilityRole="button" style={isFormVisible ? styles.addInventoryItemInvisible : {margin : 5}} onPress={() => setMountState(MountState.Unmount)} >
+                    <ButtonView accessibilityRole="button" style={{margin : 5}} onPress={() => setMountState(MountState.Unmount)} >
                         <LabelText >Add Inventory Item</LabelText>
                     </ButtonView>
                 </FadeComponent>
@@ -35,9 +36,3 @@ export default function InventoryPage() {
         </PageView>
     );
 }
-
-const styles = StyleSheet.create({
-    addInventoryItemInvisible: {
-        display: "none",
-    },
-});
