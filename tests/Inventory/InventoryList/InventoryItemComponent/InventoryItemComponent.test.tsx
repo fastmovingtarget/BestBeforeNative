@@ -1,3 +1,5 @@
+//2026-06-10 : Test now works with FadeComponent
+
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Renamed "Ingredient(s)" to "Inventory(_Items)"
@@ -21,11 +23,8 @@ jest.mock("@/Contexts/Inventory/InventoryDataProvider", () => {
 
 const onEditMock = jest.fn();
 
-beforeEach(() => {
-  jest.resetAllMocks();
-  const useInventoryMock = useInventory as jest.Mock;
-  useInventoryMock.mockReturnValue(mockdataContext);
-});
+const useInventoryMock = useInventory as jest.Mock;
+useInventoryMock.mockImplementation(() => {return mockdataContext});
 
 describe('Ingredient renders correctly', () => {
   it('when given all basic ingredient data', () => {
@@ -111,7 +110,12 @@ describe('Ingredient renders correctly', () => {
   });
 });
 describe('Ingredient calls correctly', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
   it("when edit button is pressed", async () => {
+
+    jest.useFakeTimers(); // Use fake timers to control the timing of the test
     const user = userEvent.setup();
 
     const {getByText} = render(
@@ -128,11 +132,16 @@ describe('Ingredient calls correctly', () => {
     expect(editButton).toBeTruthy();
 
     await user.press(editButton);
+
+    jest.runAllTimers(); // Fast-forward all timers to ensure any delayed actions are executed
     
     expect(onEditMock).toHaveBeenCalledTimes(1);    
     expect(onEditMock).toHaveBeenCalledWith(123);
+
+    jest.useRealTimers(); // Restore real timers after the test
   })
   it("when delete button is pressed", async () => {
+    jest.useFakeTimers(); // Use fake timers to control the timing of the test
     const user = userEvent.setup();
 
     const {getByText} = render(
@@ -149,11 +158,14 @@ describe('Ingredient calls correctly', () => {
     expect(deleteButton).toBeTruthy();
 
     await user.press(deleteButton);
+    jest.runAllTimers(); // Fast-forward all timers to ensure any delayed actions are executed
 
     expect(mockdataContext.deleteInventoryItem).toHaveBeenCalledTimes(1);
     expect(mockdataContext.deleteInventoryItem).toHaveBeenCalledWith(123)
+    jest.useRealTimers(); // Restore real timers after the test
   })
   it("when delete button is pressed but no Inventory_Item_ID exists (impossible in normal program flow)", async () => {
+    jest.useFakeTimers(); // Use fake timers to control the timing of the test
     const user = userEvent.setup();
 
     const {getByText} = render(
@@ -170,7 +182,11 @@ describe('Ingredient calls correctly', () => {
 
     await user.press(deleteButton);
 
+    jest.runAllTimers(); // Fast-forward all timers to ensure any delayed actions are executed
+
     expect(mockdataContext.deleteInventoryItem).toHaveBeenCalledTimes(1);
     expect(mockdataContext.deleteInventoryItem).toHaveBeenCalledWith(-1)
+    jest.useRealTimers(); // Restore real timers after the test
+
   })
 })

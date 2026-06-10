@@ -1,3 +1,5 @@
+//2026-06-10 : Test now works with FadeComponent
+
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Renamed "Ingredient(s)" to "Inventory(_Items)"
@@ -7,7 +9,7 @@
 //2025-10-14 : Removed improperly described test
 
 import { Text } from "react-native";
-import {userEvent, render} from '@testing-library/react-native';
+import {userEvent, render, waitFor} from '@testing-library/react-native';
 import React from "react";
 
 import InventoryPage from "../../components/Inventory/InventoryPage";
@@ -34,22 +36,12 @@ jest.mock("../../components/Inventory/InventoryList/InventoryList", () => {
     };
 });
 
-beforeEach(() => {
-    jest.resetAllMocks();
-});
-
 describe("Inventory Page renders", () => {
     test("The Search component", () => {
         const mockInventorySearch = InventorySearch as jest.Mock;
         mockInventorySearch.mockReturnValue(<Text>Search:</Text>);
         const {getByText} = render(<InventoryPage />);
         expect(getByText(/Search:/i)).toBeTruthy();
-    })
-    test("The Form component", () => {
-        const mockInventoryItemForm = InventoryItemForm as jest.Mock;
-        mockInventoryItemForm.mockReturnValue(<Text>Form:</Text>);
-        const {getByText} = render(<InventoryPage />);
-        expect(getByText(/Form:/i)).toBeTruthy();
     })
     test("The Add Inventory Item component", () => {
         const {getByText} = render(<InventoryPage />);
@@ -62,17 +54,44 @@ describe("Inventory Page renders", () => {
         expect(getByText(/List:/i)).toBeTruthy();
     })
 })
-test("When The Add Inventory Item button is pressed, change the visibility of Add Inventory Item button", async () => {
+test("When The Add Inventory Item button is pressed, the Add button disappears", async () => {
+    jest.useFakeTimers(); // Use fake timers to control the timing of the test
     const user = userEvent.setup();
     
     const mockInventoryItemForm = InventoryItemForm as jest.Mock;
     mockInventoryItemForm.mockImplementation(({style}) => <Text style={style}>Form:</Text>);
-    const {getByRole} = render(<InventoryPage />);
+    const {getByRole, queryByRole} = render(<InventoryPage />);
     
     const addInventoryItemButton = getByRole("button", {name: /Add Inventory Item/i});
-    expect(addInventoryItemButton).toHaveProperty("props.style.backgroundColor", "#272727");
 
     await user.press(addInventoryItemButton);
 
-    expect(addInventoryItemButton).toHaveProperty("props.style.display", "none");
+    jest.runAllTimers(); // Fast-forward all timers to ensure any delayed actions are executed
+
+    await waitFor(() => {
+        expect(queryByRole("button", {name: /Add Inventory Item/i})).toBeNull();
+    });
+
+    jest.useRealTimers(); // Restore real timers after the test
+})
+
+test("When The Add Inventory Item button is pressed, the Form component appears", async () => {
+    jest.useFakeTimers(); // Use fake timers to control the timing of the test
+    const user = userEvent.setup();
+    
+    const mockInventoryItemForm = InventoryItemForm as jest.Mock;  
+    mockInventoryItemForm.mockImplementation(({style}) => <Text style={style}>Form:</Text>);
+    const {getByRole, queryByRole} = render(<InventoryPage />);
+    
+    const addInventoryItemButton = getByRole("button", {name: /Add Inventory Item/i});
+
+    await user.press(addInventoryItemButton);
+
+    jest.runAllTimers(); // Fast-forward all timers to ensure any delayed actions are executed
+
+    await waitFor(() => {
+        expect(queryByRole("text", {name: /Form:/i})).toBeTruthy();
+    });
+
+    jest.useRealTimers(); // Restore real timers after the test
 })
