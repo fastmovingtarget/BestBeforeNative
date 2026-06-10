@@ -1,3 +1,5 @@
+//2026-06-10 : ip addresses changed
+
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Renamed Ingredients to Inventory
@@ -59,7 +61,7 @@ test('should fetch inventory data and update state', async () => {
     /*Assert *******************************************************************/
 
     expect(fetchMock).toHaveBeenCalledWith(
-        `http://${"192.168.50.183"}:${"5091"}/inventory/`,
+        `http://${"192.168.50.201"}:${"5091"}/inventory/`,
         {
             method: "POST",
             headers: {
