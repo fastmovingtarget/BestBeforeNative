@@ -1,3 +1,5 @@
+//2026-06-11 : Accounting for text changes
+
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
@@ -77,7 +79,7 @@ describe("PlannerIngredients Renders", () => {
     test("Plan correctly", () => {
         const { getByText } = render(<PlannerIngredients recipePlan={mockPlan} />);
 
-        expect(getByText("Ingredients for Test Recipe")).toBeTruthy();
+        expect(getByText("Ingredients to make Test Recipe")).toBeTruthy();
         expect(getByText(/Plan Ingredient 1/i)).toBeTruthy();
         expect(getByText(/Plan Ingredient 2/i)).toBeTruthy();
         expect(getByText(/Test Recipe/i)).toBeTruthy();
@@ -147,7 +149,7 @@ describe("PlannerIngredients Renders", () => {
             Plan_Ingredients: []
         };  
         const { getByText } = render(<PlannerIngredients recipePlan={mockPlanNoIngredients} />);
-        expect(getByText("Ingredients for Test Recipe No Ingredients")).toBeTruthy();
+        expect(getByText(/Ingredients to make Test Recipe No Ingredients/)).toBeTruthy();
         expect(() => getByText("Plan Ingredient 1")).toThrow();
         expect(() => getByText("Plan Ingredient 2")).toThrow();
     });
@@ -160,7 +162,7 @@ describe("PlannerIngredients Renders", () => {
             Plan_Ingredients: undefined
         };  
         const { getByText } = render(<PlannerIngredients recipePlan={mockPlanNullIngredients} />);
-        expect(getByText("Ingredients for Test Recipe Null Ingredients")).toBeTruthy();
+        expect(getByText(/Ingredients to make Test Recipe Null Ingredients/)).toBeTruthy();
         expect(() => getByText("Plan Ingredient 1")).toThrow();
         expect(() => getByText("Plan Ingredient 2")).toThrow();
     });

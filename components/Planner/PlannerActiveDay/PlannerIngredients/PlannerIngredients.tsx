@@ -1,3 +1,7 @@
+//2026-06-01 : Using FadeComponent and ScrollableContainer
+
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
 
 //2025-11-17 : Full initial implementation and documentation
@@ -8,13 +12,10 @@ import React, {useState} from "react";
 import Recipe_Plan, {Plan_Ingredient} from "@/Types/Plan";
 import Shopping_List_Item from "@/Types/Shopping_List_Item";
 import Inventory_Item from "@/Types/Inventory_Item";
-import PressableComponent from "@/components/CustomComponents/PressableComponent";
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 import { useShoppingList } from "@/Contexts/ShoppingList/ShoppingListDataProvider";
-import ListView from "@/components/CustomComponents/ListView";
 import { usePlans } from "@/Contexts/Plans/PlansDataProvider";
-import LabelText from "@/components/CustomComponents/LabelText";
-import ComponentView from "@/components/CustomComponents/ComponentView";
+import { FadeComponent, LabelText, PressableComponent, ScrollableContainer} from '@/ui/BestBeforeUI';
 
 /**
  * React Component for displaying the ingredients of a selected recipe plan
@@ -87,14 +88,15 @@ export default function RecipePlanActiveDayRecipeIngredients({recipePlan}: {reci
     };
 
     return (
-        <ComponentView>
-            <LabelText>Ingredients for {recipePlan.Recipe_Name}</LabelText>
+        <FadeComponent style={{flex:1, padding:10, margin:10}}>
+            <LabelText>Ingredients to make {recipePlan.Recipe_Name}</LabelText>
             {/* Implementation for displaying ingredients goes here */}
+            <ScrollableContainer style={{flexGrow:1, marginTop:10}}>
             {
                 recipePlan.Plan_Ingredients?.map((planIngredient, index) => {
                     const indicatorIcon = planIngredient.Inventory_Item_ID ? '✅' : (planIngredient.Shopping_Item_ID ? '\u{1F6D2}' : '\u2757');//using the curly braces allows us to use unicode emojis with >4 characters
                     return (
-                        <ComponentView key={`plan-ingredient-container-${index}`} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                        <FadeComponent key={`plan-ingredient-container-${index}`} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                             <LabelText>{indicatorIcon} {planIngredient.Recipe_Ingredient_Name}</LabelText>
                             {
                                 !planIngredient.Shopping_Item_ID && !planIngredient.Inventory_Item_ID && (
@@ -107,20 +109,21 @@ export default function RecipePlanActiveDayRecipeIngredients({recipePlan}: {reci
                                     </PressableComponent>
                                 </>
                             )}
-                        </ComponentView>
+                        </FadeComponent>
                     )
                 })
             }
+            </ScrollableContainer>
             {selectedPlanIngredientIndex !== null && (
-                <ListView>
+                <ScrollableContainer>
                     <LabelText>Available Ingredients:</LabelText>
                     {inventory.map((inventoryItem, index) => (
                         <PressableComponent key={`available-ingredient-${index}`} onPress={() => attachPlanIngredient(inventoryItem)}>
                             <LabelText>{inventoryItem.Inventory_Item_Name}</LabelText>
                         </PressableComponent>
                     ))}
-                </ListView>
+                </ScrollableContainer>
             )}
-        </ComponentView>
+        </FadeComponent>
     );
 }

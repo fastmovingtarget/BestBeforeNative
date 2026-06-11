@@ -1,23 +1,25 @@
+//2026-06-01 : removed context bar
+
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-10-20 : Changed to using recipes context
 
 import { useState } from "react"
 import type Recipe from "@/Types/Recipe"
-import PageView from "../CustomComponents/PageView"
 import RecipeForm from "./RecipeForm/RecipeForm"
 import RecipesList from "./RecipesList/RecipesList"
-import RecipesSearch from "./RecipesSearch/RecipesSearch"
 import RecipeSelected from "./RecipeSelected/RecipeSelected"
-import FormFieldContainer from "../CustomComponents/FormFieldContainer"
-import ComponentView from "../CustomComponents/ComponentView"
-import ButtonView from "../CustomComponents/ButtonView"
-import LabelText from "../CustomComponents/LabelText"
 import { useRecipes } from "../../Contexts/Recipes/RecipesDataProvider";
+import { PageView, FadeComponent } from "@/ui/BestBeforeUI";
+import { MountState } from "@/ui/Types/MountState"
 
 export default function RecipesPage() {
 
     const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
     const [isEditing, setIsEditing] = useState(false);
     const {deleteRecipe} = useRecipes();
+
+    
 
     return (
         <PageView>
@@ -33,34 +35,14 @@ export default function RecipesPage() {
                     />
                 ) : (
                 selectedRecipe && !isEditing ? (//if there's a selected recipe and we're not editing it, show the selected recipe
-                    <>
-                        <ComponentView style={{flexGrow:0}}>
-                            <FormFieldContainer style={{padding:0, columnGap:10}}>
-                                <ButtonView style={{flexGrow:1}} onPress={() => setSelectedRecipe(null)}>
-                                    <LabelText>Back</LabelText>
-                                </ButtonView>
-                                <ButtonView style={{flexGrow:1}} onPress={() => setIsEditing(true)}>
-                                    <LabelText>Edit Recipe</LabelText>
-                                </ButtonView>
-                                <ButtonView style={{flexGrow:1}} onPress={() => {setSelectedRecipe(null);deleteRecipe(selectedRecipe.Recipe_ID || -1)}}>
-                                    <LabelText>Delete Recipe</LabelText>
-                                </ButtonView>
-                            </FormFieldContainer>
-                        </ComponentView>
-                        <RecipeSelected
-                            recipe={selectedRecipe}
-                        />
-                    </>
+                    <RecipeSelected
+                        setIsEditing={setIsEditing}
+                        setSelectedRecipe={setSelectedRecipe}
+                        deleteRecipe={deleteRecipe}
+                        recipe={selectedRecipe}
+                    />
                 ) : (//otherwise, show the recipe search and recipe list
-                    <>
-                        <ComponentView style={{flexDirection:"row"}}>
-                            <ButtonView onPress={() => setIsEditing(true)} style={{flexGrow:1}}>
-                                <LabelText>Add New Recipe</LabelText>
-                            </ButtonView>
-                        </ComponentView>
-                        <RecipesSearch />
-                        <RecipesList setSelectedRecipe={setSelectedRecipe}/>
-                    </>
+                    <RecipesList setSelectedRecipe={setSelectedRecipe} setIsEditing={setIsEditing} />               
                 ))
             }
         </PageView>

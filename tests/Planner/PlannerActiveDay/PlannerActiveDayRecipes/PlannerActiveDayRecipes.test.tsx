@@ -1,3 +1,5 @@
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
@@ -17,8 +19,8 @@ import PlannerActiveDayRecipes from '@/components/Planner/PlannerActiveDay/Plann
 import Recipe from '@/Types/Recipe';
 import Plan from '@/Types/Plan';
 import RecipesListItem from '@/components/Recipes/RecipesList/RecipesListItem/RecipesListItem';
-import PressableComponent from '@/components/CustomComponents/PressableComponent';
-import LabelText from '@/components/CustomComponents/LabelText';
+import PressableComponent from '@/ui/PressableComponent';
+import LabelText from '@/ui/LabelText';
 import { useRecipes } from '@/Contexts/Recipes/RecipesDataProvider';
 
 const mockDataContext = {

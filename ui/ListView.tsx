@@ -1,3 +1,7 @@
+//2026-06-01 : UI Tweaking
+
+//2025-11-21 : Moving common UI elements into their own folder
+
 import {ScrollView} from "react-native";
 import type { PropsWithChildren } from "react";
 import type { ViewStyle } from "react-native";
@@ -21,6 +25,7 @@ const listViewStyles = {
     flexGrow: 1,
     flexDirection: "column",
     borderRadius: 10,
+    width: "100%",
 } as ViewStyle;
 
 

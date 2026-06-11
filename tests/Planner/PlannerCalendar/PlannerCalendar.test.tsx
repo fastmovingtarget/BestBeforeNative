@@ -1,3 +1,7 @@
+//2026-06-11 : Text Changes
+
+//2026-06-02 : changed location of PlannerCalendarDay
+
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
@@ -13,9 +17,9 @@ import {render, userEvent} from '@testing-library/react-native';
 import { Text } from 'react-native';
 
 import PlannerCalendar from '@/components/Planner/PlannerCalendar/PlannerCalendar';
-import PlannerCalendarDay from '@/components/Planner/PlannerCalendar/PlannerCalendarDay/PlannerCalendarDay';
+import PlannerCalendarDay from '@/components/Planner/PlannerCalendar/PlannerCalendarGrid/PlannerCalendarDay/PlannerCalendarDay';
 
-jest.mock("@/components/Planner/PlannerCalendar/PlannerCalendarDay/PlannerCalendarDay", () => {
+jest.mock("@/components/Planner/PlannerCalendar/PlannerCalendarGrid/PlannerCalendarDay/PlannerCalendarDay", () => {
     return {
         __esModule: true,
         default: jest.fn(),
@@ -54,13 +58,13 @@ describe("Recipe Plan Calendar Renders", () => {
             <PlannerCalendar setSelectedDate={mockSetSelectedDate} />
         );
 
-        expect(getByText(/Mon/i)).toBeTruthy();
-        expect(getByText(/Tue/i)).toBeTruthy();
-        expect(getByText(/Wed/i)).toBeTruthy();
-        expect(getByText(/Thu/i)).toBeTruthy();
-        expect(getByText(/Fri/i)).toBeTruthy();
-        expect(getByText(/Sat/i)).toBeTruthy();
-        expect(getByText(/Sun/i)).toBeTruthy();
+        expect(getByText(/Mo/i)).toBeTruthy();
+        expect(getByText(/Tu/i)).toBeTruthy();
+        expect(getByText(/We/i)).toBeTruthy();
+        expect(getByText(/Th/i)).toBeTruthy();
+        expect(getByText(/Fr/i)).toBeTruthy();
+        expect(getByText(/Sa/i)).toBeTruthy();
+        expect(getByText(/Su/i)).toBeTruthy();
         
     });
     test("The actual calendar itself", () => {

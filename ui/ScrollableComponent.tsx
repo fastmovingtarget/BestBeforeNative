@@ -1,6 +1,11 @@
-import {View} from "react-native";
+//2026-06-01 : UI Tweaking
+
+//2025-11-21 : Moving common UI elements into their own folder
+
+import {ScrollView} from "react-native";
 import type { PropsWithChildren } from "react";
 import type { ViewStyle } from "react-native";
+import { Colours } from "@/constants/Colors";
 
 type ComponentViewProps = {
     style?: ViewStyle,
@@ -9,14 +14,14 @@ type ComponentViewProps = {
 
 const ComponentView = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildren<ComponentViewProps>) => {
     return (
-        <View 
-            style={{ 
+        <ScrollView 
+            contentContainerStyle={{ 
                 ...componentViewStyles,
                 ...style,
             }}
             aria-label={ariaLabel}>
             {children}
-        </View>
+        </ScrollView>
     );
 }
 
@@ -26,12 +31,11 @@ const componentViewStyles = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#191f2b",
-    color: "#e6e0d4",
+    backgroundColor: Colours.primary,
+    color: Colours.text,
     borderRadius: 10,
     padding: 10,
     margin: 5,
 } as ViewStyle;
-
 
 export default ComponentView;

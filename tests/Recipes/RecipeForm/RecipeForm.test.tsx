@@ -1,10 +1,12 @@
+//2026-06-10 : Test now works with FadeComponent
+
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
 
 //2025-10-24 : Fixing import and mock to use correct context provider
 
-import {render, userEvent, screen} from '@testing-library/react-native';
+import {render, userEvent, screen, waitFor} from '@testing-library/react-native';
 import RecipeForm from '@/components/Recipes/RecipeForm/RecipeForm';
 import {useRecipes} from '@/Contexts/Recipes/RecipesDataProvider';
 import Recipe from '@/Types/Recipe';
@@ -18,11 +20,6 @@ const mockDataContext = {
 jest.mock('@/Contexts/Recipes/RecipesDataProvider', () => ({
   useRecipes: jest.fn(),
 }));
-
-beforeEach(() => {
-  jest.resetAllMocks();
-  (useRecipes as jest.Mock).mockReturnValue(mockDataContext);
-});
 
 const mockExitForm = jest.fn();
 
@@ -43,6 +40,13 @@ const mockRecipe: Recipe = {
     }],
     Recipe_Instructions: 'Test Instructions',
 }
+
+beforeEach(() => {
+    mockDataContext.deleteRecipe.mockReset();
+    mockDataContext.addRecipe.mockReset();
+    mockDataContext.updateRecipe.mockReset();
+  (useRecipes as jest.Mock).mockReturnValue(mockDataContext);
+});
 
 describe('Recipe Form Renders ', () => {
     it("all field labels correctly", () => {
@@ -111,7 +115,6 @@ describe('Recipe Form Submit Button Functionality', () => {
             Recipe_Instructions: 'New Instructions',
             Recipe_Ingredients: [],
         });
-        expect(mockExitForm).toHaveBeenCalled();
     });
 
     it("calls updateRecipe when updating an existing recipe", async () => {
@@ -140,12 +143,33 @@ describe('Recipe Form Submit Button Functionality', () => {
             Recipe_Difficulty: 33,
             Recipe_Instructions: 'Test Instructions Updated Instructions',
         });
-        expect(mockExitForm).toHaveBeenCalled();
     });
 });   
-describe('Recipe Form Cancel Button Functionality', () => {
+
+describe("Recipe form exits after animation", () => {
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+    it("calls exitForm when submit button is pressed", async () => {
+        const user = userEvent.setup();
+        mockExitForm.mockReset();
+        const {getByText} = render(
+            <RecipeForm exitForm={mockExitForm}/>
+        );
+
+        const submitButton = getByText(/submit/i);
+        await user.press(submitButton);
+
+        expect(mockExitForm).not.toHaveBeenCalled();
+        jest.advanceTimersByTime(300); //advance timers to trigger the end of the animation
+        expect(mockExitForm).toHaveBeenCalled();
+    });
     it("calls exitForm when cancel button is pressed", async () => {
         const user = userEvent.setup();
+        mockExitForm.mockReset();
         const {getByText} = render(
             <RecipeForm exitForm={mockExitForm}/>
         );
@@ -153,9 +177,11 @@ describe('Recipe Form Cancel Button Functionality', () => {
         const cancelButton = getByText(/cancel/i);
         await user.press(cancelButton);
 
+        expect(mockExitForm).not.toHaveBeenCalled();
+        jest.advanceTimersByTime(300); //advance timers to trigger the end of the animation
         expect(mockExitForm).toHaveBeenCalled();
     });
-});
+})
 
 describe("Recipe Ingredients", () => {
     describe("When blank input", () => {

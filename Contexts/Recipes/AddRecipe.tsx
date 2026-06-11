@@ -1,3 +1,5 @@
+//2026-06-01 : updating local IP Address
+
 //2025-11-20 : Cleanup of debug logs
 
 //2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
@@ -29,7 +31,7 @@ export const addRecipeData = (
     recipe : Recipe,) => {
 
     const serverProps = {
-        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.183",
+        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     }
 

@@ -1,3 +1,5 @@
+//2026-06-11 : Text changes
+
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-10-23 : Converted to use Shopping List Context
@@ -56,7 +58,7 @@ describe("The Search box", () => {
         const searchInput = getByLabelText(/shopping-list-search-input/i);
         await user.type(searchInput, "Test");
         expect(mockDataContext.setShoppingListSearchOptions).toHaveBeenLastCalledWith({
-            searchString: "Test",
+            searchText: "Test",
         });
     })
 })

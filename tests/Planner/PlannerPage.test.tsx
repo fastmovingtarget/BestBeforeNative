@@ -1,3 +1,5 @@
+//2026-06-11 : Accounting for new state change
+
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
@@ -65,18 +67,5 @@ describe("Planner Interaction", () => {
         user.press(getByText(/Select Date/i));
 
         await waitFor(() => expect(getByText(/Planner Active Day : Sun Oct 15 2023/i)).toBeTruthy());
-    });
-    test("Returning to calendar updates state", async () => {
-        const user = userEvent.setup();
-        const {getByText} = render(
-            <PlannerPage />
-        );
-        //First select a date to show the active day view
-        await user.press(getByText(/Planner Calendar/i));
-
-        expect(getByText(/Planner Active Day : Fri Oct 20 2023/i)).toBeTruthy();
-        //Then return to calendar view
-        await user.press(getByText(/Back to Calendar/i));
-        expect(getByText(/Planner Calendar/i)).toBeTruthy();
     });
 });

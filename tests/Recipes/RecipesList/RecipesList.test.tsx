@@ -1,3 +1,5 @@
+//2026-06-10 : Test now works with FadeComponent
+
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-10-24 : Fixing import and mock to use correct context provider
@@ -41,7 +43,7 @@ const mockdataContext = {
   recipes : mockRecipes
 };
 
-// Not exactly a unit test if it's using IngredientComponent, so I'm adding in a basic mock of it here
+// Not exactly a unit test if it's using RecipeListItem, so I'm adding in a basic mock of it here
 const mockRecipeListItem = ({recipe, setSelectedRecipe} : {recipe : Recipe, setSelectedRecipe : (recipeId : number) => void} ) =>
   <>
     <Pressable
@@ -70,7 +72,6 @@ jest.mock("@/Contexts/Recipes/RecipesDataProvider", () => {
 });
 
 beforeEach(() => {
-  jest.resetAllMocks();
   const useRecipesMock = useRecipes as jest.Mock;
   useRecipesMock.mockReturnValue(mockdataContext);
 
@@ -82,32 +83,60 @@ beforeEach(() => {
 test('Renders correctly when given all basic recipes data', () => {
     const mockSetSelectedRecipe = jest.fn();
     const {getByText} = render(
-        <RecipesList setSelectedRecipe={mockSetSelectedRecipe}/>
+        <RecipesList setSelectedRecipe={mockSetSelectedRecipe} setIsEditing={jest.fn()}/>
     );
 
     expect(getByText(/Test Recipe 1/i)).toBeTruthy();
     expect(getByText(/30/i)).toBeTruthy();
-    expect(getByText(/Difficulty: 3/i)).toBeTruthy();
+    expect(getByText(/Difficulty: 1/i)).toBeTruthy();
     expect(getByText(/Test Recipe 2/i)).toBeTruthy();
     expect(getByText(/60/i)).toBeTruthy();
-    expect(getByText(/Difficulty: 3/i)).toBeTruthy();
+    expect(getByText(/Difficulty: 2/i)).toBeTruthy();
     expect(getByText(/Test Recipe 3/i)).toBeTruthy();
     expect(getByText(/90/i)).toBeTruthy();
     expect(getByText(/Difficulty: 3/i)).toBeTruthy();
 })
 
-
-test('Set Selected Recipe is called when a test recipe is clicked', async () => {
-  const user = userEvent.setup();
+test('Set Selected Recipe is called when a test recipe is clicked', async () => {   
+    jest.useFakeTimers(); // Use fake timers to control the timing of the test
+    const user = userEvent.setup();
     const mockSetSelectedRecipe = jest.fn();
+    const mockSetIsEditing = jest.fn();
 
     const {getByText} = render(
-            <RecipesList setSelectedRecipe={mockSetSelectedRecipe}/>
+            <RecipesList setSelectedRecipe={mockSetSelectedRecipe} setIsEditing={mockSetIsEditing}/>
         );
 
     const recipeListItemText = getByText(/Test Recipe 1/i); // Get the second edit button (for Test Ingredient 2)
 
     await user.press(recipeListItemText); // Simulate the press event
 
+    jest.advanceTimersByTime(500); // Run all timers to ensure any delayed actions are executed
+
+    expect(mockSetSelectedRecipe).toHaveBeenCalledTimes(1);
     expect(mockSetSelectedRecipe).toHaveBeenCalledWith(1); // Check if the onEdit function was called
+
+    jest.useRealTimers(); // Restore real timers after the test
+})
+
+test('Set Selected Recipe is called when add new recipe is clicked', async () => {   
+    jest.useFakeTimers(); // Use fake timers to control the timing of the test
+    const user = userEvent.setup();
+    const mockSetSelectedRecipe = jest.fn();
+    const mockSetIsEditing = jest.fn();
+
+    const {getByText} = render(
+            <RecipesList setSelectedRecipe={mockSetSelectedRecipe} setIsEditing={mockSetIsEditing}/>
+        );
+
+    const addNewRecipeButton = getByText(/Add New Recipe/i); // Get the "Add New Recipe" button
+
+    await user.press(addNewRecipeButton); // Simulate the press event
+
+    jest.advanceTimersByTime(500); // Run all timers to ensure any delayed actions are executed
+
+    expect(mockSetIsEditing).toHaveBeenCalledTimes(1);
+    expect(mockSetIsEditing).toHaveBeenCalledWith(true); // Check if the onEdit function was called
+
+    jest.useRealTimers(); // Restore real timers after the test
 })

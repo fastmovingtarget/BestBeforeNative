@@ -24,3 +24,23 @@ export const Colors = {
     tabIconSelected: tintColorDark,
   },
 };
+
+export const Colours = {
+    primary:          "#a09181",
+    background:       "#c2b5a8",
+    buttonBackground: "#817467",
+    buttonBackgroundPressed: "#aaaaaa",
+    inputBackground:  "#B09F8E",
+    text:             "#000000",
+    componentText:    "#ffffff",
+    buttonText:       "#ffffff",
+    placeholderText:  "#666666",
+};
+
+/*
+export const Colours = {
+    primary:          "#A6AA7E",
+    background:       "#AA987E",
+    buttonBackground: "#AA817E",
+    text:           "#000000",
+};*/

@@ -1,3 +1,7 @@
+//2026-06-01 : Using FadeComponent and RowContainer
+
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Item_... fields now have Shopping_ as a prefix
 
 //2025-10-23 : Converted to use Shopping List Context
@@ -6,13 +10,9 @@
 
 import { StyleSheet } from 'react-native';
 import Shopping_List_Item from '@/Types/Shopping_List_Item';
-import FormFieldContainer from '@/components/CustomComponents/FormFieldContainer';
-import LabelText from '@/components/CustomComponents/LabelText';
-import FormTextInput from '@/components/CustomComponents/FormTextInput';
-import ButtonView from '@/components/CustomComponents/ButtonView';
-import ComponentView from '@/components/CustomComponents/ComponentView';
 import { useState } from 'react';
 import { useShoppingList } from '@/Contexts/ShoppingList/ShoppingListDataProvider';
+import {RowContainer, ButtonView, LabelText, FormTextInput, FadeComponent} from '@/ui/BestBeforeUI';
 
 const blankItem : Shopping_List_Item = {
     Shopping_Item_Name: "",
@@ -52,8 +52,8 @@ export default function ShoppingListForm({item = blankItem, isFormVisible, onCan
     }
 
     return (
-        <ComponentView aria-label="formContainer" style={isFormVisible ? styles.formVisible : styles.formInvisible} >
-            <FormFieldContainer  >
+        <FadeComponent aria-label="formContainer" style={isFormVisible ? styles.formVisible : styles.formInvisible} >
+            <RowContainer  >
                 <LabelText >Item: </LabelText> 
                 <FormTextInput
                     defaultValue={formItem.Shopping_Item_Name || ""}
@@ -61,9 +61,9 @@ export default function ShoppingListForm({item = blankItem, isFormVisible, onCan
                     onChange={(event) => setFormItem({...formItem, Shopping_Item_Name: event.nativeEvent.text})}
                     aria-label="name-input"
                 />
-            </FormFieldContainer>
+            </RowContainer>
 
-            <FormFieldContainer  >
+            <RowContainer  >
                 <LabelText >Quantity: </LabelText>
                 <FormTextInput
                     defaultValue={formItem.Shopping_Item_Quantity?.toString() || ""}
@@ -71,17 +71,17 @@ export default function ShoppingListForm({item = blankItem, isFormVisible, onCan
                     onChange={(event) => setFormItem({...formItem, Shopping_Item_Quantity: parseInt(event.nativeEvent.text)})}
                     aria-label="quantity-input"
                 />
-            </FormFieldContainer>
-            <FormFieldContainer style={{justifyContent:"space-around"}} >
+            </RowContainer>
+            <RowContainer style={{justifyContent:"space-around"}} >
                 <ButtonView onPress={cancelHandler}>
                     <LabelText >Cancel</LabelText>
                 </ButtonView>
                 <ButtonView onPress={submitHandler}>
                     <LabelText >Submit</LabelText>
                 </ButtonView>
-            </FormFieldContainer>
+            </RowContainer>
 
-        </ComponentView>
+        </FadeComponent>
     )
 }
 

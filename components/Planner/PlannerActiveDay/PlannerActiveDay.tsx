@@ -1,3 +1,7 @@
+//2026-06-01 : Using FadeComponent and RowContainer
+
+//2025-11-21 : Moving common UI elements into their own folder
+
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
 
 //2025-11-17 : Added Docs, corrected styles and naming
@@ -10,8 +14,8 @@ import React, { useState } from "react";
 import Recipe_Plan from "@/Types/Plan";
 import PlannerActiveDayRecipes from "./PlannerActiveDayRecipes/PlannerActiveDayRecipes";
 import PlannerIngredients from "./PlannerIngredients/PlannerIngredients";
-import ComponentView from "@/components/CustomComponents/ScrollableComponent";
-import LabelText from "@/components/CustomComponents/LabelText";
+import { FadeComponent, LabelText, RowContainer } from '@/ui/BestBeforeUI';
+import { Pressable } from "react-native";
 
 /**
  * React Component for displaying the active day view of the Recipe Planner
@@ -22,15 +26,20 @@ import LabelText from "@/components/CustomComponents/LabelText";
  * @returns React Component
  */ 
 
-export default function PlannerActiveDay({selectedDate}: {selectedDate: Date | null}) {
+export default function PlannerActiveDay({selectedDate, setSelectedDate}: {selectedDate: Date | null, setSelectedDate: (date: Date | null) => void}) {
     const [selectedPlan, setSelectedPlan] = useState<Recipe_Plan | null>(null);
     
     return (
-        <ComponentView style={{flex: 1, padding: 10}}>
-            <LabelText>{selectedDate ? selectedDate.toDateString() : "No Date Selected"}</LabelText>
+        <FadeComponent style={{flex: 1, padding: 10, }}>
+            <RowContainer>
+                <Pressable onPress={() => setSelectedDate(null)} style={{position: "absolute", left: 5, padding: 5,}}>
+                    <LabelText >{"<"}</LabelText>
+                </Pressable>
+                <LabelText >{selectedDate ? selectedDate.toDateString() : "No Date Selected"}</LabelText>
+            </RowContainer>
             {selectedPlan ? 
             (<PlannerIngredients recipePlan={selectedPlan} />) : 
             (<PlannerActiveDayRecipes date={selectedDate ? selectedDate : new Date()} setSelectedPlan={setSelectedPlan} />)}
-        </ComponentView>
+        </FadeComponent>
     );
 }

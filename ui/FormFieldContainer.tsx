@@ -1,6 +1,11 @@
+//2026-06-01 : UI Tweaking
+
+//2025-11-21 : Moving common UI elements into their own folder
+
 import {View} from "react-native";
 import type { PropsWithChildren } from "react";
 import type { ViewStyle } from "react-native";
+import {Colours} from "../constants/Colors";
 
 type FormFieldProps = {
     style?: ViewStyle,
@@ -26,7 +31,7 @@ const formFieldContainerStyles = {
     justifyContent: "space-between",
     textAlignVertical: "center",
     textAlign: "center",
-    color: "#e3dccf",
+    color: Colours.text,
     borderRadius: 5,
     width: "100%",
     padding: 5,

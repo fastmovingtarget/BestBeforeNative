@@ -1,3 +1,5 @@
+//2026-06-11 : fixing render props for PlannerActiveDay
+
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
@@ -90,6 +92,7 @@ describe("PlannerActiveDay Component Renders", () => {
         const {getByText} = render(
             <PlannerActiveDay
                 selectedDate={mockSelectedDate}
+                setSelectedDate={jest.fn()}
             />
         );
         expect(getByText("Sun Oct 01 2023")).toBeTruthy();
@@ -105,6 +108,7 @@ describe("PlannerActiveDay Component Renders", () => {
         const {getByText} = render(
             <PlannerActiveDay
                 selectedDate={mockSelectedDate}
+                setSelectedDate={jest.fn()}
             />
         );
         expect(getByText("Active Day Recipes Component")).toBeTruthy();
@@ -120,7 +124,8 @@ describe("PlannerActiveDay Component Renders", () => {
         });
         const {queryByText} = render(
             <PlannerActiveDay
-                selectedDate={mockSelectedDate}
+                selectedDate={mockSelectedDate} 
+                setSelectedDate={jest.fn()}
             />
         );
         expect(queryByText("Active Day Recipe Ingredients Component")).toBeFalsy();

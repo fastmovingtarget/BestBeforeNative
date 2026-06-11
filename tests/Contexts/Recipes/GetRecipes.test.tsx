@@ -1,3 +1,5 @@
+//2026-06-10 : ip addresses changed
+
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
@@ -9,7 +11,7 @@ import { getRecipesData } from '../../../Contexts/Recipes/GetRecipes';
 import Recipe, {RecipesSearchOptions} from '../../../Types/Recipe'; // Adjust the import path as necessary
 import fetchMock from 'jest-fetch-mock';
 
-const mockServerProps = { DatabaseServer: '192.168.50.183', DatabasePort: '5091' };
+const mockServerProps = { DatabaseServer: '192.168.50.201', DatabasePort: '5091' };
 const userID = 1;
 //         
 // Mocking the fetch function
