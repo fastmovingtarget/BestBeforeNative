@@ -1,3 +1,5 @@
+//2026-06-11 : Improved vertical margins for consistency
+
 //2026-06-01 : FadeComponent handling, moved context bar
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -44,7 +46,7 @@ export default function RecipesList({ setSelectedRecipe, setIsEditing }: { setSe
             mountState={mountState}
             onUnmountAnimationEnd={onUnmountAnimationEnd}
         >
-            <FadeComponent style={{flexDirection:"row"}}>
+            <FadeComponent style={{flexDirection:"row", marginVertical: 0, marginBottom: 5, columnGap:10}}>
                 <ButtonView onPress={() => {
                             setMountState(MountState.Unmount);
                             setIsEditingInternal(true)

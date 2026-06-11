@@ -1,3 +1,5 @@
+//2026-06-11 : Removed padding doubling
+
 //2026-06-01 : Calendar Grid code moved to separate file
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -44,7 +46,7 @@ export default function PlannerCalendar({setSelectedDate} : {setSelectedDate: (d
     });
 
     return (
-        <ColumnContainer style={{flex:1, padding: 5, marginHorizontal:0}}>
+        <ColumnContainer style={{flex:1, marginHorizontal:0}}>
             <FadeComponent style={{flexDirection:"row", justifyContent: "space-between", alignItems: "center", padding: 0}}>
                 <PressableComponent onPress={() => setMonthIndex(monthIndex - 1)} style={{flex:1}}>
                     <LabelText style={{fontSize: 18, fontWeight: "bold"}}>{"<"}</LabelText>
