@@ -1,3 +1,5 @@
+//2026-06-11 : Removed a console log
+
 //2026-06-01 : FadeComponent handling, moved context bar
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -18,7 +20,6 @@ export default function RecipeSelected({recipe, setSelectedRecipe, setIsEditing,
     const [endSelectMethod, setEndSelectMethod] = React.useState<"Back" | "Delete" | "Edit" | "none">("none");
 
     const endSelectFunction = () => {
-        console.log("End select function called with method:", endSelectMethod);
         if(endSelectMethod === "Back") {
             setSelectedRecipe(null);
         }
