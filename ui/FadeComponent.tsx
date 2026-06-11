@@ -1,3 +1,5 @@
+//2026-06-11 : Removing an extra console log
+
 //2026-06-01 : Animated fade in/out component
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -44,7 +46,6 @@ const FadeComponent = ({style, children, 'aria-label' : ariaLabel, duration = 30
                 useNativeDriver: true,
             }).start(() => {
                 if (onUnmountAnimationEnd) {
-                    console.log("Unmount animation ended for ", ariaLabel);
                     onUnmountAnimationEnd();
                 }
             });
@@ -69,7 +70,7 @@ const FadeComponent = ({style, children, 'aria-label' : ariaLabel, duration = 30
                 ...style,
                 opacity: fadeAnim,
             }}
-            aria-label={ariaLabel}            
+            aria-label={ariaLabel}  
             >
             {children}
         </Animated.View>
