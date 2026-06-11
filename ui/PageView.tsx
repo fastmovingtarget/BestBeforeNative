@@ -1,3 +1,5 @@
+//2026-06-11 : Improved padding
+
 //2026-06-01 : UI Tweaking
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -29,6 +31,7 @@ const pageViewStyles = {
     flex:1,
     width: "100%",
     paddingTop: 30,
+    paddingHorizontal: 5,
 } as ViewStyle;
 
 export default PageView;
