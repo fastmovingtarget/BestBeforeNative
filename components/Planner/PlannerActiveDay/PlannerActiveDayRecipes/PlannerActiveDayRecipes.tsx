@@ -1,3 +1,5 @@
+//2026-06-12 : Added ResizeComponent wrapper for height changes
+
 //2026-06-01 : Using FadeComponent and RowContainer
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -15,6 +17,7 @@
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
 import React, {useState} from 'react';
+import { Keyboard } from 'react-native';
 import ScrollableComponent from '@/ui/ScrollableComponent';
 
 import Recipe from '@/Types/Recipe';
@@ -23,6 +26,7 @@ import RecipesListItem from '@/components/Recipes/RecipesList/RecipesListItem/Re
 import { usePlans } from '@/Contexts/Plans/PlansDataProvider';
 import { useRecipes } from '@/Contexts/Recipes/RecipesDataProvider';
 import {RowContainer, ButtonView, LabelText, FormTextInput, ListView, ColumnContainer, FadeComponent} from '@/ui/BestBeforeUI';
+import ResizeComponent from '@/ui/ResizeComponent';
 
 /**
  * React Component for displaying the list of recipes planned for the active day
@@ -37,6 +41,7 @@ export default function PlanActiveDayRecipes({date, setSelectedPlan}: {date: Dat
     const { plans, addPlan, deletePlan } = usePlans();
     const { recipes } = useRecipes();
     const [recipesVisible, setRecipesVisible] = useState<boolean>(false);
+    const [containerHeight, setContainerHeight] = useState<number>(0);
 
     //todo implement view Recipe Plan Ingredients
 
@@ -52,71 +57,86 @@ export default function PlanActiveDayRecipes({date, setSelectedPlan}: {date: Dat
 
     return (
         <ColumnContainer style={{ flex: 1, width: "100%"}}>
-            <FadeComponent style={{ flex:1, borderColor: "red", }}>
-                <ScrollableComponent style={{justifyContent: 'flex-start', flexGrow: 1, margin:0}}>
-                    {todayPlans.map((plan: Plan) => {
-                        return (
-                            <RowContainer 
-                                    style={{justifyContent: 'space-between', alignItems: 'center', borderColor: "gray", borderWidth: 1, width:"100%" }}
-                                    key={`recipe-plan-${plan.Plan_ID}`}>
-                                <LabelText style={{borderColor: "gray", borderWidth: 1}}>
-                                    {plan.Recipe_Name}
-                                </LabelText>
-                                <ButtonView onPress={() => setSelectedPlan(plan)} style={{borderColor: "gray", borderWidth: 1}}>
-                                    <LabelText>
-                                        View Ingredients
-                                    </LabelText>
-                                </ButtonView>
-                                <ButtonView 
-                                    style={{borderColor: "gray", borderWidth: 1}}
-                                    onPress={() => {
-                                        if(plan.Plan_ID !== undefined) 
-                                            deletePlan(plan.Plan_ID)
-                                    }}>
-                                    <LabelText>
-                                        Remove
-                                    </LabelText>
-                                </ButtonView>
-                            </RowContainer>
-                        );
-                    })}
-                </ScrollableComponent> 
-            </FadeComponent>
-            {recipesVisible && (
-                <FadeComponent style={{flex: 1, marginTop: 10, padding: 5, width:"100%"}}>
-                    <FormTextInput
-                        placeholder="Search Recipes"
-                        defaultValue=''
-                        aria-label='recipe plan recipe search'
-                        onChangeText={(text) => {
-                            // Implement search functionality
-                        }}
-                        style={{flex:1}}
-                    />
-                    <ListView style={{ width: '100%', margin: 0, padding:0}}>
-                    {
-                        recipes.map((recipe: Recipe) => 
-                            <RecipesListItem 
-                                recipe={recipe}
-                                setSelectedRecipe={
-                                    () => {
-                                        addPlan({
-                                            Recipe_ID: recipe.Recipe_ID,
-                                            Recipe_Name: recipe.Recipe_Name,
-                                            Plan_Date: date,
-                                        });
+            <ColumnContainer style={{width: "100%", justifyContent: "flex-start"}} onLayout={(event) => setContainerHeight(event.nativeEvent.layout.height)}>
+                <ResizeComponent targetHeight={(containerHeight - 10)*(recipesVisible ? 0.3 : 1)} style={{ width: "100%"}}>
+                    <FadeComponent >
+                        <ScrollableComponent style={{justifyContent: 'flex-start', flexGrow: 1, margin:0}}>
+                            {
+                                todayPlans.length === 0 ?
+                                <LabelText>
+                                    No recipes planned for today!
+                                </LabelText> :
+                                todayPlans.map((plan: Plan) => {
+                                    return (
+                                        <RowContainer 
+                                                style={{justifyContent: 'space-between', alignItems: 'center', width:"100%", marginVertical: 5}}
+                                                key={`recipe-plan-${plan.Plan_ID}`}>
+                                            <LabelText>
+                                                {plan.Recipe_Name}
+                                            </LabelText>
+                                            <ButtonView onPress={() => setSelectedPlan(plan)} >
+                                                <LabelText>
+                                                    View Ingredients
+                                                </LabelText>
+                                            </ButtonView>
+                                            <ButtonView 
+                                                onPress={() => {
+                                                    if(plan.Plan_ID !== undefined) 
+                                                        deletePlan(plan.Plan_ID)
+                                                }}>
+                                                <LabelText>
+                                                    Remove
+                                                </LabelText>
+                                            </ButtonView>
+                                        </RowContainer>
+                                    );
+                                })
+                            }
+                        </ScrollableComponent> 
+                    </FadeComponent>
+                </ResizeComponent>
+                <ResizeComponent targetHeight={(containerHeight - 10)*(recipesVisible ? 0.7 : 0.0)} style={{ width: "100%"}}>
+                    <FadeComponent style={{ marginTop: 10, padding: 5, width:"100%"}}>
+                        <FormTextInput
+                            placeholder="Search Recipes..."
+                            defaultValue=''
+                            aria-label='recipe plan recipe search'
+                            onChangeText={(text) => {
+                                // Implement search functionality
+                            }}
+                            style={{height: 40}}
+                        />
+                        <ListView style={{ width: '100%', margin: 0, padding:0}}>
+                        {
+                            recipes.map((recipe: Recipe) => 
+                                <RecipesListItem 
+                                    recipe={recipe}
+                                    setSelectedRecipe={
+                                        () => {
+                                            addPlan({
+                                                Recipe_ID: recipe.Recipe_ID,
+                                                Recipe_Name: recipe.Recipe_Name,
+                                                Plan_Date: date,
+                                            });
+                                        }
                                     }
-                                }
-                                key={`recipe-${recipe.Recipe_ID}`}
-                            />  
-                        )
-                    }
-                    </ListView>
-                </FadeComponent>
-            )}
+                                    key={`recipe-${recipe.Recipe_ID}`}
+                                />  
+                            )
+                        }
+                        </ListView>
+                    </FadeComponent>
+                </ResizeComponent>
+            </ColumnContainer>
         
-            <ButtonView onPress={() => setRecipesVisible(!recipesVisible)} >
-                <LabelText>
+            
+            <ButtonView onPress={() => {
+                    Keyboard.dismiss();
+                    setRecipesVisible(!recipesVisible);
+                }} 
+                style={{alignSelf: 'center', margin: 5, height: 45, width: "100%"}}
+            >
+                <LabelText >
                     {recipesVisible ? "That's Enough" : "Plan a Recipe"}
                 </LabelText>
             </ButtonView>
