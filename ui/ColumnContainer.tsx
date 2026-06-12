@@ -1,3 +1,5 @@
+//2026-06-12 : Added onLayout to find container size
+
 //2026-06-01 : Custom container for row/column
 
 import {View} from "react-native";
@@ -6,7 +8,8 @@ import type { ViewStyle } from "react-native";
 
 type ColumnContainerProps = {
     style?: ViewStyle,
-    ["aria-label"]?:string
+    ["aria-label"]?:string,
+    onLayout?: (event: { nativeEvent: { layout: { x: number; y: number; width: number; height: number } } }) => void,
 }
 
 /**
@@ -19,14 +22,15 @@ type ColumnContainerProps = {
  * @param {string} aria-label - Accessibility label for the container.
  */
 
-const ColumnContainer = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildren<ColumnContainerProps>) => {
+const ColumnContainer = ({style, children, 'aria-label' : ariaLabel, onLayout} : PropsWithChildren<ColumnContainerProps>) => {
     return (
         <View 
             style={{ 
                 ...ColumnContainerStyles,
                 ...style,
             }}
-            aria-label={ariaLabel}>
+            aria-label={ariaLabel}
+            onLayout={onLayout}>
             {children}
         </View>
     );
