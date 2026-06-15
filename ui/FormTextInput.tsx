@@ -1,11 +1,14 @@
+//2026-06-15 : Added field validation and error message
+
 //2026-06-01 : UI Tweaking
 
 //2025-11-21 : Moving common UI elements into their own folder
 
 import { TextInput, NativeSyntheticEvent, } from "react-native";
-import type { PropsWithChildren } from "react";
+import { useState, type PropsWithChildren } from "react";
 import type { TextInputChangeEventData, TextStyle} from "react-native";
 import { Colours } from "@/constants/Colors";
+import { ColumnContainer, LabelText } from "./BestBeforeUI";
 
 type InputTextProps = {
     style?: TextStyle,
@@ -17,27 +20,53 @@ type InputTextProps = {
     ["aria-label"]:string
     multiline?: boolean,
     numberOfLines?: number,
+    validationFunction?:(text : string) => true | string,
 }
 
-const FormTextInput = ({style, children, defaultValue, inputMode = "text", onChange, onChangeText, 'aria-label' : ariaLabel, placeholder = "", multiline = false, numberOfLines = 1} : PropsWithChildren<InputTextProps>) => {
+const FormTextInput = ({style, children, defaultValue, inputMode = "text", onChange, onChangeText, 'aria-label' : ariaLabel, placeholder = "", multiline = false, numberOfLines = 1, validationFunction} : PropsWithChildren<InputTextProps>) => {
+
+    const initialMessage = validationFunction ? (validationFunction(defaultValue) === true ? null : validationFunction(defaultValue).toString()) : null;    
+
+    const [invalidMessage, setInvalidMessage] = useState<string | null>(initialMessage);
+    
+    const onChangeValidation = (event : NativeSyntheticEvent<TextInputChangeEventData>) => {
+        if(validationFunction){
+            const validationResult = validationFunction(event.nativeEvent.text);
+            if(validationResult === true){
+                if(onChange) onChange(event);
+                setInvalidMessage(null);
+            }
+            else{
+                setInvalidMessage(validationResult);
+                console.log("Input validation failed for: " + event.nativeEvent.text + ". Reason: " + validationResult);
+            }
+        } else {
+            if(onChange) onChange(event);
+        }
+    }
+
     return (
-        <TextInput 
-            style={{ 
-                ...inputTextStyles,
-                ...style,
-            }}
-            defaultValue={defaultValue}
-            inputMode={inputMode}
-            onChange={onChange}
-            onChangeText={onChangeText}
-            aria-label={ariaLabel}
-            placeholder={placeholder}
-            placeholderTextColor={Colours.placeholderText}
-            multiline={multiline}
-            numberOfLines={numberOfLines}
-        >
-            {children}
-        </TextInput>
+        <ColumnContainer style={{alignItems: "flex-start", position: "relative"}}>
+            <TextInput 
+                style={{ 
+                    ...inputTextStyles,
+                    ...style,
+                    borderColor: invalidMessage ? Colours.errorText : "transparent",
+                }}
+                defaultValue={defaultValue}
+                inputMode={inputMode}
+                onChange={onChangeValidation}
+                onChangeText={onChangeText}
+                aria-label={ariaLabel}
+                placeholder={placeholder}
+                placeholderTextColor={Colours.placeholderText}
+                multiline={multiline}
+                numberOfLines={numberOfLines}
+            >
+                {children}
+            </TextInput>
+            {invalidMessage && <LabelText style={{color: Colours.errorText, position: "absolute", bottom: -13, fontSize: 10}}>{invalidMessage}</LabelText>}
+        </ColumnContainer>
     );
 }
 
@@ -53,7 +82,10 @@ const inputTextStyles = {
         width: "70%",
         lineHeight: 20,
         fontSize: 16,
-        margin: 5,
+        margin: 8,
+        padding:3,
+        borderWidth: 1,
+        borderColor: "transparent",
 } as TextStyle;
 
 
