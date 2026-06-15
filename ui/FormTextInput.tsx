@@ -1,3 +1,5 @@
+//2026-06-15 : Failed validation requires handling in parent
+
 //2026-06-15 : Improved error message display
 
 //2026-06-15 : Added field validation and error message
@@ -39,8 +41,8 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onCha
                 setInvalidMessage(null);
             }
             else{
+                if(onChange) onChange(event);
                 setInvalidMessage(validationResult);
-                console.log("Input validation failed for: " + event.nativeEvent.text + ". Reason: " + validationResult);
             }
         } else {
             if(onChange) onChange(event);
