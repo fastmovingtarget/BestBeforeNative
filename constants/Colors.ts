@@ -35,6 +35,7 @@ export const Colours = {
     componentText:    "#ffffff",
     buttonText:       "#ffffff",
     placeholderText:  "#666666",
+    errorText:        "#aa0000",
 };
 
 /*
