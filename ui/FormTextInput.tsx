@@ -1,3 +1,5 @@
+//2026-06-15 : Improved error message display
+
 //2026-06-15 : Added field validation and error message
 
 //2026-06-01 : UI Tweaking
@@ -65,10 +67,23 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onCha
             >
                 {children}
             </TextInput>
-            {invalidMessage && <LabelText style={{color: Colours.errorText, position: "absolute", bottom: -13, fontSize: 10}}>{invalidMessage}</LabelText>}
+            {invalidMessage && <LabelText style={errorTextStyles}>{invalidMessage}</LabelText>}
         </ColumnContainer>
     );
 }
+
+const errorTextStyles = {
+    color: Colours.errorText, 
+    position: "absolute", 
+    bottom: 1, 
+    left: 15, 
+    fontSize: 10, 
+    backgroundColor: Colours.primary, 
+    paddingVertical: 0, 
+    paddingHorizontal: 5, 
+    borderWidth: 1, 
+    borderColor: Colours.errorText
+} as TextStyle;
 
 const inputTextStyles = {
         display: "flex",
