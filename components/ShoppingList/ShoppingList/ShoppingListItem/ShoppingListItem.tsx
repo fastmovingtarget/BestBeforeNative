@@ -1,3 +1,5 @@
+//2026-06-15 : 0 quantity now displays correctly
+
 //2026-06-01 : Using FadeComponent and RowContainer
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -34,7 +36,7 @@ export default function ShoppingListItem({ item, onEdit } : { item: Shopping_Lis
         <FadeComponent >
             <RowContainer>
                 <LabelText>{item.Shopping_Item_Name}</LabelText>
-                <LabelText>{item.Shopping_Item_Quantity ? item.Shopping_Item_Quantity + "g" : "??g"}</LabelText>
+                <LabelText>{item.Shopping_Item_Quantity || item.Shopping_Item_Quantity === 0 ? item.Shopping_Item_Quantity + "g" : "??g"}</LabelText>
             </RowContainer>
             {item.Plan_Date && item.Plan_Recipe_Name ? (
                 <LabelText>Buy By: {item.Plan_Date.toLocaleDateString()} for {item.Plan_Recipe_Name}</LabelText>

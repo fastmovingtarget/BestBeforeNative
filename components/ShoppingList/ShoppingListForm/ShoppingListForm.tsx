@@ -1,3 +1,5 @@
+//2026-06-15 : Correctly validating input forms
+
 //2026-06-01 : Using FadeComponent and RowContainer
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -28,6 +30,16 @@ export default function ShoppingListForm({item = blankItem, isFormVisible, onCan
     const [formItem, setFormItem] = useState<Shopping_List_Item>( item || blankItem);//gets 
     const {addShoppingItem, updateShoppingItem} = useShoppingList();
 
+    const itemNameValidation = (text: string) => {
+        if(text.trim() === "") return "Item name cannot be empty";
+        return true;
+    }
+
+    const quantityValidation = (text: string) => {
+        if(isNaN(parseInt(text))) return "Quantity must be a number";
+        return true;
+    }
+
     const cancelHandler = () => {
         if(item?.Shopping_Item_ID)  
             setFormItem(item || blankItem) 
@@ -40,6 +52,9 @@ export default function ShoppingListForm({item = blankItem, isFormVisible, onCan
     }
 
     const submitHandler = () => {
+        if(itemNameValidation(formItem.Shopping_Item_Name) !== true || quantityValidation(formItem.Shopping_Item_Quantity?.toString() || "") !== true){
+            return;
+        }
         if(item?.Shopping_Item_ID)  
             updateShoppingItem(formItem) 
         else{ 
@@ -53,26 +68,28 @@ export default function ShoppingListForm({item = blankItem, isFormVisible, onCan
 
     return (
         <FadeComponent aria-label="formContainer" style={isFormVisible ? styles.formVisible : styles.formInvisible} >
-            <RowContainer  >
+            <RowContainer style={{justifyContent: "space-between"}} >
                 <LabelText >Item: </LabelText> 
                 <FormTextInput
                     defaultValue={formItem.Shopping_Item_Name || ""}
                     inputMode='text'
                     onChange={(event) => setFormItem({...formItem, Shopping_Item_Name: event.nativeEvent.text})}
+                    validationFunction={itemNameValidation}
                     aria-label="name-input"
                 />
             </RowContainer>
 
-            <RowContainer  >
+            <RowContainer style={{alignItems: "center", justifyContent: "space-between"}} >
                 <LabelText >Quantity: </LabelText>
                 <FormTextInput
                     defaultValue={formItem.Shopping_Item_Quantity?.toString() || ""}
                     inputMode='numeric'
-                    onChange={(event) => setFormItem({...formItem, Shopping_Item_Quantity: parseInt(event.nativeEvent.text)})}
+                    onChange={(event) => setFormItem({...formItem, Shopping_Item_Quantity: parseInt(event.nativeEvent.text) ? parseInt(event.nativeEvent.text) : 0})}
+                    validationFunction={quantityValidation}
                     aria-label="quantity-input"
                 />
             </RowContainer>
-            <RowContainer style={{justifyContent:"space-around"}} >
+            <RowContainer style={{justifyContent:"space-around", marginTop: 10}} >
                 <ButtonView onPress={cancelHandler}>
                     <LabelText >Cancel</LabelText>
                 </ButtonView>
