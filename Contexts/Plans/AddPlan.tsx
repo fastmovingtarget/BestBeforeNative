@@ -1,3 +1,5 @@
+//2026-06-15 : plan date now timezone independent
+
 //2026-06-01 : updating local IP Address
 
 //2025-11-19 : Renamed RecipePlan(s) to just Plan(s)
@@ -37,7 +39,7 @@ export const addPlanData = async (
 
     const addBody = JSON.stringify({
         ...Plan,
-        Plan_Date: Plan.Plan_Date ? new Date(Plan.Plan_Date).toISOString().slice(0, 10) : undefined, // Format date to YYYY-MM-DD, keep it undefined if not provided
+        Plan_Date: Plan.Plan_Date ? `${Plan.Plan_Date.getFullYear()}-${(Plan.Plan_Date.getMonth() + 1).toString().padStart(2, '0')}-${Plan.Plan_Date.getDate().toString().padStart(2, '0')}` : undefined, // Format date to YYYY-MM-DD, keep it undefined if not provided
         User_ID: userID,
     });
 
