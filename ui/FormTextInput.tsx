@@ -1,3 +1,5 @@
+//2026-06-17 : Incoming width applies to container
+
 //2026-06-15 : Failed validation requires handling in parent
 
 //2026-06-15 : Improved error message display
@@ -32,7 +34,7 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onCha
     const initialMessage = validationFunction ? (validationFunction(defaultValue) === true ? null : validationFunction(defaultValue).toString()) : null;    
 
     const [invalidMessage, setInvalidMessage] = useState<string | null>(initialMessage);
-    
+
     const onChangeValidation = (event : NativeSyntheticEvent<TextInputChangeEventData>) => {
         if(validationFunction){
             const validationResult = validationFunction(event.nativeEvent.text);
@@ -50,12 +52,14 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onCha
     }
 
     return (
-        <ColumnContainer style={{alignItems: "flex-start", position: "relative"}}>
+        <ColumnContainer style={{alignItems: "flex-start", position: "relative", width: style?.width || "100%", flexGrow: style?.flexGrow || 0,}}>
             <TextInput 
                 style={{ 
                     ...inputTextStyles,
                     ...style,
+                    width: "100%",
                     borderColor: invalidMessage ? Colours.errorText : "transparent",
+                    textAlignVertical: multiline ? "top" : "center",
                 }}
                 defaultValue={defaultValue}
                 inputMode={inputMode}
@@ -96,13 +100,13 @@ const inputTextStyles = {
         color: Colours.text,
         borderRadius: 5,
         textAlignVertical: "center",
-        width: "70%",
         lineHeight: 20,
         fontSize: 16,
-        margin: 8,
+        width:"100%",
+        marginVertical: 8,
         padding:3,
+        paddingVertical: 8,
         borderWidth: 1,
-        borderColor: "transparent",
 } as TextStyle;
 
 
