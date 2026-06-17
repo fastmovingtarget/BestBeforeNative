@@ -1,3 +1,5 @@
+//2026-06-17 : Validation for Name, Time & Difficulty
+
 //2026-06-10 : console.log removed
 
 //2026-06-01 : Using FadeComponent and RowContainer
@@ -32,6 +34,9 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
     const {addRecipe, updateRecipe} = useRecipes();
 
     const onSubmit = () => {
+        if(validateRecipeName(currentRecipe.Recipe_Name) !== true || validateRecipeTime(currentRecipe.Recipe_Time?.toString() || "") !== true || validateRecipeDifficulty(currentRecipe.Recipe_Difficulty?.toString() || "") !== true){
+            return;
+        }
         if(inputRecipe.Recipe_ID) {
             updateRecipe(currentRecipe);
         }
@@ -72,6 +77,41 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
         exitForm();
     }
 
+    const validateRecipeName = (name: string) => {
+        if(name.trim() === "") {
+            return "Recipe Name cannot be empty";
+        }
+        return true;
+    }
+
+    const validateRecipeTime = (time: string) => {
+        if(time.trim() === "" || time === null) {
+            return "Cannot be empty";
+        }
+        const timeNumber = Number.parseInt(time, 10);
+        if(isNaN(timeNumber)) {
+            return "Must be a number";
+        }
+        if(timeNumber < 0) {
+            return "Cannot be negative";
+        }
+        return true;
+    }
+
+    const validateRecipeDifficulty = (difficulty: string) => {
+        if(difficulty.trim() === "" || difficulty === null) {
+            return "Cannot be empty";
+        }
+        const difficultyNumber = Number.parseInt(difficulty, 10);
+        if(isNaN(difficultyNumber)) {
+            return "Must be a number";
+        }
+        if(difficultyNumber < 0 || difficultyNumber > 5) {
+            return "Must be between 0 and 5";
+        }
+        return true;
+    }
+
     return (
         <FadeComponent 
             style={{backgroundColor:"transparent", flex:1, margin:0, padding:0}}
@@ -98,6 +138,7 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
                             aria-label="recipe-name"
                             onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Name: text})}}
                             defaultValue={currentRecipe.Recipe_Name || ""}
+                            validationFunction={validateRecipeName}
                             style={{flexGrow: 1, width: "auto"}}
                         />
                     </RowContainer>
@@ -109,6 +150,7 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
                             aria-label="recipe-time"
                             onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Time: Number(text)})}}
                             defaultValue={currentRecipe.Recipe_Time?.toString() || "0"}
+                            validationFunction={validateRecipeTime}
                             style={{flexGrow: 1, width: "auto"}}
                         />
                     </RowContainer>
@@ -120,6 +162,7 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
                             aria-label="recipe-difficulty"
                             onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Difficulty: Number(text)})}}
                             defaultValue={currentRecipe.Recipe_Difficulty?.toString() || "0"}
+                            validationFunction={validateRecipeDifficulty}
                             style={{flexGrow: 1, width: "auto"}}
                         />
                     </RowContainer>
