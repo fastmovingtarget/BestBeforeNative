@@ -1,3 +1,5 @@
+//2026-06-17 : Layout changes for Recipe Form
+
 //2026-06-17 : Validation for Name, Time & Difficulty
 
 //2026-06-10 : console.log removed
@@ -129,46 +131,42 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
                     </ButtonView>
                 </RowContainer>
             </FadeComponent>
-            <FadeComponent style={{flex:1, width:"100%", marginHorizontal:0, paddingHorizontal:0}}>
+            <FadeComponent style={{flex:1, width:"100%", marginHorizontal:0}}>
                 <ScrollableContainer style={{justifyContent: "flex-start", width: "100%"}}>
                     <RowContainer >
-                        <LabelText>Recipe Name</LabelText>
                         <FormTextInput
-                            placeholder="Enter recipe name"
+                            placeholder="Recipe Name"
                             aria-label="recipe-name"
                             onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Name: text})}}
                             defaultValue={currentRecipe.Recipe_Name || ""}
                             validationFunction={validateRecipeName}
-                            style={{flexGrow: 1, width: "auto"}}
+                            style={{width: "100%"}}
                         />
                     </RowContainer>
 
-                    <RowContainer>
-                        <LabelText>Recipe Time</LabelText>
+                    <RowContainer style={{width: "100%", justifyContent: "space-between"}}>
                         <FormTextInput
-                            placeholder="Enter recipe time"
+                            placeholder="Time"
                             aria-label="recipe-time"
-                            onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Time: Number(text)})}}
-                            defaultValue={currentRecipe.Recipe_Time?.toString() || "0"}
+                            onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Time: text === "" ? undefined : Number.parseInt(text)})}}
+                            defaultValue={currentRecipe.Recipe_Time?.toString() || ""}
+                            inputMode="numeric"
                             validationFunction={validateRecipeTime}
-                            style={{flexGrow: 1, width: "auto"}}
+                            style={{ width: "48.5%"}}
                         />
-                    </RowContainer>
-
-                    <RowContainer>
-                        <LabelText>Recipe Difficulty</LabelText>
                         <FormTextInput
-                            placeholder="Enter recipe difficulty"
+                            placeholder="Difficulty"
                             aria-label="recipe-difficulty"
-                            onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Difficulty: Number(text)})}}
-                            defaultValue={currentRecipe.Recipe_Difficulty?.toString() || "0"}
+                            onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Difficulty: text === "" ? undefined : Number.parseInt(text)})}}
+                            defaultValue={currentRecipe.Recipe_Difficulty?.toString() || ""}
+                            inputMode="numeric"
                             validationFunction={validateRecipeDifficulty}
-                            style={{flexGrow: 1, width: "auto"}}
+                            style={{ width: "48.5%"}}
                         />
                     </RowContainer>
 
                     {currentRecipe.Recipe_Ingredients?.map((ingredient, index) => (
-                        <RowContainer key={index}>
+                        <RowContainer key={index} style={{width: "100%", justifyContent: "space-between"}}>
                             <FormTextInput
                                 placeholder="Enter ingredient"
                                 aria-label={`recipe-ingredient-name-${index}`}
@@ -177,7 +175,7 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
                                     newIngredients[index].Recipe_Ingredient_Name = text;
                                     setCurrentRecipe({...currentRecipe, Recipe_Ingredients: newIngredients});
                                 }}
-                                style={{flex: 1}}
+                                style={{width: "42%"}}
                                 defaultValue={ingredient.Recipe_Ingredient_Name || ""}
                             />
                             <FormTextInput
@@ -189,14 +187,14 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
                                     newIngredients[index].Recipe_Ingredient_Quantity = Number(text);
                                     setCurrentRecipe({...currentRecipe, Recipe_Ingredients: newIngredients});
                                 }}
-                                style={{flex: 1}}
+                                style={{width: "45%"}}
                                 defaultValue={`${ingredient.Recipe_Ingredient_Quantity}` || ""}
                             />
                             <ButtonView 
                                 onPress={() => deleteRecipeIngredient(index)}
                                 aria-label={`recipe-ingredient-delete-${index}`}
                             >
-                                <LabelText>X</LabelText>
+                                <LabelText style={{fontSize: 10}}>X</LabelText>
                             </ButtonView>
                         </RowContainer>))
                     }
@@ -206,16 +204,16 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
                             <LabelText>Add Ingredient</LabelText>
                         </ButtonView>
                     </RowContainer>
-                    <RowContainer style={{flexDirection: "column"}}>
-                        <LabelText>Recipe Instructions</LabelText>
+
+                    <RowContainer style={{width: "100%"}}>
                         <FormTextInput
-                            placeholder="Enter recipe instructions"
+                            placeholder="Enter recipe instructions..."
                             aria-label="recipe-instructions"
                             onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Instructions: text})}}
                             defaultValue={currentRecipe.Recipe_Instructions || ""}
-                            style={{width: "auto", flexGrow: 1}}
+                            style={{width: "100%", height: 100}}
                             multiline={true}
-                            numberOfLines={4}
+                            numberOfLines={5}
                         />
                     </RowContainer>
                 </ScrollableContainer>
