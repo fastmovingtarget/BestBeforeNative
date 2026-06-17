@@ -1,3 +1,5 @@
+//2026-06-17 : Minor text fix
+
 //2025-11-19 : Adjusting imports and calls to fit new naming convention
 
 //2025-05-27 : Adding Shopping list tab in to the app
@@ -40,7 +42,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="recipes"
         options={{
-          title: 'recipes',
+          title: 'Recipes',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />
