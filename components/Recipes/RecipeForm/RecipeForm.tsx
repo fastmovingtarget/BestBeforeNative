@@ -1,3 +1,5 @@
+//2026-06-18 : Allow use of blank number input, validation for ingredients
+
 //2026-06-17 : Added validation, tinkered with style
 
 //2026-06-10 : console.log removed
@@ -34,9 +36,9 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
     const {addRecipe, updateRecipe} = useRecipes();
 
     const onSubmit = () => {
-        if(validateRecipeName(currentRecipe.Recipe_Name) !== true || validateRecipeTime(currentRecipe.Recipe_Time?.toString() || "") !== true || validateRecipeDifficulty(currentRecipe.Recipe_Difficulty?.toString() || "") !== true){
+        if(!checkValidation())
             return;
-        }
+        
         if(inputRecipe.Recipe_ID) {
             updateRecipe(currentRecipe);
         }
@@ -50,12 +52,13 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
         setCurrentRecipe(inputRecipe);
         setMountState(MountState.Unmount);
     }
+
     const addNewRecipeIngredient = () => {
         const newIngredients = [
             ...(currentRecipe.Recipe_Ingredients || []),
             {
                 Recipe_Ingredient_Name: "",
-                Recipe_Ingredient_Quantity: 0,
+                Recipe_Ingredient_Quantity: undefined,
             } as Recipe_Ingredient
         ];
         setCurrentRecipe({
@@ -86,7 +89,7 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
 
     const validateRecipeTime = (time: string) => {
         if(time.trim() === "" || time === null) {
-            return "Cannot be empty";
+            return "Time cannot be empty";
         }
         const timeNumber = Number.parseInt(time, 10);
         if(isNaN(timeNumber)) {
@@ -100,7 +103,7 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
 
     const validateRecipeDifficulty = (difficulty: string) => {
         if(difficulty.trim() === "" || difficulty === null) {
-            return "Cannot be empty";
+            return "Difficulty cannot be empty";
         }
         const difficultyNumber = Number.parseInt(difficulty, 10);
         if(isNaN(difficultyNumber)) {
@@ -108,6 +111,44 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
         }
         if(difficultyNumber < 0 || difficultyNumber > 5) {
             return "Must be between 0 and 5";
+        }
+        return true;
+    }
+
+    const validateRecipeIngredientName = (name: string) => {
+        if(name.trim() === "") {
+            return "Name cannot be empty";
+        }
+        return true;
+    }
+
+    const validateRecipeIngredientQuantity = (quantity: string) => {
+        if(quantity.trim() === "" || quantity === null) {
+            return "Quantity cannot be empty";
+        }
+        const quantityNumber = Number.parseInt(quantity, 10);
+        if(isNaN(quantityNumber)) {
+            return "Must be a number";
+        }
+        if(quantityNumber < 0) {
+            return "Cannot be negative";
+        }
+        return true;
+    }
+
+    const checkValidation = () => {
+        if(validateRecipeName(currentRecipe.Recipe_Name) !== true 
+            || validateRecipeTime(currentRecipe.Recipe_Time?.toString() || "") !== true 
+            || validateRecipeDifficulty(currentRecipe.Recipe_Difficulty?.toString() || "") !== true){
+            return false;
+        }
+        if(currentRecipe.Recipe_Ingredients) {
+            for(const ingredient of currentRecipe.Recipe_Ingredients) {
+                if(validateRecipeIngredientName(ingredient.Recipe_Ingredient_Name) !== true 
+                    || validateRecipeIngredientQuantity(ingredient.Recipe_Ingredient_Quantity?.toString() || "") !== true){
+                    return false;
+                }
+            }
         }
         return true;
     }
@@ -173,8 +214,9 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
                                     newIngredients[index].Recipe_Ingredient_Name = text;
                                     setCurrentRecipe({...currentRecipe, Recipe_Ingredients: newIngredients});
                                 }}
-                                style={{width: "42%"}}
                                 defaultValue={ingredient.Recipe_Ingredient_Name || ""}
+                                validationFunction={validateRecipeIngredientName}
+                                style={{width: "42%"}}
                             />
                             <FormTextInput
                                 placeholder="Ingredient Quantity"
@@ -185,8 +227,9 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
                                     newIngredients[index].Recipe_Ingredient_Quantity = Number(text);
                                     setCurrentRecipe({...currentRecipe, Recipe_Ingredients: newIngredients});
                                 }}
-                                style={{width: "45%"}}
+                                validationFunction={validateRecipeIngredientQuantity}
                                 defaultValue={ingredient.Recipe_Ingredient_Quantity?.toString() || ""}
+                                style={{width: "45%"}}
                             />
                             <ButtonView 
                                 onPress={() => deleteRecipeIngredient(index)}

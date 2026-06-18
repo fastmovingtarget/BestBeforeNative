@@ -1,3 +1,5 @@
+//2026-06-17 : Text fix to AddRecipe body
+
 //2026-06-01 : updating local IP Address
 
 //2025-11-20 : Cleanup of debug logs
@@ -37,7 +39,7 @@ export const addRecipeData = (
 
     const requestBody = {
         ...recipe,
-        Recipe_User_ID: userId,
+        User_ID: userId,
     } as Recipe;
 
     let returnPromise = new Promise<UpdateState>((resolve) => {

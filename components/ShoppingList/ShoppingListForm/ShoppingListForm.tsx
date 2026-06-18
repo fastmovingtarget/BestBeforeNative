@@ -1,3 +1,5 @@
+//2026-06-18 : Quantity now starts undefined, adds validation
+
 //2026-06-15 : Correctly validating input forms
 
 //2026-06-01 : Using FadeComponent and RowContainer
@@ -18,14 +20,14 @@ import {RowContainer, ButtonView, LabelText, FormTextInput, FadeComponent} from 
 
 const blankItem : Shopping_List_Item = {
     Shopping_Item_Name: "",
-    Shopping_Item_Quantity: 0
+    Shopping_Item_Quantity: undefined,
 }
 
 export default function ShoppingListForm({item = blankItem, isFormVisible, onCancel} : {item? : Shopping_List_Item, isFormVisible : boolean, onCancel? : () => void}) {
 
     const blankItem : Shopping_List_Item = {
         Shopping_Item_Name: "",
-        Shopping_Item_Quantity: 0,
+        Shopping_Item_Quantity: undefined,
     }
     const [formItem, setFormItem] = useState<Shopping_List_Item>( item || blankItem);//gets 
     const {addShoppingItem, updateShoppingItem} = useShoppingList();
@@ -36,6 +38,7 @@ export default function ShoppingListForm({item = blankItem, isFormVisible, onCan
     }
 
     const quantityValidation = (text: string) => {
+        if(text.trim() === "") return "Quantity cannot be empty";
         if(isNaN(parseInt(text))) return "Quantity must be a number";
         return true;
     }
@@ -69,8 +72,8 @@ export default function ShoppingListForm({item = blankItem, isFormVisible, onCan
     return (
         <FadeComponent aria-label="formContainer" style={isFormVisible ? styles.formVisible : styles.formInvisible} >
             <RowContainer style={{justifyContent: "space-between"}} >
-                <LabelText >Item: </LabelText> 
                 <FormTextInput
+                    placeholder="Item Name"
                     defaultValue={formItem.Shopping_Item_Name || ""}
                     inputMode='text'
                     onChange={(event) => setFormItem({...formItem, Shopping_Item_Name: event.nativeEvent.text})}
@@ -80,11 +83,11 @@ export default function ShoppingListForm({item = blankItem, isFormVisible, onCan
             </RowContainer>
 
             <RowContainer style={{alignItems: "center", justifyContent: "space-between"}} >
-                <LabelText >Quantity: </LabelText>
                 <FormTextInput
+                    placeholder="Quantity"
                     defaultValue={formItem.Shopping_Item_Quantity?.toString() || ""}
                     inputMode='numeric'
-                    onChange={(event) => setFormItem({...formItem, Shopping_Item_Quantity: parseInt(event.nativeEvent.text) ? parseInt(event.nativeEvent.text) : 0})}
+                    onChange={(event) => setFormItem({...formItem, Shopping_Item_Quantity: parseInt(event.nativeEvent.text) ? parseInt(event.nativeEvent.text) : undefined})}
                     validationFunction={quantityValidation}
                     aria-label="quantity-input"
                 />
