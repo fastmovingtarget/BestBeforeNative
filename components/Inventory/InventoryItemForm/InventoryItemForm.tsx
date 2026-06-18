@@ -1,3 +1,5 @@
+//2026-06-18 : Item quantity now starts undefined
+
 //2026-06-01 : feat: use FadeComponent, consolidate UI
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -18,7 +20,7 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
 
     const blankInventoryItem : Inventory_Item = {
         Inventory_Item_Name: "",
-        Inventory_Item_Quantity: 0,
+        Inventory_Item_Quantity: null,
         Inventory_Item_Date: new Date(),
     }
     const [formInventoryItem, setFormInventoryItem] = useState<Inventory_Item>( inventoryItem || blankInventoryItem);
@@ -48,23 +50,22 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
     return (
         <FadeComponent aria-label="formContainer" style={isFormVisible ? styles.formVisible : styles.formInvisible} mountState={mountState} onUnmountAnimationEnd={() => {if(onCancel) onCancel()}} >
             <RowContainer  >
-                <LabelText >Ingredient: </LabelText> 
                 <FormTextInput
                     defaultValue={formInventoryItem.Inventory_Item_Name || ""}
                     inputMode='text'
                     onChange={(event) => setFormInventoryItem({...formInventoryItem, Inventory_Item_Name: event.nativeEvent.text})}
+                    placeholder="Item Name"
                     aria-label="name-input"
                 />
             </RowContainer>
                 
             <RowContainer  >
-                <LabelText aria-label="date-input-label" >Use By: </LabelText>
                 <ButtonView
                     onPress={() => setPickerVisible(!pickerVisible)}
-                    style={{width: "70%", padding:0}}
+                    style={{width: "100%", padding:0}}
                 >
                     <LabelText aria-label="date-input-button">
-                        {formInventoryItem.Inventory_Item_Date?.toLocaleDateString("en-UK", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                        {`Use By: ${formInventoryItem.Inventory_Item_Date?.toLocaleDateString("en-UK", { year: "numeric", month: "2-digit", day: "2-digit" })}`}
                     </LabelText>
                 </ButtonView>
                 {pickerVisible ? <DateTimePicker
@@ -77,11 +78,11 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
                 /> : null}
             </RowContainer>
             <RowContainer  >
-                <LabelText >Quantity: </LabelText>
                 <FormTextInput
                     defaultValue={formInventoryItem.Inventory_Item_Quantity?.toString() || ""}
                     inputMode='numeric'
-                    onChange={(event) => setFormInventoryItem({...formInventoryItem, Inventory_Item_Quantity: parseInt(event.nativeEvent.text)})}
+                    onChange={(event) => setFormInventoryItem({...formInventoryItem, Inventory_Item_Quantity: parseInt(event.nativeEvent.text) ? parseInt(event.nativeEvent.text) : null})}
+                    placeholder="Quantity"
                     aria-label="quantity-input"
                 />
             </RowContainer>
