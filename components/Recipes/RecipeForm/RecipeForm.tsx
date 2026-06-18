@@ -1,6 +1,6 @@
-//2026-06-17 : Layout changes for Recipe Form
+//2026-06-18 : Allow use of blank number input, validation for ingredients
 
-//2026-06-17 : Validation for Name, Time & Difficulty
+//2026-06-17 : Added validation, tinkered with style
 
 //2026-06-10 : console.log removed
 
@@ -18,46 +18,47 @@ import React from 'react';
 import Recipe from '@/Types/Recipe';
 import { useRecipes } from "@/Contexts/Recipes/RecipesDataProvider"
 import Recipe_Ingredient from '@/Types/Recipe_Ingredient';
-import {RowContainer, ButtonView, LabelText, FormTextInput, ScrollableContainer, FadeComponent} from '@/ui/BestBeforeUI';
+import {RowContainer, ButtonView, LabelText, FormTextInput, ScrollableContainer, FadeComponent, ColumnContainer} from '@/ui/BestBeforeUI';
 import { MountState } from '@/ui/Types/MountState';
 
-const blankRecipe = {
+const emptyRecipe = {
     Recipe_Name: "",
-    Recipe_Difficulty: 0,
-    Recipe_Time: 0,
+    Recipe_Difficulty: undefined,
+    Recipe_Time: undefined,
     Recipe_Ingredients: [],
     Recipe_Instructions: "",
 }
 
-export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inputRecipe?: Recipe, exitForm: () => void}) {
+export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inputRecipe?: Recipe, exitForm: () => void}) {
 
     const [currentRecipe, setCurrentRecipe] = React.useState<Recipe>(inputRecipe);
     const [mountState, setMountState] = React.useState<MountState>(MountState.Mount);
     const {addRecipe, updateRecipe} = useRecipes();
 
     const onSubmit = () => {
-        if(validateRecipeName(currentRecipe.Recipe_Name) !== true || validateRecipeTime(currentRecipe.Recipe_Time?.toString() || "") !== true || validateRecipeDifficulty(currentRecipe.Recipe_Difficulty?.toString() || "") !== true){
+        if(!checkValidation())
             return;
-        }
+        
         if(inputRecipe.Recipe_ID) {
             updateRecipe(currentRecipe);
         }
         else {
             addRecipe(currentRecipe);
         }
-        setCurrentRecipe(blankRecipe);
+        setCurrentRecipe(emptyRecipe);
         setMountState(MountState.Unmount);
     }
     const onCancel = () => {
         setCurrentRecipe(inputRecipe);
         setMountState(MountState.Unmount);
     }
+
     const addNewRecipeIngredient = () => {
         const newIngredients = [
             ...(currentRecipe.Recipe_Ingredients || []),
             {
                 Recipe_Ingredient_Name: "",
-                Recipe_Ingredient_Quantity: 0,
+                Recipe_Ingredient_Quantity: undefined,
             } as Recipe_Ingredient
         ];
         setCurrentRecipe({
@@ -88,7 +89,7 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
 
     const validateRecipeTime = (time: string) => {
         if(time.trim() === "" || time === null) {
-            return "Cannot be empty";
+            return "Time cannot be empty";
         }
         const timeNumber = Number.parseInt(time, 10);
         if(isNaN(timeNumber)) {
@@ -102,7 +103,7 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
 
     const validateRecipeDifficulty = (difficulty: string) => {
         if(difficulty.trim() === "" || difficulty === null) {
-            return "Cannot be empty";
+            return "Difficulty cannot be empty";
         }
         const difficultyNumber = Number.parseInt(difficulty, 10);
         if(isNaN(difficultyNumber)) {
@@ -110,6 +111,44 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
         }
         if(difficultyNumber < 0 || difficultyNumber > 5) {
             return "Must be between 0 and 5";
+        }
+        return true;
+    }
+
+    const validateRecipeIngredientName = (name: string) => {
+        if(name.trim() === "") {
+            return "Name cannot be empty";
+        }
+        return true;
+    }
+
+    const validateRecipeIngredientQuantity = (quantity: string) => {
+        if(quantity.trim() === "" || quantity === null) {
+            return "Quantity cannot be empty";
+        }
+        const quantityNumber = Number.parseInt(quantity, 10);
+        if(isNaN(quantityNumber)) {
+            return "Must be a number";
+        }
+        if(quantityNumber < 0) {
+            return "Cannot be negative";
+        }
+        return true;
+    }
+
+    const checkValidation = () => {
+        if(validateRecipeName(currentRecipe.Recipe_Name) !== true 
+            || validateRecipeTime(currentRecipe.Recipe_Time?.toString() || "") !== true 
+            || validateRecipeDifficulty(currentRecipe.Recipe_Difficulty?.toString() || "") !== true){
+            return false;
+        }
+        if(currentRecipe.Recipe_Ingredients) {
+            for(const ingredient of currentRecipe.Recipe_Ingredients) {
+                if(validateRecipeIngredientName(ingredient.Recipe_Ingredient_Name) !== true 
+                    || validateRecipeIngredientQuantity(ingredient.Recipe_Ingredient_Quantity?.toString() || "") !== true){
+                    return false;
+                }
+            }
         }
         return true;
     }
@@ -133,7 +172,7 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
             </FadeComponent>
             <FadeComponent style={{flex:1, width:"100%", marginHorizontal:0}}>
                 <ScrollableContainer style={{justifyContent: "flex-start", width: "100%"}}>
-                    <RowContainer >
+                    <RowContainer style={{width: "100%"}}>
                         <FormTextInput
                             placeholder="Recipe Name"
                             aria-label="recipe-name"
@@ -168,18 +207,19 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
                     {currentRecipe.Recipe_Ingredients?.map((ingredient, index) => (
                         <RowContainer key={index} style={{width: "100%", justifyContent: "space-between"}}>
                             <FormTextInput
-                                placeholder="Enter ingredient"
+                                placeholder="Ingredient Name"
                                 aria-label={`recipe-ingredient-name-${index}`}
                                 onChangeText={(text) => {
                                     const newIngredients = [...currentRecipe.Recipe_Ingredients || []];
                                     newIngredients[index].Recipe_Ingredient_Name = text;
                                     setCurrentRecipe({...currentRecipe, Recipe_Ingredients: newIngredients});
                                 }}
-                                style={{width: "42%"}}
                                 defaultValue={ingredient.Recipe_Ingredient_Name || ""}
+                                validationFunction={validateRecipeIngredientName}
+                                style={{width: "42%"}}
                             />
                             <FormTextInput
-                                placeholder="Enter ingredient"
+                                placeholder="Ingredient Quantity"
                                 aria-label={`recipe-ingredient-quantity-${index}`}
                                 inputMode="numeric"
                                 onChangeText={(text) => {
@@ -187,8 +227,9 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
                                     newIngredients[index].Recipe_Ingredient_Quantity = Number(text);
                                     setCurrentRecipe({...currentRecipe, Recipe_Ingredients: newIngredients});
                                 }}
+                                validationFunction={validateRecipeIngredientQuantity}
+                                defaultValue={ingredient.Recipe_Ingredient_Quantity?.toString() || ""}
                                 style={{width: "45%"}}
-                                defaultValue={`${ingredient.Recipe_Ingredient_Quantity}` || ""}
                             />
                             <ButtonView 
                                 onPress={() => deleteRecipeIngredient(index)}
@@ -204,7 +245,7 @@ export default function RecipeForm({inputRecipe = blankRecipe, exitForm} : {inpu
                             <LabelText>Add Ingredient</LabelText>
                         </ButtonView>
                     </RowContainer>
-
+                    
                     <RowContainer style={{width: "100%"}}>
                         <FormTextInput
                             placeholder="Enter recipe instructions..."
