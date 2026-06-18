@@ -1,3 +1,5 @@
+//2026-06-18 : Removed require cycle
+
 //2026-06-17 : Incoming width applies to container
 
 //2026-06-15 : Failed validation requires handling in parent
@@ -14,7 +16,8 @@ import { TextInput, NativeSyntheticEvent, } from "react-native";
 import { useState, type PropsWithChildren } from "react";
 import type { TextInputChangeEventData, TextStyle} from "react-native";
 import { Colours } from "@/constants/Colors";
-import { ColumnContainer, LabelText } from "./BestBeforeUI";
+import ColumnContainer from "./ColumnContainer";
+import LabelText from "./LabelText";
 
 type InputTextProps = {
     style?: TextStyle,

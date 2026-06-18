@@ -1,3 +1,5 @@
+//2026-06-18 : Added recipe search functionality
+
 //2026-06-12 : Added ResizeComponent wrapper for height changes
 
 //2026-06-01 : Using FadeComponent and RowContainer
@@ -42,6 +44,7 @@ export default function PlanActiveDayRecipes({date, setSelectedPlan}: {date: Dat
     const { recipes } = useRecipes();
     const [recipesVisible, setRecipesVisible] = useState<boolean>(false);
     const [containerHeight, setContainerHeight] = useState<number>(0);
+    const [recipesSearch, setRecipesSearch] = useState<string>('');
 
     //todo implement view Recipe Plan Ingredients
 
@@ -102,13 +105,13 @@ export default function PlanActiveDayRecipes({date, setSelectedPlan}: {date: Dat
                             defaultValue=''
                             aria-label='recipe plan recipe search'
                             onChangeText={(text) => {
-                                // Implement search functionality
+                                setRecipesSearch(text);
                             }}
                             style={{height: 40}}
                         />
                         <ListView style={{ width: '100%', margin: 0, padding:0}}>
                         {
-                            recipes.map((recipe: Recipe) => 
+                            recipes.filter((recipe: Recipe) => recipe.Recipe_Name.toLowerCase().includes(recipesSearch.toLowerCase())).map((recipe: Recipe) => 
                                 <RecipesListItem 
                                     recipe={recipe}
                                     setSelectedRecipe={
