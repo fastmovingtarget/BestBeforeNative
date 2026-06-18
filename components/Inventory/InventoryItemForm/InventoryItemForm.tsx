@@ -1,3 +1,5 @@
+//2026-06-18 : Added validation for form fields
+
 //2026-06-18 : Item quantity now starts undefined
 
 //2026-06-01 : feat: use FadeComponent, consolidate UI
@@ -37,6 +39,9 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
     }
 
     const submitHandler = () => {
+        if(validateName(formInventoryItem.Inventory_Item_Name || "") !== true || validateQuantity(formInventoryItem.Inventory_Item_Quantity?.toString() || "") !== true || validateDate(formInventoryItem.Inventory_Item_Date || undefined) !== true){
+            return;
+        }
         if(formInventoryItem?.Inventory_Item_ID)  
             updateInventoryItem(formInventoryItem) 
         else{ 
@@ -47,10 +52,28 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
         setMountState(MountState.Unmount);
     }
 
+    const validateName = (text: string) => {
+        if(text.trim() === "") return "Item name cannot be empty";
+        return true;
+    }
+
+    const validateQuantity = (text: string) => {
+        if(text.trim() === "") return "Quantity cannot be empty";
+        if(isNaN(parseInt(text))) return "Quantity must be a number";
+        return true;
+    }
+
+    const validateDate = (date: Date | undefined) => {
+        if(!date) return "Date cannot be empty";
+        if(date < new Date()) return "Date cannot be in the past";
+        return true;
+    }
+
     return (
         <FadeComponent aria-label="formContainer" style={isFormVisible ? styles.formVisible : styles.formInvisible} mountState={mountState} onUnmountAnimationEnd={() => {if(onCancel) onCancel()}} >
             <RowContainer  >
                 <FormTextInput
+                    validationFunction={validateName}
                     defaultValue={formInventoryItem.Inventory_Item_Name || ""}
                     inputMode='text'
                     onChange={(event) => setFormInventoryItem({...formInventoryItem, Inventory_Item_Name: event.nativeEvent.text})}
@@ -79,6 +102,7 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
             </RowContainer>
             <RowContainer  >
                 <FormTextInput
+                    validationFunction={validateQuantity}
                     defaultValue={formInventoryItem.Inventory_Item_Quantity?.toString() || ""}
                     inputMode='numeric'
                     onChange={(event) => setFormInventoryItem({...formInventoryItem, Inventory_Item_Quantity: parseInt(event.nativeEvent.text) ? parseInt(event.nativeEvent.text) : null})}
