@@ -1,3 +1,5 @@
+//2026-06-19 : Logs for API calls
+
 //2026-06-01 : updating local IP Address
 
 //2025-11-10 : Added improved documentation
@@ -11,6 +13,7 @@
 import React from "react";
 import Recipe from "../../Types/Recipe";
 import { UpdateState } from "@/Types/DataLoadingState";
+import log from "@/utils/log";
 
 /**
  * Deletes a recipe from the database and updates the local state.
@@ -32,6 +35,8 @@ export const deleteRecipeData = async (
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     }
 
+    log(`Deleting recipe with ID: ${recipeID}`, "debug");
+
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipes/${recipeID}`, 
@@ -42,13 +47,17 @@ export const deleteRecipeData = async (
                 }
             }
         ).then((rawData) => {
-            if(!rawData.ok) 
+            if(!rawData.ok) {
+                log(`Failed to delete recipe with ID: ${recipeID}`, "error");
                 resolve(UpdateState.Failed);
+            }
             else{
                 setRecipes(recipes.filter((recipe) => recipe.Recipe_ID !== recipeID));//remove the deleted recipe from the list
+                log(`Successfully deleted recipe with ID: ${recipeID}`, "debug");
                 resolve(UpdateState.Successful);
             }
-        }).catch(() => {
+        }).catch((error) => {
+            log(`Error deleting recipe with ID: ${recipeID}: ${error}`, "error");
             resolve(UpdateState.Failed);
         });
     })

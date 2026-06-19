@@ -1,3 +1,5 @@
+//2026-06-19 : Logs for API calls
+
 //2026-06-01 : updating local IP Address
 
 //2025-11-19 : Renamed RecipePlan(s) to just Plan(s)
@@ -13,6 +15,7 @@
 import React from "react";
 import Plan from "../../Types/Plan";
 import { UpdateState } from "@/Types/DataLoadingState";
+import log from "@/utils/log";
 
 /**
  * Deletes a recipe plan from the database and updates the local state.
@@ -34,8 +37,11 @@ export const deletePlanData = async (
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     };
 
+    log(`Deleting plan with ID: ${planID}`, "debug");
+
     const returnPromise = new Promise<UpdateState>((resolve) => {
         if(!planID) {
+            log(`Failed to delete plan: Invalid plan ID`, "error");
             resolve(UpdateState.Failed);
         }
 
@@ -49,12 +55,18 @@ export const deletePlanData = async (
                 }
             }
         ).then((rawData) => {
-            if(!rawData.ok) 
+            if(!rawData.ok) {
+                log(`Failed to delete plan with ID: ${planID}`, "error");
                 resolve(UpdateState.Failed);
+            }
             else {
+                log(`Successfully deleted plan with ID: ${planID}`, "debug");
                 setPlans(Plans.filter((plan) => plan.Plan_ID !== planID));//remove the deleted recipe from the list
                 resolve(UpdateState.Successful);
             }
+        }).catch((error) => {
+            log(`Error deleting plan with ID: ${planID}: ${error}`, "error");
+            resolve(UpdateState.Failed);
         });
     })
     return returnPromise;

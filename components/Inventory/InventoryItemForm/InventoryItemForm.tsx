@@ -1,3 +1,5 @@
+//2026-06-19 : allow submission of items on today's date
+
 //2026-06-18 : Added validation for form fields
 
 //2026-06-18 : Item quantity now starts undefined
@@ -65,7 +67,11 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
 
     const validateDate = (date: Date | undefined) => {
         if(!date) return "Date cannot be empty";
-        if(date < new Date()) return "Date cannot be in the past";
+        const today = new Date();
+        if(date.getFullYear() < today.getFullYear() || 
+            (date.getFullYear() === today.getFullYear() && date.getMonth() < today.getMonth()) ||
+            (date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && date.getDate() < today.getDate())) 
+            return "Date cannot be in the past";
         return true;
     }
 

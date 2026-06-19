@@ -1,3 +1,5 @@
+//2026-06-19 : Logs for API calls
+
 //2026-06-01 : updating local IP Address
 
 //2025-11-19 : Renamed Ingredients to Inventory
@@ -13,6 +15,7 @@
 import React from "react";
 import Inventory_Item from "../../Types/Inventory_Item";
 import { UpdateState } from "@/Types/DataLoadingState";
+import log from "@/utils/log";
 
 /**
  * Adds a new inventory item to the database and updates the local state.
@@ -42,6 +45,8 @@ export const addInventoryItemData = async (
         User_ID: userID,
     } as Inventory_Item);
 
+    log(`Adding inventory item: ${inventoryItem.Inventory_Item_Name} for user ID: ${userID}`, "debug");
+
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/inventory/`, 
@@ -54,6 +59,7 @@ export const addInventoryItemData = async (
             }
         ).then((rawData) => {
             if(!rawData.ok) {
+                log(`Error adding inventory item: ${rawData.statusText}`, "error");
                 resolve(UpdateState.FailedAdd);
             }
             else{
@@ -65,9 +71,11 @@ export const addInventoryItemData = async (
                             Inventory_Item_Date: new Date(data.Inventory_Item_Date),//date comes in as a string and doesn't get properly parsed within .json()
                         }]);
                 })
+                log(`Successfully added inventory item: ${inventoryItem.Inventory_Item_Name}`, "debug");
                 resolve(UpdateState.Successful);
             }
-        }).catch(() => {
+        }).catch((error) => {
+            log(`Error adding inventory item: ${error}`, "error");
             resolve(UpdateState.Failed);
         });
     })

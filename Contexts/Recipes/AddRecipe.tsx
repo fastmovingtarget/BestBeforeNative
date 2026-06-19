@@ -1,3 +1,5 @@
+//2026-06-19 : Logs for API calls
+
 //2026-06-17 : Text fix to AddRecipe body
 
 //2026-06-01 : updating local IP Address
@@ -15,6 +17,7 @@
 import React from "react";
 import Recipe from "../../Types/Recipe";
 import { UpdateState } from "@/Types/DataLoadingState";
+import log from "@/utils/log";
 
 /**
  * Adds a new recipe to the database and updates the local state.
@@ -42,6 +45,8 @@ export const addRecipeData = (
         User_ID: userId,
     } as Recipe;
 
+    log(`Adding recipe: ${recipe.Recipe_Name} for user ID: ${userId}`, "debug");
+
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipes/`, 
@@ -54,6 +59,7 @@ export const addRecipeData = (
             }
         ).then((rawData) => {
             if(!rawData.ok) {
+                log(`Error adding recipe: ${rawData.statusText}`, "error");
                 resolve(UpdateState.Failed);
             }
             else{
@@ -62,10 +68,12 @@ export const addRecipeData = (
                         ...recipes,
                         data,  
                     ]);
+                    log(`Successfully added recipe: ${recipe.Recipe_Name} for user ID: ${userId}`, "debug");
                     resolve(UpdateState.Successful);
                 })
             }   
-        }).catch(() => {
+        }).catch((error) => {
+            log(`Error adding recipe: ${error}`, "error");
             resolve(UpdateState.Failed);
         });
     })
