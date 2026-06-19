@@ -1,3 +1,5 @@
+//2026-06-19 : Logs for API calls
+
 //2026-06-15 : plan date now timezone independent
 
 //2026-06-01 : updating local IP Address
@@ -15,6 +17,7 @@
 import React from "react";
 import Plan from "../../Types/Plan";
 import { UpdateState } from "@/Types/DataLoadingState";
+import log from "@/utils/log";
 
 /**
  * Adds a new recipe plan to the database and updates the local state.
@@ -36,12 +39,15 @@ export const addPlanData = async (
         DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     };
+    
 
     const addBody = JSON.stringify({
         ...Plan,
         Plan_Date: Plan.Plan_Date ? `${Plan.Plan_Date.getFullYear()}-${(Plan.Plan_Date.getMonth() + 1).toString().padStart(2, '0')}-${Plan.Plan_Date.getDate().toString().padStart(2, '0')}` : undefined, // Format date to YYYY-MM-DD, keep it undefined if not provided
         User_ID: userID,
     });
+    
+    log(`Adding plan: ${Plan.Recipe_Name} ${Plan.Plan_Date} for user ID: ${userID}`, "debug");
 
     const returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
@@ -55,6 +61,7 @@ export const addPlanData = async (
             }
         ).then((rawData) => {
             if(!rawData.ok) {
+                log(`Failed to add plan: ${Plan.Recipe_Name} ${Plan.Plan_Date} for user ID: ${userID}`, "error");
                 resolve(UpdateState.Failed);
             }
             else {
@@ -73,8 +80,12 @@ export const addPlanData = async (
                             data
                         ]);
                 })
+                log(`Successfully added plan: ${Plan.Recipe_Name} ${Plan.Plan_Date} for user ID: ${userID}`, "debug");
                 resolve(UpdateState.Successful);
             }
+        }).catch((error) => {
+            log(`Error adding plan: ${Plan.Recipe_Name} ${Plan.Plan_Date} for user ID: ${userID}: ${error}`, "error");
+            resolve(UpdateState.Failed);
         });
     })
     return returnPromise;

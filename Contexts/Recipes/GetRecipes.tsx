@@ -1,3 +1,5 @@
+//2026-06-19 : Logs for API calls
+
 //2026-06-01 : updating local IP Address
 
 //2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
@@ -11,6 +13,7 @@
 import React from "react";
 import Recipe, {RecipesSearchOptions} from "../../Types/Recipe";
 import { SyncState } from "@/Types/DataLoadingState";
+import log from "@/utils/log";
 
 /**
  * Fetches recipes from the database based on user ID and optional search criteria,
@@ -37,6 +40,8 @@ export const getRecipesData = async (
         return `${key}=${encodeURIComponent(value)}`;
     }).join("&");
 
+    log(`Fetching recipes data for user ID: ${userID} with options: ${optionsString}`, "debug");
+
     const returnPromise = new Promise<SyncState>((resolve, reject) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipes/${userID}?${optionsString}`, 
@@ -48,6 +53,7 @@ export const getRecipesData = async (
             }
         ).then((rawData) => {
             if(rawData.status !== 200) {
+                log(`Error fetching recipes data: ${rawData.statusText}`, "error");
                 resolve(SyncState.Failed);
             }
             else {
@@ -55,11 +61,12 @@ export const getRecipesData = async (
                     setRecipes(
                         data
                     );
+                    log(`Successfully fetched recipes data for user ID: ${userID}`, "debug");
                     resolve(SyncState.Successful);
                 })
             }
         }).catch(() => {
-            console.error("Error fetching recipes data");
+            log(`Error fetching recipes data for user ID: ${userID}`, "error");
             resolve(SyncState.Failed);
         });
     })

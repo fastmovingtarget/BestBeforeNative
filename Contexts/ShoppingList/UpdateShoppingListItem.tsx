@@ -1,3 +1,5 @@
+//2026-06-19 : Logs for API calls
+
 //2026-06-01 : updating local IP Address
 
 //2025-11-19 : Item_(...) now have Shopping_ Prefix
@@ -13,6 +15,7 @@
 import React from "react";
 import Shopping_List_Item from "../../Types/Shopping_List_Item";
 import { UpdateState } from "@/Types/DataLoadingState";
+import log from "@/utils/log";
 
 /**
  * Updates an existing shopping list item in the database and updates the local state.
@@ -34,6 +37,8 @@ export const updateShoppingListItemData = async (
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     }
 
+    log(`Updating shopping list item with ID: ${shoppingListItem.Shopping_Item_ID}`, "debug");
+
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/shoppinglist/${shoppingListItem.Shopping_Item_ID}`, 
@@ -46,6 +51,7 @@ export const updateShoppingListItemData = async (
             }
         ).then((rawData) => {
             if(!rawData.ok) {
+                log(`Failed to update shopping list item with ID: ${shoppingListItem.Shopping_Item_ID}`, "error");
                 resolve(UpdateState.Failed);
             }
             else{
@@ -55,9 +61,11 @@ export const updateShoppingListItemData = async (
                     else //otherwise return the ingredient that was input
                         return shoppingListItem;
                 }));
+                log(`Successfully updated shopping list item with ID: ${shoppingListItem.Shopping_Item_ID}`, "debug");
                 resolve(UpdateState.Successful);
             }
-        }).catch(() => {
+        }).catch((error) => {
+            log(`Failed to update shopping list item with ID: ${shoppingListItem.Shopping_Item_ID}: ${error}`, "error");
             resolve(UpdateState.Failed);
         });
     })

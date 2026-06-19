@@ -1,3 +1,5 @@
+//2026-06-19 : Logs for API calls
+
 //2025-11-19 : Renamed Ingredients to Inventory
 
 //2025-11-10 : Added matchIngredient, documentation
@@ -110,13 +112,13 @@ export const InventoryDataProvider = ({children}:{children:React.ReactNode}) => 
                 Plan_ID: plan.Plan_ID,
             }
             
-            if((existingInventoryItem.Inventory_Item_Quantity || 0) > planIngredient.Recipe_Ingredient_Quantity){//if there's some initial inventory item left over
+            if((existingInventoryItem.Inventory_Item_Quantity || 0) > (planIngredient.Recipe_Ingredient_Quantity || 0)){//if there's some initial inventory item left over
                 newInventoryItem.Inventory_Item_Quantity = planIngredient.Recipe_Ingredient_Quantity;
                 //create a new inventory item with the leftover quantity
                 const leftoverInventoryItem : Inventory_Item = {
                     ...existingInventoryItem,
                     Inventory_Item_ID: undefined,
-                    Inventory_Item_Quantity: (existingInventoryItem.Inventory_Item_Quantity || 0) - planIngredient.Recipe_Ingredient_Quantity,
+                    Inventory_Item_Quantity: (existingInventoryItem.Inventory_Item_Quantity || 0) - (planIngredient.Recipe_Ingredient_Quantity || 0),
                 }
                 addInventoryItemData(userId, inventory, setInventory, leftoverInventoryItem).then(//we add the inventory item first, but wait for the result before updating the original inventory item
                     //avoid triggering getInventory until the second update is done

@@ -1,3 +1,5 @@
+//2026-06-19 : Logs for API calls
+
 //2026-06-01 : updating local IP Address
 
 //2025-11-10 : Added improved documentation
@@ -11,6 +13,7 @@
 import React from "react";
 import Recipe from "../../Types/Recipe";
 import { UpdateState } from "@/Types/DataLoadingState";
+import log from "@/utils/log";
 
 /**
  * Updates an existing recipe in the database and updates the local state.
@@ -32,6 +35,8 @@ export const updateRecipeData = (
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     }
 
+    log(`Updating recipe with ID: ${recipe.Recipe_ID}`, "debug");
+
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipes/${recipe.Recipe_ID}`, 
@@ -43,8 +48,10 @@ export const updateRecipeData = (
                 body : JSON.stringify(recipe)
             }
         ).then((rawData) => {
-            if(!rawData.ok) 
-                resolve(UpdateState.Failed);            
+            if(!rawData.ok) {
+                log(`Failed to update recipe with ID: ${recipe.Recipe_ID}`, "error");
+                resolve(UpdateState.Failed);
+            }
             else{
                 setRecipes(recipes.map(element => {
                     if (element.Recipe_ID !== recipe.Recipe_ID)//if the element's ID isn't the input recipe's then no change
@@ -53,9 +60,11 @@ export const updateRecipeData = (
                         return recipe;
                         
                 }));
+                log(`Successfully updated recipe with ID: ${recipe.Recipe_ID}`, "debug");
                 resolve(UpdateState.Successful);            
             }
-        }).catch(() => {
+        }).catch((error) => {
+            log(`Error updating recipe with ID: ${recipe.Recipe_ID}: ${error}`, "error");
             resolve(UpdateState.Failed);
         });
     })

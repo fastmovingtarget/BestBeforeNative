@@ -1,3 +1,5 @@
+//2026-06-19 : Logs for API calls
+
 //2026-06-01 : updating local IP Address
 
 //2025-11-19 : Renamed Ingredients to Inventory
@@ -15,6 +17,7 @@
 import React from "react";
 import Inventory_Item from "../../Types/Inventory_Item";
 import { UpdateState } from "@/Types/DataLoadingState";
+import log from "@/utils/log";
 
 /**
  * Deletes an inventory item from the database and updates the local state.
@@ -34,6 +37,7 @@ export const deleteInventoryItemData = async (
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     }
 
+    log(`Deleting inventory item with ID: ${inventoryItemID}`, "debug");
 
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
@@ -47,12 +51,16 @@ export const deleteInventoryItemData = async (
         ).then((rawData) => {
             if(rawData.ok) {
                 setInventoryItems(inventoryItems.filter((item) => item.Inventory_Item_ID !== inventoryItemID));//remove the deleted item from the list
+                log(`Successfully deleted inventory item with ID: ${inventoryItemID}`, "debug");
                 resolve(UpdateState.Successful);
             }
-            else
+            else {
+                log(`Error deleting inventory item with ID: ${inventoryItemID}`, "error");
                 resolve(UpdateState.Failed);
-        }).catch(() => {
-                    resolve(UpdateState.Failed);
+            }
+        }).catch((error) => {
+            log(`Error deleting inventory item with ID: ${inventoryItemID}: ${error}`, "error");
+            resolve(UpdateState.Failed);
         });
     })
     return returnPromise;

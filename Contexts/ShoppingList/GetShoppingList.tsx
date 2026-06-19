@@ -1,3 +1,5 @@
+//2026-06-19 : Logs for API calls
+
 //2026-06-01 : updating local IP Address
 
 //2025-11-19 : Item_(...) now have Shopping_ Prefix
@@ -13,6 +15,7 @@
 import React from "react";
 import Shopping_List_Item, { ShoppingListSearchOptions } from "../../Types/Shopping_List_Item";
 import { SyncState } from "@/Types/DataLoadingState";
+import log from "@/utils/log";
 
 /**
  * Fetches shopping list items from the database based on user ID and optional search criteria,
@@ -39,7 +42,7 @@ export const getShoppingListData = (
         return `${key}=${encodeURIComponent(value)}`;
     }).join("&");
 
-    console.log(`Fetching shopping list data with options: ${optionsString}`);
+    log(`Fetching shopping list data for user ID: ${userID} with options: ${optionsString}`, "debug");
 
     let returnPromise = new Promise<SyncState>((resolve) => {
         fetch(
@@ -52,6 +55,7 @@ export const getShoppingListData = (
             }
         ).then((rawData) => {
             if(rawData.status !== 200) {
+                log(`Error fetching shopping list data: ${rawData.statusText}`, "error");
                 resolve(SyncState.Failed);
             }
             else{
@@ -67,11 +71,12 @@ export const getShoppingListData = (
                             return element
                         }),
                     );
+                    log(`Successfully fetched shopping list data for user ID: ${userID}`, "debug");
                     resolve(SyncState.Successful);
                 })
             }
         }).catch(() => {
-            console.error("Error fetching shopping list data");
+            log(`Error fetching shopping list data for user ID: ${userID}`, "error");
             resolve(SyncState.Failed);
         });
     })

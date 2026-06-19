@@ -1,3 +1,5 @@
+//2026-06-19 : Logs for API calls
+
 //2026-06-01 : updating local IP Address
 
 //2025-11-19 : Renamed RecipePlan(s) to just Plan(s)
@@ -13,6 +15,7 @@
 import React from "react";
 import Plan from "../../Types/Plan";
 import { SyncState } from "@/Types/DataLoadingState";
+import log from "@/utils/log";
 
 /**
  * Fetches recipe plans from the database based on user ID and updates the local state.
@@ -31,6 +34,8 @@ export const getPlansData = async (
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     };
 
+    log(`Fetching plans for user ID: ${userID}`, "debug");
+
     const returnPromise = new Promise<SyncState>((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/plans/${userID}`, 
@@ -42,6 +47,7 @@ export const getPlansData = async (
             }
         ).then((rawData) => {
             if(rawData.status !== 200) {
+                log(`Failed to fetch plans for user ID: ${userID}`, "error");
                 resolve(SyncState.Failed);
             }
             else {
@@ -55,11 +61,13 @@ export const getPlansData = async (
                                 };
                             })
                         );
+
+                    log(`Successfully fetched plans for user ID: ${userID}`, "debug");
                     resolve(SyncState.Successful);
                 })
             }
-        }).catch(() => {
-            console.error("Error fetching plans data");
+        }).catch((error) => {
+            log(`Error fetching plans for user ID: ${userID}: ${error}`, "error");
             resolve(SyncState.Failed);
         });
     })

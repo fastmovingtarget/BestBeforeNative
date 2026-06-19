@@ -1,3 +1,5 @@
+//2026-06-19 : Logs for API calls
+
 //2026-06-01 : updating local IP Address
 
 //2025-11-19 : Renamed Ingredients to Inventory
@@ -17,6 +19,7 @@
 import React from "react";
 import { UpdateState } from "@/Types/DataLoadingState";
 import Inventory_Item from "../../Types/Inventory_Item";
+import log from "@/utils/log";
 
 /**
  * Updates an existing inventory item in the database and updates the local state.
@@ -44,6 +47,8 @@ export const updateInventoryItemData = async (
         Inventory_Item_Date: inventoryItem.Inventory_Item_Date ? new Date(inventoryItem.Inventory_Item_Date).toISOString().slice(0, 10) : null, // Format date to YYYY-MM-DD
     } as Inventory_Item);
 
+    log(`Updating inventory item with ID: ${inventoryItem.Inventory_Item_ID}`, "debug");
+
     let returnPromise = new Promise<UpdateState>((resolve) => {
 
         fetch(
@@ -57,9 +62,11 @@ export const updateInventoryItemData = async (
             }
         ).then((rawData) => {
             if(!rawData.ok) {//this should encompass all errors
+                log(`Failed to update inventory item with ID: ${inventoryItem.Inventory_Item_ID}`, "error");
                 resolve(UpdateState.Failed);
             }
             else {
+                log(`Successfully updated inventory item with ID: ${inventoryItem.Inventory_Item_ID}`, "debug");
                 resolve(UpdateState.Successful);//nothing useful passed back from the server, so we can just return successful
                 setInventory(inventory.map(element => {
                     if (element.Inventory_Item_ID !== inventoryItem.Inventory_Item_ID)//if the element's ID isn't the input inventory item's then no change
@@ -68,7 +75,8 @@ export const updateInventoryItemData = async (
                         return inventoryItem;
                 }));
             }
-        }).catch(() => {
+        }).catch((error) => {
+            log(`Error updating inventory item with ID: ${inventoryItem.Inventory_Item_ID}: ${error}`, "error");
             resolve(UpdateState.Failed);
         });
     })

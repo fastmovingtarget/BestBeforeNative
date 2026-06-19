@@ -1,3 +1,5 @@
+//2026-06-19 : Logs for API calls
+
 //2026-06-10 : ip address changed
 
 //2025-11-19 : Item_(...) now have Shopping_ Prefix
@@ -13,6 +15,7 @@
 import React from "react";
 import Shopping_List_Item from "../../Types/Shopping_List_Item";
 import { UpdateState } from "@/Types/DataLoadingState";
+import log from "@/utils/log";
 
 /**
  * Deletes a shopping list item from the database and updates the local state.
@@ -33,6 +36,8 @@ export const deleteShoppingListItemData = async (
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
     }
 
+    log(`Deleting shopping list item with ID: ${shoppingListItem_ID}`, "debug");
+
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/shoppingList/${shoppingListItem_ID}`, 
@@ -44,13 +49,16 @@ export const deleteShoppingListItemData = async (
             }
         ).then((rawData) => {
             if(!rawData.ok) {
+                log(`Error deleting shopping list item with ID: ${shoppingListItem_ID}`, "error");
                 resolve(UpdateState.Failed);
             }
             else {
                 setRecipes(shoppingList.filter((item) => item.Shopping_Item_ID !== shoppingListItem_ID));//remove the deleted recipe from the list
+                log(`Successfully deleted shopping list item with ID: ${shoppingListItem_ID}`, "debug");
                 resolve(UpdateState.Successful);
             }
         }).catch(() => {
+            log(`Error deleting shopping list item with ID: ${shoppingListItem_ID}`, "error");
             resolve(UpdateState.Failed);
         });
     })

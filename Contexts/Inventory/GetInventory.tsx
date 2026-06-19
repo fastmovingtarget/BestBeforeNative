@@ -1,3 +1,5 @@
+//2026-06-19 : Logs for API calls
+
 //2026-06-01 : updating local IP Address
 
 //2025-11-19 : Renamed Ingredients to Inventory
@@ -13,6 +15,8 @@
 import React from "react";
 import Inventory_Item, {InventorySearchOptions} from "../../Types/Inventory_Item";
 import { SyncState } from "@/Types/DataLoadingState";
+
+import log from "@/utils/log";
 /**
  * Fetches inventory from the database based on user ID and optional search criteria,
  * then updates the local state with the retrieved inventory.
@@ -38,6 +42,8 @@ export const getInventoryData = async (
         return `${key}=${encodeURIComponent(value)}`;
     }).join("&");
 
+    log(`Fetching inventory data for user ID: ${userID} with options: ${optionsString}`, "debug");
+
     let returnPromise = new Promise<SyncState>((resolve) => {
         fetch(
             `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/inventory/${userID}?${optionsString}`, 
@@ -49,6 +55,7 @@ export const getInventoryData = async (
             }
         ).then((rawData) => {
             if(rawData.status !== 200) {
+                log(`Error fetching inventory data: ${rawData.statusText}`, "error");
                 resolve(SyncState.Failed);
             }
             else {
@@ -64,11 +71,12 @@ export const getInventoryData = async (
                             return element
                         }),
                     );
+                    log(`Successfully fetched inventory data for user ID: ${userID}`, "debug");
                     resolve(SyncState.Successful);
                 })
             }
         }).catch((error) => {
-            console.error("Error fetching inventory data", error);
+            log(`Error fetching inventory data: ${error}`, "error");
             resolve(SyncState.Failed);
         });
     });
