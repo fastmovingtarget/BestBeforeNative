@@ -1,3 +1,5 @@
+//2026-06-29 : Added Back/Edit/Delete icons
+
 //2026-06-11 : Removed a console log
 
 //2026-06-01 : FadeComponent handling, moved context bar
@@ -12,6 +14,7 @@ import React from "react";
 import Recipe from "@/Types/Recipe";
 import { ScrollableContainer, LabelText, FadeComponent, RowContainer, ButtonView } from "@/ui/BestBeforeUI";
 import { MountState } from "@/ui/Types/MountState";
+import { BackIcon, EditIcon, DeleteIcon } from "@/ui/ReactIcon";
 
 export default function RecipeSelected({recipe, setSelectedRecipe, setIsEditing, deleteRecipe}: { recipe: Recipe, setSelectedRecipe: (recipe: Recipe | null) => void, setIsEditing: (editing: boolean) => void, deleteRecipe: (id: number) => void }) {
 
@@ -37,25 +40,25 @@ export default function RecipeSelected({recipe, setSelectedRecipe, setIsEditing,
 
     return (
         <FadeComponent 
-            style={{backgroundColor:"transparent", flex:1, margin:0, padding:0}}
+            style={{backgroundColor:"transparent", flex:1, margin:0, padding:0, justifyContent:"space-between"}}
             aria-label="recipe-selected-component"
             mountState={mountState}
             onUnmountAnimationEnd={() => endSelectFunction()}
             >
-            <FadeComponent style={{flexGrow:0}}>
+            <FadeComponent style={{flexGrow:0, marginTop:0}}>
                 <RowContainer style={{padding:0, columnGap:10}}>
                     <ButtonView style={{flexGrow:1}} onPress={() => {setEndSelectMethod("Back"); setMountState(MountState.Unmount)}}>
-                        <LabelText>Back</LabelText>
+                        <BackIcon />
                     </ButtonView>
                     <ButtonView style={{flexGrow:1}} onPress={() => {setEndSelectMethod("Edit"); setMountState(MountState.Unmount)}}>
-                        <LabelText>Edit Recipe</LabelText>
+                        <EditIcon />
                     </ButtonView>
                     <ButtonView style={{flexGrow:1}} onPress={() => {setEndSelectMethod("Delete"); setMountState(MountState.Unmount)}}>
-                        <LabelText>Delete Recipe</LabelText>
+                        <DeleteIcon />
                     </ButtonView>
                 </RowContainer>
             </FadeComponent>
-            <FadeComponent style={{flex:1, width:"100%", marginHorizontal:0, paddingHorizontal:0}}>
+            <FadeComponent style={{flex:1, width:"100%", marginHorizontal:0, paddingHorizontal:0, marginBottom:0}}>
                 <ScrollableContainer style={{ width:"100%"}}>
                     <LabelText >{recipe.Recipe_Name}</LabelText>
                     <LabelText >Time: {recipe.Recipe_Time} min</LabelText>
