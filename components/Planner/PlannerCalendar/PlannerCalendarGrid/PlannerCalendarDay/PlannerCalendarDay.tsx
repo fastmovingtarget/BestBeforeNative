@@ -1,3 +1,5 @@
+//2026-06-29 : Improvements to pressable visuals
+
 //2026-06-01 : File location changed
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -14,6 +16,7 @@ import React from 'react';
 import { usePlans } from '@/Contexts/Plans/PlansDataProvider';
 
 import {Component, FadeComponent, LabelText, PressableComponent} from '@/ui/BestBeforeUI';
+import { Colours } from '@/constants/Colors';
 
 /**
  * React Component for displaying a single day in the Recipe Plan Calendar
@@ -38,12 +41,12 @@ export default function PlannerCalendarDay({onPress, date, greyOut} : {onPress:(
     return (
         <PressableComponent
             onPress={() => onPress(date.getDate())}
-            style={{flexDirection: "column", flex:1, margin: 1, padding: 0, justifyContent: "flex-start", alignItems: "center", height:"100%", overflow: "hidden"}}
+            style={{flexDirection: "column", flex:1, margin: 1, padding: 0, justifyContent: "flex-start", alignItems: "center", height:"100%", overflow: "hidden", backgroundColor: Colours.buttonBackground }}
             >
             <LabelText style={{textAlign: "center", fontSize: 14, fontWeight: "bold", verticalAlign: "top", marginVertical: 0, padding: 0}}>
                     {date.getDate()}
             </LabelText>
-            <Component style={{flex:1, width: "100%", justifyContent: "flex-start", alignItems: "center", margin:0, padding:0, overflow: "hidden", flexShrink:1,}}>
+            <Component style={{flex:1, width: "100%", justifyContent: "flex-start", alignItems: "center", margin:0, padding:0, overflow: "hidden", flexShrink:1, backgroundColor: "inherit"}}>
             {recipePlansForDate.map(recipePlan => {
                 return (
                     <LabelText
