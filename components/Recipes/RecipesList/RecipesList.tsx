@@ -1,3 +1,5 @@
+//2026-06-30 : Icon for Add New Recipe
+
 //2026-06-11 : Improved vertical margins for consistency
 
 //2026-06-01 : FadeComponent handling, moved context bar
@@ -10,9 +12,10 @@ import React from "react";
 import Recipe from "@/Types/Recipe";
 import RecipesListItem from "./RecipesListItem/RecipesListItem";
 import { useRecipes } from "@/Contexts/Recipes/RecipesDataProvider";
-import { FadeComponent, ListView, ButtonView, LabelText } from "@/ui/BestBeforeUI";
+import { FadeComponent, ListView, ButtonView } from "@/ui/BestBeforeUI";
 import RecipesSearch from "../RecipesSearch/RecipesSearch";
 import { MountState } from "@/ui/Types/MountState";
+import { AddRecipeIcon } from "@/ui/ReactIcon";
 
 export default function RecipesList({ setSelectedRecipe, setIsEditing }: { setSelectedRecipe: (recipe: Recipe) => void, setIsEditing: (editing: boolean) => void }) {
     const { recipes } = useRecipes();
@@ -54,7 +57,7 @@ export default function RecipesList({ setSelectedRecipe, setIsEditing }: { setSe
                     } 
                     style={{flexGrow:1}}
                 >
-                    <LabelText>Add New Recipe</LabelText>
+                    <AddRecipeIcon />
                 </ButtonView>
             </FadeComponent>
             <RecipesSearch />
