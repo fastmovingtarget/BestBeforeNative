@@ -1,3 +1,5 @@
+//2026-06-30 : Added Buy, Edit and Delete icons
+
 //2026-06-15 : 0 quantity now displays correctly
 
 //2026-06-01 : Using FadeComponent and RowContainer
@@ -16,6 +18,7 @@ import type Shopping_List_Item from "@/Types/Shopping_List_Item";
 import { useShoppingList } from "@/Contexts/ShoppingList/ShoppingListDataProvider";
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 import {RowContainer, ButtonView, LabelText, FadeComponent} from "@/ui/BestBeforeUI";
+import { AddInventoryIcon, DeleteIcon, EditShoppingListIcon } from "@/ui/ReactIcon";
 
 export default function ShoppingListItem({ item, onEdit } : { item: Shopping_List_Item, onEdit: (itemID: number) => void }) {
     const { deleteShoppingItem } = useShoppingList();
@@ -43,13 +46,13 @@ export default function ShoppingListItem({ item, onEdit } : { item: Shopping_Lis
             ) : null}
             <RowContainer style={{justifyContent: "space-around", width: "100%"}}>
                 <ButtonView onPress={onPurchase}>
-                    <LabelText>Purchase</LabelText>
+                    <AddInventoryIcon />
                 </ButtonView>
                 <ButtonView onPress={() => onEdit(item.Shopping_Item_ID || -1)}>
-                    <LabelText>Edit</LabelText>
+                    <EditShoppingListIcon />
                 </ButtonView>
                 <ButtonView onPress={() => {deleteShoppingItem(item.Shopping_Item_ID || -1)}}>
-                    <LabelText>Delete</LabelText>
+                    <DeleteIcon />
                 </ButtonView>
             </RowContainer>
         </FadeComponent>
