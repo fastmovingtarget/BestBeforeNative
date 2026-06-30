@@ -1,3 +1,5 @@
+//2026-06-30 : Icon for Add to Shopping List
+
 //2026-06-01 : Using FadeComponent for animations
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -11,6 +13,7 @@ import ShoppingListSearch from "./ShoppingListSearch/ShoppingListSearch";
 import ShoppingList from "./ShoppingList/ShoppingList";
 import ShoppingListForm from "./ShoppingListForm/ShoppingListForm";
 import { PageView, ButtonView, LabelText, FadeComponent} from '@/ui/BestBeforeUI';
+import { AddShoppingListItemIcon } from "@/ui/ReactIcon";
 
 export default function ShoppingListPage() {
     const [isFormVisible, setIsFormVisible] = useState(false);
@@ -21,7 +24,7 @@ export default function ShoppingListPage() {
                 {!isFormVisible ?
                     <FadeComponent>
                         <ButtonView accessibilityRole="button" onPress={() => setIsFormVisible(true)} style={{margin:5}}>
-                            <LabelText >Add Item</LabelText>
+                            <AddShoppingListItemIcon />
                         </ButtonView> 
                     </FadeComponent>
                     :
