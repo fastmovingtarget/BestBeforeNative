@@ -1,3 +1,7 @@
+//2026-06-30 : Text Fix
+
+//2026-06-30 : Improvements to formatting, adding React Icons
+
 //2026-06-01 : Using FadeComponent and ScrollableContainer
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -15,7 +19,8 @@ import Inventory_Item from "@/Types/Inventory_Item";
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 import { useShoppingList } from "@/Contexts/ShoppingList/ShoppingListDataProvider";
 import { usePlans } from "@/Contexts/Plans/PlansDataProvider";
-import { FadeComponent, LabelText, PressableComponent, ScrollableContainer} from '@/ui/BestBeforeUI';
+import { FadeComponent, LabelText, PressableComponent, RowContainer, ScrollableContainer, ButtonView} from '@/ui/BestBeforeUI';
+import { AddShoppingListItemIcon, InventoryIcon, LinkInventoryItemIcon, ShoppingListIcon, WarningIcon } from "@/ui/ReactIcon";
 
 /**
  * React Component for displaying the ingredients of a selected recipe plan
@@ -88,26 +93,33 @@ export default function RecipePlanActiveDayRecipeIngredients({recipePlan}: {reci
     };
 
     return (
-        <FadeComponent style={{flex:1, padding:10, margin:10}}>
+        <FadeComponent style={{flex:1, padding:10, marginVertical:5, width:"100%", justifyContent: "flex-start", alignItems: "flex-start"}}>
             <LabelText>Ingredients to make {recipePlan.Recipe_Name}</LabelText>
             {/* Implementation for displaying ingredients goes here */}
-            <ScrollableContainer style={{flexGrow:1, marginTop:10}}>
+            <ScrollableContainer style={{flexGrow:1, marginTop:10, width:"100%"}}>
             {
                 recipePlan.Plan_Ingredients?.map((planIngredient, index) => {
-                    const indicatorIcon = planIngredient.Inventory_Item_ID ? '✅' : (planIngredient.Shopping_Item_ID ? '\u{1F6D2}' : '\u2757');//using the curly braces allows us to use unicode emojis with >4 characters
                     return (
-                        <FadeComponent key={`plan-ingredient-container-${index}`} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-                            <LabelText>{indicatorIcon} {planIngredient.Recipe_Ingredient_Name}</LabelText>
+                        <FadeComponent key={`plan-ingredient-container-${index}`} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "100%"}}>
+                            <RowContainer style={{alignItems: 'center', width: "auto"}}>
+                                {planIngredient.Inventory_Item_ID ? 
+                                <InventoryIcon /> :
+                                planIngredient.Shopping_Item_ID ? 
+                                <ShoppingListIcon /> :
+                                <WarningIcon />}
+                                
+                                <LabelText> {planIngredient.Recipe_Ingredient_Name}</LabelText>
+                            </RowContainer>
                             {
                                 !planIngredient.Shopping_Item_ID && !planIngredient.Inventory_Item_ID && (
-                                <>
-                                    <PressableComponent key={`plan-ingredient-${index}`} aria-label="attach-inventory-item" onPress={() => selectedPlanIngredientIndex !== index && setSelectedPlanIngredientIndex(index)}>
-                                        <LabelText>{'\u{1F517}'}</LabelText>
-                                    </PressableComponent>
-                                    <PressableComponent key={`add-to-shopping-list-${index}`} aria-label="add-to-shopping-list" onPress={() => addToShoppingList(index)}>
-                                        <LabelText>{'\u{1F4CB}'}</LabelText>
-                                    </PressableComponent>
-                                </>
+                                <RowContainer style={{alignItems: 'center', width: "auto"}}>
+                                    <ButtonView style={{marginHorizontal: 5}} key={`plan-ingredient-${index}`} aria-label="attach-inventory-item" onPress={() => selectedPlanIngredientIndex !== index && setSelectedPlanIngredientIndex(index)}>
+                                        <LinkInventoryItemIcon />
+                                    </ButtonView>
+                                    <ButtonView style={{marginHorizontal: 5}} key={`add-to-shopping-list-${index}`} aria-label="add-to-shopping-list" onPress={() => addToShoppingList(index)}>
+                                        <AddShoppingListItemIcon />
+                                    </ButtonView>
+                                </RowContainer>
                             )}
                         </FadeComponent>
                     )

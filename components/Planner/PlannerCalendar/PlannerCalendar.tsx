@@ -1,3 +1,7 @@
+//2026-06-30 : Improved consistency of month scroll button sizing
+
+//2026-06-29 : Added Back/Forward icons for month scrolling
+
 //2026-06-11 : Removed padding doubling
 
 //2026-06-01 : Calendar Grid code moved to separate file
@@ -16,6 +20,7 @@ import React, { useState } from 'react';
 import PlannerCalendarDay from './PlannerCalendarGrid/PlannerCalendarDay/PlannerCalendarDay';
 import {ColumnContainer, FadeComponent, LabelText, PressableComponent, RowContainer} from '@/ui/BestBeforeUI';
 import PlannerCalendarGrid from './PlannerCalendarGrid/PlannerCalendarGrid';
+import { BackIcon, ForwardIcon } from '@/ui/ReactIcon';
 
 /**
  * React Component for displaying the Planner Calendar
@@ -29,8 +34,6 @@ import PlannerCalendarGrid from './PlannerCalendarGrid/PlannerCalendarGrid';
 export default function PlannerCalendar({setSelectedDate} : {setSelectedDate: (date: Date) => void}) {
 
     const [monthIndex, setMonthIndex] = useState(0); // 0 for current month, -1 for last month, 1 for next month
-
-    const daysOfWeek = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
     const today = new Date();
 
@@ -48,14 +51,14 @@ export default function PlannerCalendar({setSelectedDate} : {setSelectedDate: (d
     return (
         <ColumnContainer style={{flex:1, marginHorizontal:0}}>
             <FadeComponent style={{flexDirection:"row", justifyContent: "space-between", alignItems: "center", padding: 0}}>
-                <PressableComponent onPress={() => setMonthIndex(monthIndex - 1)} style={{flex:1}}>
-                    <LabelText style={{fontSize: 18, fontWeight: "bold"}}>{"<"}</LabelText>
+                <PressableComponent onPress={() => setMonthIndex(monthIndex - 1)} style={{ width: "20%", flexGrow: 0}}>
+                    <BackIcon />
                 </PressableComponent>
-                <LabelText style={{fontSize: 18, fontWeight: "bold"}}>
-                    {monthStartDate.toLocaleString('default', { month: 'long' })}
+                <LabelText style={{fontSize: 18, fontWeight: "bold", textAlign: "center", width: "50%"}}>
+                    {monthStartDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
                 </LabelText>
-                <PressableComponent onPress={() => setMonthIndex(monthIndex + 1)} style={{flex:1}}>
-                    <LabelText style={{fontSize: 18, fontWeight: "bold"}}>{">"}</LabelText>
+                <PressableComponent onPress={() => setMonthIndex(monthIndex + 1)} style={{ width: "20%", flexGrow: 0}}>
+                    <ForwardIcon />
                 </PressableComponent>
             </FadeComponent>
             <PlannerCalendarGrid monthIndex={monthIndex} setSelectedDate={setSelectedDate} />

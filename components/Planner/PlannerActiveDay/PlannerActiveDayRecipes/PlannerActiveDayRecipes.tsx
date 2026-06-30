@@ -1,3 +1,5 @@
+//2026-06-30 : Icon for delete plan
+
 //2026-06-18 : Added recipe search functionality
 
 //2026-06-12 : Added ResizeComponent wrapper for height changes
@@ -29,6 +31,7 @@ import { usePlans } from '@/Contexts/Plans/PlansDataProvider';
 import { useRecipes } from '@/Contexts/Recipes/RecipesDataProvider';
 import {RowContainer, ButtonView, LabelText, FormTextInput, ListView, ColumnContainer, FadeComponent} from '@/ui/BestBeforeUI';
 import ResizeComponent from '@/ui/ResizeComponent';
+import { DeleteIcon } from '@/ui/ReactIcon';
 
 /**
  * React Component for displaying the list of recipes planned for the active day
@@ -77,20 +80,21 @@ export default function PlanActiveDayRecipes({date, setSelectedPlan}: {date: Dat
                                             <LabelText>
                                                 {plan.Recipe_Name}
                                             </LabelText>
-                                            <ButtonView onPress={() => setSelectedPlan(plan)} >
-                                                <LabelText>
-                                                    View Ingredients
-                                                </LabelText>
-                                            </ButtonView>
-                                            <ButtonView 
-                                                onPress={() => {
-                                                    if(plan.Plan_ID !== undefined) 
-                                                        deletePlan(plan.Plan_ID)
-                                                }}>
-                                                <LabelText>
-                                                    Remove
-                                                </LabelText>
-                                            </ButtonView>
+                                            <RowContainer style={{width: "42%"}}>
+                                                <ButtonView onPress={() => setSelectedPlan(plan)} style={{marginRight: 5}}>
+                                                    <LabelText>
+                                                        Ingredients
+                                                    </LabelText>
+                                                </ButtonView>
+                                                <ButtonView 
+                                                    onPress={() => {
+                                                        if(plan.Plan_ID !== undefined) 
+                                                            deletePlan(plan.Plan_ID)
+                                                    }}
+                                                    style={{ width: "30%"}}>
+                                                    <DeleteIcon/>
+                                                </ButtonView>
+                                            </RowContainer>
                                         </RowContainer>
                                     );
                                 })
