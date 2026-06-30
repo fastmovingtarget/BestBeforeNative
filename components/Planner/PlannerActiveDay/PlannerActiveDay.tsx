@@ -1,3 +1,5 @@
+//2026-06-30 : Using back icon, improving button consistency
+
 //2026-06-12 : Shifted FadeComponent wrapper
 
 //2026-06-01 : Using FadeComponent and RowContainer
@@ -16,8 +18,8 @@ import React, { useState } from "react";
 import Recipe_Plan from "@/Types/Plan";
 import PlannerActiveDayRecipes from "./PlannerActiveDayRecipes/PlannerActiveDayRecipes";
 import PlannerIngredients from "./PlannerIngredients/PlannerIngredients";
-import { FadeComponent, LabelText, RowContainer } from '@/ui/BestBeforeUI';
-import { Pressable } from "react-native";
+import { FadeComponent, LabelText, PressableComponent, RowContainer } from '@/ui/BestBeforeUI';
+import { BackIcon } from "@/ui/ReactIcon";
 
 /**
  * React Component for displaying the active day view of the Recipe Planner
@@ -33,12 +35,13 @@ export default function PlannerActiveDay({selectedDate, setSelectedDate}: {selec
     
     return (
         <>
-            <FadeComponent style={{padding: 10}}>
-                <RowContainer>
-                    <Pressable onPress={() => setSelectedDate(null)} style={{position: "absolute", left: 5, padding: 5,}}>
-                        <LabelText >{"<"}</LabelText>
-                    </Pressable>
-                    <LabelText >{selectedDate ? selectedDate.toDateString() : "No Date Selected"}</LabelText>
+            <FadeComponent style={{padding: 0, margin: 0}}>
+                <RowContainer style={{alignItems: "center", padding: 0, margin: 0, justifyContent: "space-between"}}>
+                    <PressableComponent onPress={() => setSelectedDate(null)} style={{ width: "20%", flexGrow: 0}}>
+                        <BackIcon />
+                    </PressableComponent>
+                    <LabelText style={{fontSize: 18, fontWeight: "bold", textAlign: "center"}}>{selectedDate ? selectedDate.toDateString() : "No Date Selected"}</LabelText>
+                    <RowContainer style={{ width: "20%", flexGrow: 0}}></RowContainer>
                 </RowContainer>
             </FadeComponent>
             {selectedPlan ? 
