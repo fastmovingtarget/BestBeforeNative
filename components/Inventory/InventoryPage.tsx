@@ -1,3 +1,5 @@
+//2026-06-30 : Icon for Add Inventory Item
+
 //2026-06-10 : Style format no longer used
 
 //2026-06-01 : FadeComponent with removal
@@ -14,6 +16,7 @@ import InventoryList from "./InventoryList/InventoryList";
 import InventoryItemForm from "./InventoryItemForm/InventoryItemForm";
 import {ButtonView, FadeComponent, LabelText, PageView } from "@/ui/BestBeforeUI";
 import { MountState } from "@/ui/Types/MountState";
+import { AddInventoryIcon } from "@/ui/ReactIcon";
 
 export default function InventoryPage() {
     const [isFormVisible, setIsFormVisible] = useState(false);
@@ -28,7 +31,7 @@ export default function InventoryPage() {
                 :
                 <FadeComponent mountState={mountState} onUnmountAnimationEnd={() =>  setIsFormVisible(true) } >
                     <ButtonView accessibilityRole="button" style={{margin : 5}} onPress={() => setMountState(MountState.Unmount)} >
-                        <LabelText >Add Inventory Item</LabelText>
+                        <AddInventoryIcon />
                     </ButtonView>
                 </FadeComponent>
             }
