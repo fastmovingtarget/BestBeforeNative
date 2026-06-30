@@ -1,3 +1,5 @@
+//2026-06-30 : Adding more subicons, changing some to MDI for consistency
+
 //2026-06-30 : Adding Icons from material-design-icons
 
 //2026-06-29 : Centralised React Icons for import
@@ -23,7 +25,7 @@ export function EditIcon({size = defaultSize, color = Colours.text}: {size?: num
 
 export function DeleteIcon({size = defaultSize, color = Colours.text}: {size?: number, color?: string}) {
     return (
-        <Ionicons name={"trash-outline"} size={size} color={color} style={{padding:5}} />
+        <MaterialDesignIcons name={"trash-can-outline"} size={size} color={color} style={{padding:5}} />
     );  
 }
 
@@ -35,7 +37,7 @@ export function ForwardIcon({size = defaultSize, color = Colours.text}: {size?: 
 
 export function WarningIcon({size = defaultSize, color = Colours.text}: {size?: number, color?: string}) {
     return (
-        <Ionicons name={"warning-outline"} size={size} color={color} style={{padding:5}} />
+        <MaterialDesignIcons name={"alert-outline"} size={size} color={color} style={{padding:5}} />
     );  
 }
 
@@ -50,7 +52,7 @@ export function AddInventoryIcon({size = defaultSize, color = Colours.text, back
     );  
 }
 
-export function AddShoppingIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
+export function AddShoppingListItemIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
     return (
         <RowContainer style={{padding:0, margin:0, justifyContent:"center", alignItems:"center", position:"relative", width:"auto"}}>
             <MaterialDesignIcons name={"basket-outline"} size={size} color={color} style={{padding:5}} />
@@ -82,4 +84,48 @@ export function ShoppingListIcon({size = defaultSize, color = Colours.text}: {si
     return (
         <MaterialDesignIcons name={"basket-outline"} size={size} color={color} style={{padding:5}} />
     );  
+}
+
+export function EditShoppingListIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
+    return (
+        <RowContainer style={{padding:0, margin:0, justifyContent:"center", alignItems:"center", position:"relative", width:"auto"}}>
+            <MaterialDesignIcons name={"basket-outline"} size={size} color={color} style={{padding:5}} />
+            <RowContainer style={{position:"absolute", right:3, bottom:3, padding:0, backgroundColor: background, height:"auto", width:"auto", borderRadius: "50%"}} >
+                <MaterialDesignIcons name={"pencil"} size={size/2} color={color} />
+            </RowContainer>
+        </RowContainer>
+    );    
+}
+
+export function EditInventoryItemIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
+    return (
+        <RowContainer style={{padding:0, margin:0, justifyContent:"center", alignItems:"center", position:"relative", width:"auto"}}>
+            <MaterialDesignIcons name={"fridge-outline"} size={size} color={color} style={{padding:5}} />
+            <RowContainer style={{position:"absolute", right:3, bottom:3, padding:0, backgroundColor: background, height:"auto", width:"auto", borderRadius: "50%"}} >
+                <MaterialDesignIcons name={"pencil"} size={size/2} color={color} />
+            </RowContainer>
+        </RowContainer>
+    );    
+}
+
+export function EditRecipeIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
+    return (
+        <RowContainer style={{padding:0, margin:0, justifyContent:"center", alignItems:"center", position:"relative", width:"auto"}}>
+            <MaterialDesignIcons name={"pot-steam-outline"} size={size} color={color} style={{padding:5}} />
+            <RowContainer style={{position:"absolute", right:3, bottom:3, padding:0, backgroundColor: background, height:"auto", width:"auto", borderRadius: "50%"}} >
+                <MaterialDesignIcons name={"pencil"} size={size/2} color={color} />
+            </RowContainer>
+        </RowContainer>
+    );    
+}
+
+export function AddRecipeIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
+    return (
+        <RowContainer style={{padding:0, margin:0, justifyContent:"center", alignItems:"center", position:"relative", width:"auto"}}>
+            <MaterialDesignIcons name={"pot-steam-outline"} size={size} color={color} style={{padding:5}} />
+            <RowContainer style={{position:"absolute", right:3, bottom:3, padding:0, backgroundColor: background, height:"auto", width:"auto", borderRadius: "50%"}} >
+                <MaterialDesignIcons name={"plus-thick"} size={size/2} color={color} />
+            </RowContainer>
+        </RowContainer>
+    );    
 }
