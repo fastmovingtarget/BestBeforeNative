@@ -1,3 +1,5 @@
+//2026-06-30 : Icons for Edit and Delete
+
 //2026-06-01 : use FadeComponent wrapper, improve containers
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -10,6 +12,7 @@ import Inventory_Item from "@/Types/Inventory_Item";
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 import {RowContainer, FadeComponent, ButtonView, LabelText} from "@/ui/BestBeforeUI";
 import { MountState } from "@/ui/Types/MountState"; 
+import { DeleteIcon, EditInventoryItemIcon } from "@/ui/ReactIcon";
 
 export default function InventoryItemComponent({ inventoryItem, onEdit } : { inventoryItem: Inventory_Item, onEdit: (ingredientID: number) => void }) {
     const { deleteInventoryItem } = useInventory();
@@ -46,13 +49,13 @@ export default function InventoryItemComponent({ inventoryItem, onEdit } : { inv
                     setUnmountAction("edit");
                     setMountState(MountState.Unmount);
                 }}>
-                    <LabelText>Edit</LabelText>
+                    <EditInventoryItemIcon />
                 </ButtonView>
                 <ButtonView onPress={() => {
                     setUnmountAction("delete");
                     setMountState(MountState.Unmount);
                 }}>
-                    <LabelText>Delete</LabelText>
+                    <DeleteIcon />
                 </ButtonView>
             </RowContainer>
         </FadeComponent>
