@@ -1,3 +1,5 @@
+//2026-06-30 : Using tab icons from MDI library
+
 //2026-06-17 : Minor text fix
 
 //2025-11-19 : Adjusting imports and calls to fit new naming convention
@@ -10,6 +12,7 @@ import { Platform } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { MaterialDesignIcons} from '@react-native-vector-icons/material-design-icons';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -36,28 +39,28 @@ export default function TabLayout() {
         name="inventory"
         options={{
           title: 'Inventory',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color }) => <MaterialDesignIcons size={28} name="fridge-outline" color={color} />,
         }}
       />
       <Tabs.Screen
         name="recipes"
         options={{
           title: 'Recipes',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color }) => <MaterialDesignIcons size={28} name="pot-steam-outline" color={color} />,
         }}
       />
       <Tabs.Screen
         name="planner"
         options={{
           title: 'Planner',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => <MaterialDesignIcons size={28} name="calendar-month-outline" color={color} />,
         }}
       />
       <Tabs.Screen
         name="shoppinglist"
         options={{
           title: 'Shopping List',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color }) => <MaterialDesignIcons size={28} name="basket-outline" color={color} />,
         }}
       />
     </Tabs>
