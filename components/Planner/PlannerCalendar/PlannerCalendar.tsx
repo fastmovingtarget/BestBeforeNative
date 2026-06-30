@@ -1,3 +1,5 @@
+//2026-06-30 : Improved consistency of month scroll button sizing
+
 //2026-06-29 : Added Back/Forward icons for month scrolling
 
 //2026-06-11 : Removed padding doubling
@@ -49,13 +51,13 @@ export default function PlannerCalendar({setSelectedDate} : {setSelectedDate: (d
     return (
         <ColumnContainer style={{flex:1, marginHorizontal:0}}>
             <FadeComponent style={{flexDirection:"row", justifyContent: "space-between", alignItems: "center", padding: 0}}>
-                <PressableComponent onPress={() => setMonthIndex(monthIndex - 1)} style={{flex:1}}>
+                <PressableComponent onPress={() => setMonthIndex(monthIndex - 1)} style={{ width: "20%", flexGrow: 0}}>
                     <BackIcon />
                 </PressableComponent>
-                <LabelText style={{fontSize: 18, fontWeight: "bold", width: "40%", textAlign: "center"}}>
+                <LabelText style={{fontSize: 18, fontWeight: "bold", textAlign: "center", width: "50%"}}>
                     {monthStartDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
                 </LabelText>
-                <PressableComponent onPress={() => setMonthIndex(monthIndex + 1)} style={{flex:1}}>
+                <PressableComponent onPress={() => setMonthIndex(monthIndex + 1)} style={{ width: "20%", flexGrow: 0}}>
                     <ForwardIcon />
                 </PressableComponent>
             </FadeComponent>
