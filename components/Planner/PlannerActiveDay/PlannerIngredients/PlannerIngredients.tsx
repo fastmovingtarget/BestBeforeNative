@@ -1,3 +1,5 @@
+//2026-06-30 : Text Fix
+
 //2026-06-30 : Improvements to formatting, adding React Icons
 
 //2026-06-01 : Using FadeComponent and ScrollableContainer
@@ -18,7 +20,7 @@ import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 import { useShoppingList } from "@/Contexts/ShoppingList/ShoppingListDataProvider";
 import { usePlans } from "@/Contexts/Plans/PlansDataProvider";
 import { FadeComponent, LabelText, PressableComponent, RowContainer, ScrollableContainer, ButtonView} from '@/ui/BestBeforeUI';
-import { AddShoppingIcon, InventoryIcon, LinkInventoryItemIcon, ShoppingListIcon, WarningIcon } from "@/ui/ReactIcon";
+import { AddShoppingListItemIcon, InventoryIcon, LinkInventoryItemIcon, ShoppingListIcon, WarningIcon } from "@/ui/ReactIcon";
 
 /**
  * React Component for displaying the ingredients of a selected recipe plan
@@ -91,13 +93,12 @@ export default function RecipePlanActiveDayRecipeIngredients({recipePlan}: {reci
     };
 
     return (
-        <FadeComponent style={{flex:1, padding:10, marginVertical:10, width:"100%", justifyContent: "flex-start", alignItems: "flex-start"}}>
+        <FadeComponent style={{flex:1, padding:10, marginVertical:5, width:"100%", justifyContent: "flex-start", alignItems: "flex-start"}}>
             <LabelText>Ingredients to make {recipePlan.Recipe_Name}</LabelText>
             {/* Implementation for displaying ingredients goes here */}
             <ScrollableContainer style={{flexGrow:1, marginTop:10, width:"100%"}}>
             {
                 recipePlan.Plan_Ingredients?.map((planIngredient, index) => {
-                    const indicatorIcon = planIngredient.Inventory_Item_ID ? '✅' : (planIngredient.Shopping_Item_ID ? '\u{1F6D2}' : '\u2757');//using the curly braces allows us to use unicode emojis with >4 characters
                     return (
                         <FadeComponent key={`plan-ingredient-container-${index}`} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "100%"}}>
                             <RowContainer style={{alignItems: 'center', width: "auto"}}>
@@ -116,7 +117,7 @@ export default function RecipePlanActiveDayRecipeIngredients({recipePlan}: {reci
                                         <LinkInventoryItemIcon />
                                     </ButtonView>
                                     <ButtonView style={{marginHorizontal: 5}} key={`add-to-shopping-list-${index}`} aria-label="add-to-shopping-list" onPress={() => addToShoppingList(index)}>
-                                        <AddShoppingIcon />
+                                        <AddShoppingListItemIcon />
                                     </ButtonView>
                                 </RowContainer>
                             )}
