@@ -1,3 +1,5 @@
+//2026-07-01 : Top page component sizing consistency
+
 //2026-06-29 : Added Back/Edit/Delete icons
 
 //2026-06-11 : Removed a console log
@@ -14,7 +16,7 @@ import React from "react";
 import Recipe from "@/Types/Recipe";
 import { ScrollableContainer, LabelText, FadeComponent, RowContainer, ButtonView } from "@/ui/BestBeforeUI";
 import { MountState } from "@/ui/Types/MountState";
-import { BackIcon, EditIcon, DeleteIcon } from "@/ui/ReactIcon";
+import { BackIcon, DeleteIcon, EditRecipeIcon } from "@/ui/ReactIcon";
 
 export default function RecipeSelected({recipe, setSelectedRecipe, setIsEditing, deleteRecipe}: { recipe: Recipe, setSelectedRecipe: (recipe: Recipe | null) => void, setIsEditing: (editing: boolean) => void, deleteRecipe: (id: number) => void }) {
 
@@ -46,14 +48,14 @@ export default function RecipeSelected({recipe, setSelectedRecipe, setIsEditing,
             onUnmountAnimationEnd={() => endSelectFunction()}
             >
             <FadeComponent style={{flexGrow:0, marginTop:0}}>
-                <RowContainer style={{padding:0, columnGap:10}}>
-                    <ButtonView style={{flexGrow:1}} onPress={() => {setEndSelectMethod("Back"); setMountState(MountState.Unmount)}}>
+                <RowContainer style={{justifyContent:"space-between", alignItems:"center", width:"100%"}}>
+                    <ButtonView style={{flexGrow:1, margin:5, marginVertical: 8}} onPress={() => {setEndSelectMethod("Back"); setMountState(MountState.Unmount)}}>
                         <BackIcon />
                     </ButtonView>
-                    <ButtonView style={{flexGrow:1}} onPress={() => {setEndSelectMethod("Edit"); setMountState(MountState.Unmount)}}>
-                        <EditIcon />
+                    <ButtonView style={{flexGrow:1, margin:5, marginVertical: 8}} onPress={() => {setEndSelectMethod("Edit"); setMountState(MountState.Unmount)}}>
+                        <EditRecipeIcon />
                     </ButtonView>
-                    <ButtonView style={{flexGrow:1}} onPress={() => {setEndSelectMethod("Delete"); setMountState(MountState.Unmount)}}>
+                    <ButtonView style={{flexGrow:1, margin:5, marginVertical: 8}} onPress={() => {setEndSelectMethod("Delete"); setMountState(MountState.Unmount)}}>
                         <DeleteIcon />
                     </ButtonView>
                 </RowContainer>
