@@ -1,3 +1,5 @@
+//2026-07-01 : Adding ability to specify height
+
 //2026-06-18 : Removed require cycle
 
 //2026-06-17 : Incoming width applies to container
@@ -55,12 +57,13 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onCha
     }
 
     return (
-        <ColumnContainer style={{alignItems: "flex-start", position: "relative", width: style?.width || "100%", flexGrow: style?.flexGrow || 0,}}>
+        <ColumnContainer style={{alignItems: "flex-start", position: "relative", width: style?.width || "100%", height: style?.height || "auto", flexGrow: style?.flexGrow || 0,}}>
             <TextInput 
                 style={{ 
                     ...inputTextStyles,
                     ...style,
                     width: "100%",
+                    height: multiline ? 100 : 40,
                     borderColor: invalidMessage ? Colours.errorText : "transparent",
                     textAlignVertical: multiline ? "top" : "center",
                 }}
