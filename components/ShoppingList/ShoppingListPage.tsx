@@ -1,3 +1,5 @@
+//2026-07-01 : Moving Add button onto the Search bar
+
 //2026-06-30 : Icon for Add to Shopping List
 
 //2026-06-01 : Using FadeComponent for animations
@@ -12,22 +14,15 @@ import React, { useState } from "react";
 import ShoppingListSearch from "./ShoppingListSearch/ShoppingListSearch";
 import ShoppingList from "./ShoppingList/ShoppingList";
 import ShoppingListForm from "./ShoppingListForm/ShoppingListForm";
-import { PageView, ButtonView, LabelText, FadeComponent} from '@/ui/BestBeforeUI';
-import { AddShoppingListItemIcon } from "@/ui/ReactIcon";
+import { PageView} from '@/ui/BestBeforeUI';
 
 export default function ShoppingListPage() {
     const [isFormVisible, setIsFormVisible] = useState(false);
 
     return (
         <PageView>
-            <ShoppingListSearch />
-                {!isFormVisible ?
-                    <FadeComponent>
-                        <ButtonView accessibilityRole="button" onPress={() => setIsFormVisible(true)} style={{margin:5}}>
-                            <AddShoppingListItemIcon />
-                        </ButtonView> 
-                    </FadeComponent>
-                    :
+            <ShoppingListSearch setIsFormVisible={setIsFormVisible} />
+                {isFormVisible &&
                     <ShoppingListForm onCancel={() => setIsFormVisible(false)} isFormVisible={isFormVisible} />
                 }
             <ShoppingList onEdit={() => setIsFormVisible(false)} />
