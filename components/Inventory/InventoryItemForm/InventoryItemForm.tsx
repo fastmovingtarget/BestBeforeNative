@@ -1,3 +1,5 @@
+//2026-07-01 : Adding Cancel and Submit Icons
+
 //2026-06-19 : allow submission of items on today's date
 
 //2026-06-18 : Added validation for form fields
@@ -19,6 +21,7 @@ import Inventory_Item from "@/Types/Inventory_Item";
 import { ButtonView, LabelText, FormTextInput, RowContainer, FadeComponent } from '@/ui/BestBeforeUI';
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 import { MountState } from '@/ui/Types/MountState';
+import { CancelIcon, SubmitInventoryIcon } from '@/ui/ReactIcon';
 
 export default function InventoryItemForm({inventoryItem, onCancel, isFormVisible = false} : {inventoryItem?: Inventory_Item, onCancel?: () => void, isFormVisible?: boolean}) {
 
@@ -117,11 +120,11 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
                 />
             </RowContainer>
             <RowContainer style={{justifyContent:"space-around"}} >
-                <ButtonView onPress={cancelHandler}>
-                    <LabelText >Cancel</LabelText>
+                <ButtonView onPress={cancelHandler} style={{flexGrow:1, marginRight: 5}}>
+                    <CancelIcon />
                 </ButtonView>
-                <ButtonView onPress={submitHandler}>
-                    <LabelText >Submit</LabelText>
+                <ButtonView onPress={submitHandler} style={{flexGrow:1, marginLeft: 5}}>
+                    <SubmitInventoryIcon />
                 </ButtonView>
             </RowContainer>
         </FadeComponent>
