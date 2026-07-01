@@ -1,3 +1,5 @@
+//2026-07-01 : Icons for Submit and Cancel
+
 //2026-06-18 : Quantity now starts undefined, adds validation
 
 //2026-06-15 : Correctly validating input forms
@@ -16,7 +18,8 @@ import { StyleSheet } from 'react-native';
 import Shopping_List_Item from '@/Types/Shopping_List_Item';
 import { useState } from 'react';
 import { useShoppingList } from '@/Contexts/ShoppingList/ShoppingListDataProvider';
-import {RowContainer, ButtonView, LabelText, FormTextInput, FadeComponent} from '@/ui/BestBeforeUI';
+import {RowContainer, ButtonView, FormTextInput, FadeComponent} from '@/ui/BestBeforeUI';
+import { CancelIcon, SubmitShoppingListIcon } from '@/ui/ReactIcon';
 
 const blankItem : Shopping_List_Item = {
     Shopping_Item_Name: "",
@@ -93,11 +96,11 @@ export default function ShoppingListForm({item = blankItem, isFormVisible, onCan
                 />
             </RowContainer>
             <RowContainer style={{justifyContent:"space-around", marginTop: 10}} >
-                <ButtonView onPress={cancelHandler}>
-                    <LabelText >Cancel</LabelText>
+                <ButtonView onPress={cancelHandler} style={{flexGrow:1, marginRight: 5}}>
+                    <CancelIcon />
                 </ButtonView>
-                <ButtonView onPress={submitHandler}>
-                    <LabelText >Submit</LabelText>
+                <ButtonView onPress={submitHandler} style={{flexGrow:1, marginLeft: 5}}>
+                    <SubmitShoppingListIcon />
                 </ButtonView>
             </RowContainer>
 

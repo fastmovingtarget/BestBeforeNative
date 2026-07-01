@@ -1,3 +1,5 @@
+//2026-07-01 : Making top page component size consistent
+
 //2026-06-30 : Using back icon, improving button consistency
 
 //2026-06-12 : Shifted FadeComponent wrapper
@@ -37,7 +39,7 @@ export default function PlannerActiveDay({selectedDate, setSelectedDate}: {selec
         <>
             <FadeComponent style={{padding: 0, margin: 0}}>
                 <RowContainer style={{alignItems: "center", padding: 0, margin: 0, justifyContent: "space-between"}}>
-                    <PressableComponent onPress={() => setSelectedDate(null)} style={{ width: "20%", flexGrow: 0}}>
+                    <PressableComponent onPress={() => setSelectedDate(null)} style={{ width: "20%", flexGrow: 0, marginVertical: 8}}>
                         <BackIcon />
                     </PressableComponent>
                     <LabelText style={{fontSize: 18, fontWeight: "bold", textAlign: "center"}}>{selectedDate ? selectedDate.toDateString() : "No Date Selected"}</LabelText>

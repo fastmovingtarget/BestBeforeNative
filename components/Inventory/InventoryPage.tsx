@@ -1,3 +1,5 @@
+//2026-07-01 : Moving Add button to Search bar
+
 //2026-06-30 : Icon for Add Inventory Item
 
 //2026-06-10 : Style format no longer used
@@ -14,9 +16,8 @@ import React, { useState } from "react";
 import InventorySearch from "./InventorySearch/InventorySearch";
 import InventoryList from "./InventoryList/InventoryList";
 import InventoryItemForm from "./InventoryItemForm/InventoryItemForm";
-import {ButtonView, FadeComponent, LabelText, PageView } from "@/ui/BestBeforeUI";
+import { PageView } from "@/ui/BestBeforeUI";
 import { MountState } from "@/ui/Types/MountState";
-import { AddInventoryIcon } from "@/ui/ReactIcon";
 
 export default function InventoryPage() {
     const [isFormVisible, setIsFormVisible] = useState(false);
@@ -24,16 +25,10 @@ export default function InventoryPage() {
 
     return (
         <PageView>
-            <InventorySearch />
+            <InventorySearch setIsFormVisible={setIsFormVisible} />
             {
-                isFormVisible ? 
+                isFormVisible &&
                 <InventoryItemForm onCancel={() =>{ setMountState(MountState.Mount); setIsFormVisible(false); }} isFormVisible={isFormVisible} />
-                :
-                <FadeComponent mountState={mountState} onUnmountAnimationEnd={() =>  setIsFormVisible(true) } >
-                    <ButtonView accessibilityRole="button" style={{margin : 5}} onPress={() => setMountState(MountState.Unmount)} >
-                        <AddInventoryIcon />
-                    </ButtonView>
-                </FadeComponent>
             }
             <InventoryList onEdit={() => setIsFormVisible(false)} />
         </PageView>

@@ -1,3 +1,5 @@
+//2026-07-01 : Putting Search and Add in same row
+
 //2026-06-30 : Icon for Add New Recipe
 
 //2026-06-11 : Improved vertical margins for consistency
@@ -12,7 +14,7 @@ import React from "react";
 import Recipe from "@/Types/Recipe";
 import RecipesListItem from "./RecipesListItem/RecipesListItem";
 import { useRecipes } from "@/Contexts/Recipes/RecipesDataProvider";
-import { FadeComponent, ListView, ButtonView } from "@/ui/BestBeforeUI";
+import { FadeComponent, ListView, ButtonView, RowContainer } from "@/ui/BestBeforeUI";
 import RecipesSearch from "../RecipesSearch/RecipesSearch";
 import { MountState } from "@/ui/Types/MountState";
 import { AddRecipeIcon } from "@/ui/ReactIcon";
@@ -44,23 +46,25 @@ export default function RecipesList({ setSelectedRecipe, setIsEditing }: { setSe
 
     return (
         <FadeComponent 
-            style={{backgroundColor:"transparent", flex:1, margin:0, padding:0}}
+            style={{backgroundColor:"transparent", flex:1, margin:0, marginVertical:0,  padding:0}}
             aria-label="recipes-list-component"
             mountState={mountState}
             onUnmountAnimationEnd={onUnmountAnimationEnd}
         >
-            <FadeComponent style={{flexDirection:"row", marginVertical: 0, marginBottom: 5, columnGap:10}}>
-                <ButtonView onPress={() => {
-                            setMountState(MountState.Unmount);
-                            setIsEditingInternal(true)
+            <FadeComponent style={{flexDirection:"row"}}>
+                <RowContainer style={{justifyContent:"space-between", alignItems:"center", width:"100%"}}>
+                    <RecipesSearch />
+                    <ButtonView onPress={() => {
+                                setMountState(MountState.Unmount);
+                                setIsEditingInternal(true)
+                            }
                         }
-                    } 
-                    style={{flexGrow:1}}
-                >
-                    <AddRecipeIcon />
-                </ButtonView>
+                        style={{margin : 5}}
+                    >
+                        <AddRecipeIcon />
+                    </ButtonView>
+                </RowContainer>
             </FadeComponent>
-            <RecipesSearch />
             <ListView>
                 {recipes.map((recipe: Recipe) => (
                     <RecipesListItem

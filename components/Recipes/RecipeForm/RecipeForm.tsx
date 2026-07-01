@@ -1,3 +1,5 @@
+//2026-07-01 : Icons for Cancel, Submit and Remove Ingredient
+
 //2026-06-18 : Removed unused import
 
 //2026-06-18 : Allow use of blank number input, validation for ingredients
@@ -22,6 +24,7 @@ import { useRecipes } from "@/Contexts/Recipes/RecipesDataProvider"
 import Recipe_Ingredient from '@/Types/Recipe_Ingredient';
 import {RowContainer, ButtonView, LabelText, FormTextInput, ScrollableContainer, FadeComponent} from '@/ui/BestBeforeUI';
 import { MountState } from '@/ui/Types/MountState';
+import { CancelIcon, DeleteIcon, SubmitRecipeIcon } from '@/ui/ReactIcon';
 
 const emptyRecipe = {
     Recipe_Name: "",
@@ -162,13 +165,13 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
             mountState={mountState}
             onUnmountAnimationEnd={() => {exitFormWrapper();}}
             >
-            <FadeComponent style={{flexGrow:0}}>
+            <FadeComponent style={{flexGrow:0, marginTop:0}}>
                 <RowContainer style={{padding:0, columnGap:10}}>
-                    <ButtonView style={{flexGrow:1}} onPress={onCancel}>
-                        <LabelText>Cancel</LabelText>
+                    <ButtonView style={{flexGrow:1, margin: 5, marginVertical: 8}} onPress={onCancel}>
+                        <CancelIcon />
                     </ButtonView>
-                    <ButtonView style={{flexGrow:1}} onPress={onSubmit}>
-                        <LabelText>Submit</LabelText>
+                    <ButtonView style={{flexGrow:1, margin: 5, marginVertical: 8}} onPress={onSubmit}>
+                        <SubmitRecipeIcon />
                     </ButtonView>
                 </RowContainer>
             </FadeComponent>
@@ -218,7 +221,7 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
                                 }}
                                 defaultValue={ingredient.Recipe_Ingredient_Name || ""}
                                 validationFunction={validateRecipeIngredientName}
-                                style={{width: "42%"}}
+                                style={{width: "42%", height:57}}
                             />
                             <FormTextInput
                                 placeholder="Ingredient Quantity"
@@ -231,18 +234,18 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
                                 }}
                                 validationFunction={validateRecipeIngredientQuantity}
                                 defaultValue={ingredient.Recipe_Ingredient_Quantity?.toString() || ""}
-                                style={{width: "45%"}}
+                                style={{width: "45%", height:57}}
                             />
                             <ButtonView 
                                 onPress={() => deleteRecipeIngredient(index)}
                                 aria-label={`recipe-ingredient-delete-${index}`}
                             >
-                                <LabelText style={{fontSize: 10}}>X</LabelText>
+                                <DeleteIcon />
                             </ButtonView>
                         </RowContainer>))
                     }
 
-                    <RowContainer style={{alignContent: "center", justifyContent: "center", width: "100%"}}>
+                    <RowContainer style={{alignContent: "center", justifyContent: "center", width: "100%", marginVertical: 10}}>
                         <ButtonView onPress={addNewRecipeIngredient} style={{flexGrow: 1}}>
                             <LabelText>Add Ingredient</LabelText>
                         </ButtonView>
