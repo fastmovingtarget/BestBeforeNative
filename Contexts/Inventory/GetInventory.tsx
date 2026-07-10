@@ -1,3 +1,5 @@
+//2026-07-10 : Changes to pick up env server props
+
 //2026-06-19 : Logs for API calls
 
 //2026-06-01 : updating local IP Address
@@ -33,8 +35,9 @@ export const getInventoryData = async (
 ) => {
     
     const serverProps = {
-        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
-        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
+        DatabaseServer: process.env.EXPO_PUBLIC_DATABASE_SERVER || "192.168.50.201",
+        DatabasePort: process.env.EXPO_PUBLIC_DATABASE_PORT || "5091",
+        DatabaseProtocol: process.env.EXPO_PUBLIC_PROTOCOL || "http",
     }
 
     const optionsString = Object.entries(searchOptions).map(([key, value]) => {//map the key and uri encoded value pairs to a string joined by &
@@ -46,7 +49,7 @@ export const getInventoryData = async (
 
     let returnPromise = new Promise<SyncState>((resolve) => {
         fetch(
-            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/inventory/${userID}?${optionsString}`, 
+            `${serverProps.DatabaseProtocol}://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/inventory/${userID}?${optionsString}`, 
             {
                 method: "GET",
                 headers: {

@@ -1,3 +1,5 @@
+//2026-07-10 : Changes to pick up env server props
+
 //2026-06-19 : Logs for API calls
 
 //2026-06-01 : updating local IP Address
@@ -28,7 +30,7 @@ import log from "@/utils/log";
  * @returns {Promise<UpdateState>} - A promise that resolves to the update state indicating success or failure.
  */
 export const addInventoryItemData = async (
-    userID : number,
+    userID : number | null,
     inventory : Inventory_Item[],
     setInventory : React.Dispatch<React.SetStateAction<Inventory_Item[]>>, 
     inventoryItem : Inventory_Item,
@@ -37,6 +39,7 @@ export const addInventoryItemData = async (
     const serverProps = {
         DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
+        DatabaseProtocol: process.env.REACT_APP_PROTOCOL || "http",
     }
 
     const updateBody = JSON.stringify({ 
@@ -49,7 +52,7 @@ export const addInventoryItemData = async (
 
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
-            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/inventory/`, 
+            `${serverProps.DatabaseProtocol}://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/inventory/`, 
             {
                 method: "POST",
                 headers: {
