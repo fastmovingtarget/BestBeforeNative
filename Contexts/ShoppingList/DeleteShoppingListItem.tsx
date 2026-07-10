@@ -1,3 +1,5 @@
+//2026-07-10 : Changes to pick up env server props
+
 //2026-06-19 : Logs for API calls
 
 //2026-06-10 : ip address changed
@@ -34,13 +36,14 @@ export const deleteShoppingListItemData = async (
     const serverProps = {
         DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
+        DatabaseProtocol: process.env.REACT_APP_PROTOCOL || "http",
     }
 
     log(`Deleting shopping list item with ID: ${shoppingListItem_ID}`, "debug");
 
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
-            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/shoppingList/${shoppingListItem_ID}`, 
+            `${serverProps.DatabaseProtocol}://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/shoppingList/${shoppingListItem_ID}`, 
             {
                 method: "DELETE",
                 headers: {

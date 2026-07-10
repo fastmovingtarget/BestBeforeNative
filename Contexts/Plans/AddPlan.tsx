@@ -1,3 +1,5 @@
+//2026-07-10 : Changes to pick up env server props
+
 //2026-06-19 : Logs for API calls
 
 //2026-06-15 : plan date now timezone independent
@@ -38,6 +40,7 @@ export const addPlanData = async (
     const serverProps = {
         DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
         DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
+        DatabaseProtocol: process.env.REACT_APP_PROTOCOL || "http",
     };
     
 
@@ -51,7 +54,7 @@ export const addPlanData = async (
 
     const returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
-            `http://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/plans/`, 
+            `${serverProps.DatabaseProtocol}://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/plans/`, 
             {
                 method: "POST",
                 headers: {
