@@ -1,12 +1,14 @@
+//2026-07-13 : Saving and loading token in Secure Store
+
 //2026-07-10 : Calls for login and signup
 
 //2026-06-01 : Holding colour variables in Auth
 
 //2025-10-20 : Created Authentication Context
 
-import { useState, createContext, useContext  } from "react";
+import { useState, createContext, useContext, useEffect  } from "react";
+import * as SecureStore from "expo-secure-store";
 import Login from "./Login";
-import { SyncState } from "@/Types/DataLoadingState";
 import Signup from "./Signup";
 
 const AuthenticationDataContext = createContext({
@@ -30,7 +32,7 @@ const AuthenticationDataContext = createContext({
 
 export const AuthenticationDataProvider = ({children}:{children:React.ReactNode}) => {   
 
-    const [userId, setUserId] = useState<number | null>(1);
+    const [userId, setUserId] = useState<number | null>(null);
     const [colours, setColours] = useState<{
         primary: string,
         secondary: string,
@@ -43,18 +45,36 @@ export const AuthenticationDataProvider = ({children}:{children:React.ReactNode}
         text: "#e6e0d4",
     });
 
-    
+    useEffect(() => {
+        const fetchToken = async () => {
+            const tokenData = await getToken();
+            if(tokenData) {
+                const parsedData = JSON.parse(tokenData);
+                setUserId(parsedData.userId);
+            }
+        }
+        fetchToken();
+    }, []);
+
+    const saveToken = async (token: string, userId: number) => {
+        await SecureStore.setItemAsync("authToken", JSON.stringify({token, userId}));
+    }
+
+    const getToken = async () => {
+        return await SecureStore.getItemAsync("authToken");
+    }
 
     const attemptLogin = (username: string, password: string) => {
-        Login(username, password, setUserId)
+        Login(username, password, setUserId, saveToken)
     }
 
     const logout = () => {
         setUserId(null);
+        SecureStore.deleteItemAsync("authToken");
     }
     
     const signup = (username: string, password: string) => {
-        Signup(username, password, setUserId);
+        Signup(username, password, setUserId, saveToken);
     }
 
     return (
