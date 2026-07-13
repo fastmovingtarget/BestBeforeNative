@@ -1,3 +1,5 @@
+//2026-07-10 : App tabs now require a user id to exist
+
 //2025-11-19 : Adjusting imports and calls to fit new naming convention
 
 //2025-11-17 : Adding Recipe Plan data provider
@@ -18,10 +20,6 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { AuthenticationDataProvider } from '@/Contexts/Authentication/AuthenticationDataProvider';
-import { InventoryDataProvider } from '@/Contexts/Inventory/InventoryDataProvider';
-import { RecipesDataProvider } from '@/Contexts/Recipes/RecipesDataProvider';
-import { ShoppingListDataProvider } from '@/Contexts/ShoppingList/ShoppingListDataProvider';
-import { PlansDataProvider } from '@/Contexts/Plans/PlansDataProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -45,19 +43,11 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AuthenticationDataProvider>
-        <InventoryDataProvider>
-          <RecipesDataProvider>
-            <ShoppingListDataProvider>
-              <PlansDataProvider>
-                <Stack>
-                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                  <Stack.Screen name="+not-found" />
-                </Stack>
-                <StatusBar style="auto" />
-              </PlansDataProvider>
-            </ShoppingListDataProvider>
-          </RecipesDataProvider>
-        </InventoryDataProvider>
+        <Stack>
+          <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" />
       </AuthenticationDataProvider>
     </ThemeProvider>
   );

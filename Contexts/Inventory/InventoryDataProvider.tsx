@@ -1,3 +1,5 @@
+//2026-07-10 : Type guard for user === null
+
 //2026-06-19 : Logs for API calls
 
 //2025-11-19 : Renamed Ingredients to Inventory
@@ -102,6 +104,7 @@ export const InventoryDataProvider = ({children}:{children:React.ReactNode}) => 
      * @return {UpdateState} - The result of the match operation.
      */
     const matchInventoryItem = (inventoryItem: Inventory_Item, planIngredient: Plan_Ingredient, plan: Plan) => {
+        if(userId === null) return UpdateState.Failed;
         const existingInventoryItem = inventory.find((item) => item.Inventory_Item_ID === inventoryItem.Inventory_Item_ID);
         if(existingInventoryItem){            
             //assign the inventory item a plan, plan id, and plan id

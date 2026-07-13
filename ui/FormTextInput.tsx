@@ -1,3 +1,5 @@
+//2026-07-10 : Adding handling for password input type
+
 //2026-07-01 : Adding ability to specify height
 
 //2026-06-18 : Removed require cycle
@@ -25,7 +27,7 @@ type InputTextProps = {
     style?: TextStyle,
     defaultValue : string,
     placeholder?: string,
-    inputMode?:'numeric' | 'text',
+    inputMode?:'numeric' | 'text' | 'password',
     onChange?:(event : NativeSyntheticEvent<TextInputChangeEventData>) => void,
     onChangeText?:(text : string) => void,
     ["aria-label"]:string
@@ -68,7 +70,8 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onCha
                     textAlignVertical: multiline ? "top" : "center",
                 }}
                 defaultValue={defaultValue}
-                inputMode={inputMode}
+                inputMode={inputMode === "password" ? "text" : inputMode}
+                secureTextEntry={inputMode === "password"}
                 onChange={onChangeValidation}
                 onChangeText={onChangeText}
                 aria-label={ariaLabel}
