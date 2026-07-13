@@ -1,10 +1,12 @@
+//2026-07-13 : Saving Token to local storage
+
 //2026-07-10 : Calls for login and signup
 
 
 import { SyncState } from "@/Types/DataLoadingState";
 import log from "@/utils/log";
 
-export default function Login(username: string, password: string, setUserId: (id: number) => void): Promise<SyncState> {
+export default function Login(username: string, password: string, setUserId: (id: number) => void, saveToken: (token: string, userId: number) => void): Promise<SyncState> {
 
  const serverProps = {
         DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
@@ -36,6 +38,7 @@ export default function Login(username: string, password: string, setUserId: (id
                     }
                     else {
                         setUserId(data.User_ID);
+                        saveToken(data.Token_ID, data.User_ID);
                         log(`Successfully logged in with user ID: ${data.User_ID}`, "debug");
                         resolve(SyncState.Successful);
                     }
