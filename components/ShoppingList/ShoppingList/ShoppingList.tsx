@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-06-01 : Using FadeComponent and RowContainer
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -15,6 +16,11 @@ import ShoppingListItem from "./ShoppingListItem/ShoppingListItem";
 import { ScrollableContainer} from "@/ui/BestBeforeUI";
 import { useShoppingList } from "@/Contexts/ShoppingList/ShoppingListDataProvider";
 
+/**
+ * ShoppingList component
+ * @param onEdit - Callback function to call when an item is being edited - lets the shopping list page know to hide the add shopping list item form so that only one form is present at a time
+ * @returns A list of shopping list items, with the ability to edit or delete each item
+ */
 export default function ShoppingList({onEdit}: {onEdit: () => void}) {
     const [editId, setEditId] = useState<number | undefined>(undefined);
 
