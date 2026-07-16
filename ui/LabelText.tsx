@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-06-01 : UI Tweaking
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -11,6 +12,16 @@ type LabelTextProps = {
     style?: TextStyle,
     ["aria-label"]?:string
 }
+
+/**
+ * LabelText
+ * A styled text component that displays a label with default styles including text color, border radius, padding, and font size.
+ * @component
+ * @param {TextStyle} style - Optional additional styles to apply to the text.
+ * @param {React.ReactNode} children - Child components to be rendered inside the text.
+ * @param {string} aria-label - Accessibility label for the text.
+ * @returns {JSX.Element} A React component that renders a styled text label.
+ */
 
 const LabelText = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildren<LabelTextProps>) => {
     return (

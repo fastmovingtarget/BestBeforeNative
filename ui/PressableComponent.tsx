@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-06-01 : UI Tweaking
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -13,6 +14,17 @@ type PressableViewProps = PropsWithChildren<{
     accessibilityRole?: AccessibilityProps["accessibilityRole"],
     ["aria-label"]?: string,
 }>
+
+/**
+ * PressableComponent
+ * A customizable pressable component that changes its background color when pressed.
+ * @param style - Optional styles to apply to the pressable component
+ * @param children - The content to display inside the pressable component
+ * @param onPress - Function to call when the pressable component is pressed
+ * @param accessibilityRole - Accessibility role for the pressable component
+ * @param aria-label - Accessibility label for the pressable component
+ * @returns {JSX.Element} A React component that renders a customizable pressable component.
+ */
 
 const PressableComponent : React.FC<PressableViewProps> = ({style, children, onPress, "aria-label" : ariaLabel, accessibilityRole} : PressableViewProps ) => {
     return (

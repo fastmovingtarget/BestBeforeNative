@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-07-10 : Adding handling for password input type
 
 //2026-07-01 : Adding ability to specify height
@@ -36,6 +37,23 @@ type InputTextProps = {
     validationFunction?:(text : string) => true | string,
 }
 
+/**
+ * FormTextInput
+ * A styled text input component that supports validation and error message display.
+ * FormTextInput has default styles including background color, text color, border radius, padding, and margin.
+ * @component
+ * @param {TextStyle} style - Optional additional styles to apply to the text input.
+ * @param {string} defaultValue - The initial value of the text input.
+ * @param {string} placeholder - Placeholder text to display when the input is empty.
+ * @param {'numeric' | 'text' | 'password'} inputMode - The type of input (numeric, text, or password).
+ * @param {function} onChange - Callback function to handle changes in the text input.
+ * @param {function} onChangeText - Callback function to handle changes in the text input value.
+ * @param {string} aria-label - Accessibility label for the text input.
+ * @param {boolean} multiline - Whether the text input supports multiple lines.
+ * @param {number} numberOfLines - The number of lines to display in the text input when multiline is true.
+ * @param {function} validationFunction - A function to validate the input value. Returns true if valid, or an error message string if invalid.
+ * @returns {JSX.Element} A React component that renders a text input with the specified styles, validation, and error message display.
+ */
 const FormTextInput = ({style, children, defaultValue, inputMode = "text", onChange, onChangeText, 'aria-label' : ariaLabel, placeholder = "", multiline = false, numberOfLines = 1, validationFunction} : PropsWithChildren<InputTextProps>) => {
 
     const initialMessage = validationFunction ? (validationFunction(defaultValue) === true ? null : validationFunction(defaultValue).toString()) : null;    

@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-06-01 : Container for item lists
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -19,6 +20,7 @@ type ScrollableContainerProps = {
  * @param {ViewStyle} style - Optional additional styles to apply to the container.
  * @param {React.ReactNode} children - Child components to be rendered inside the container.
  * @param {string} aria-label - Accessibility label for the container.
+ * @returns {JSX.Element} A React component that renders a scrollable container with the specified styles and children.
  */
 
 const ScrollableContainer = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildren<ScrollableContainerProps>) => {

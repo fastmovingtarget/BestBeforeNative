@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-06-11 : Improved padding
 
 //2026-06-01 : UI Tweaking
@@ -11,6 +12,16 @@ import { Colours } from "@/constants/Colors";
 
 type PageViewProps = PropsWithChildren<{style? : ViewStyle}>
 
+/**
+ * PageView
+ * A styled container that arranges its children in a column, so flex direction is column
+ * PageView has default styles including background color, text color, border radius, padding, and width.
+ * @component
+ * @param {ViewStyle} style - Optional additional styles to apply to the container.
+ * @param {React.ReactNode} children - Child components to be rendered inside the container.
+ * @param {string} aria-label - Accessibility label for the container.
+ * @returns {JSX.Element} A React component that renders a styled page view with the specified styles and children.
+ */
 const PageView : React.FC<PageViewProps> = props => {
     return (
         <View style={{ 

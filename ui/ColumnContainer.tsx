@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-06-12 : Added onLayout to find container size
 
 //2026-06-01 : Custom container for row/column
@@ -20,6 +21,8 @@ type ColumnContainerProps = {
  * @param {ViewStyle} style - Optional additional styles to apply to the container.
  * @param {React.ReactNode} children - Child components to be rendered inside the container.
  * @param {string} aria-label - Accessibility label for the container.
+ * @param {function} onLayout - Callback function to handle layout changes of the container.
+ * @returns {JSX.Element} A React component that renders a column container with the specified styles and children.
  */
 
 const ColumnContainer = ({style, children, 'aria-label' : ariaLabel, onLayout} : PropsWithChildren<ColumnContainerProps>) => {

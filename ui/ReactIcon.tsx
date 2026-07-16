@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-07-01 : Adding Icons for Submit and Cancel
 
 //2026-06-30 : Adding more subicons, changing some to MDI for consistency
@@ -12,6 +13,14 @@ import {Colours} from "@/constants/Colors";
 import {RowContainer} from "@/ui/BestBeforeUI";
 
 const defaultSize = 30;
+
+/**
+ * Library of React icons for use in the app. Each icon is a functional component that returns a JSX element representing the icon.
+ * @param {number} size - Optional size of the icon. Default is 30.
+ * @param {string} color - Optional color of the icon. Default is Colours.text.
+ * @param {string} background - Optional background color for icons with sub-icons. Default is Colours.buttonBackground.
+ * @returns {JSX.Element} A React component that renders the specified icon with the given size and color.
+ */
 
 export function BackIcon({size = defaultSize, color = Colours.text}: {size?: number, color?: string}) {
     return (
