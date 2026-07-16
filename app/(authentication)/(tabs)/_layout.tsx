@@ -1,3 +1,5 @@
+//2026-07-16 : Adding function description
+
 //2026-07-10 : App tabs now require a user id to exist
 
 //2026-06-30 : Using tab icons from MDI library
@@ -8,7 +10,7 @@
 
 //2025-05-27 : Adding Shopping list tab in to the app
 
-import { Redirect, Tabs } from 'expo-router';
+import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 
@@ -22,6 +24,16 @@ import { RecipesDataProvider } from '@/Contexts/Recipes/RecipesDataProvider';
 import { ShoppingListDataProvider } from '@/Contexts/ShoppingList/ShoppingListDataProvider';
 import { PlansDataProvider } from '@/Contexts/Plans/PlansDataProvider';
 
+
+/**
+ * App tab layout component
+ * Returns a tab layout with the following tabs:
+ * - Inventory
+ * - Recipes
+ * - Planner
+ * - Shopping List
+ * - Profile
+ */
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
