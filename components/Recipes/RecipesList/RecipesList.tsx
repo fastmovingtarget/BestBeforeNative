@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-07-01 : Putting Search and Add in same row
 
 //2026-06-30 : Icon for Add New Recipe
@@ -19,6 +20,12 @@ import RecipesSearch from "../RecipesSearch/RecipesSearch";
 import { MountState } from "@/ui/Types/MountState";
 import { AddRecipeIcon } from "@/ui/ReactIcon";
 
+/**
+ * RecipesList component
+ * @param setSelectedRecipe - Callback function to set the selected recipe in the parent component
+ * @param setIsEditing - Callback function to set the editing state in the parent component
+ * @returns A component that displays a list of recipes with options to search and add new recipes
+ */
 export default function RecipesList({ setSelectedRecipe, setIsEditing }: { setSelectedRecipe: (recipe: Recipe) => void, setIsEditing: (editing: boolean) => void }) {
     const { recipes } = useRecipes();
     const [mountState, setMountState] = React.useState<MountState>(MountState.Mount);
@@ -26,6 +33,10 @@ export default function RecipesList({ setSelectedRecipe, setIsEditing }: { setSe
     const [selectedRecipe, setSelectedRecipeInternal] = React.useState<Recipe | null>(null);
     const [isEditing, setIsEditingInternal] = React.useState<boolean>(false);
 
+    /**
+     * Handles the end of the unmount animation. If a recipe was selected, it sets the selected recipe in the parent component. If the editing state was set, it sets the editing state in the parent component.
+     * This function is called when the unmount animation ends, allowing for a smooth transition between components.
+     */
     const onUnmountAnimationEnd = () => {
         if(isEditing) {
             setIsEditing(true);
@@ -38,6 +49,10 @@ export default function RecipesList({ setSelectedRecipe, setIsEditing }: { setSe
         }
     }
 
+    /**
+     * Sets the selected recipe in the internal state and triggers the unmount animation. This function is called when a recipe is selected from the list, allowing for a smooth transition to the recipe details view.
+     * @param recipe - The recipe that was selected from the list
+     */
     const selectRecipe = (recipe: Recipe) => {
         setSelectedRecipeInternal(recipe);
         setMountState(MountState.Unmount);
