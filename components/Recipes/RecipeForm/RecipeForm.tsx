@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-07-01 : Icons for Cancel, Submit and Remove Ingredient
 
 //2026-06-18 : Removed unused import
@@ -34,12 +35,23 @@ const emptyRecipe = {
     Recipe_Instructions: "",
 }
 
+/**
+ * RecipeForm component
+ * @param inputRecipe - The recipe to edit, or a blank recipe to create a new one
+ * @param exitForm - Callback function to call when the form is exited (either by cancel or submit)
+ * @returns A form for adding or editing a recipe
+ */
 export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inputRecipe?: Recipe, exitForm: () => void}) {
 
     const [currentRecipe, setCurrentRecipe] = React.useState<Recipe>(inputRecipe);
     const [mountState, setMountState] = React.useState<MountState>(MountState.Mount);
     const {addRecipe, updateRecipe} = useRecipes();
 
+    /**
+     * Handles the submission of the recipe form. Validates the form fields and either adds a new recipe or updates an existing one.
+     * If the form is valid, it calls the appropriate function from the Recipes context and resets the form state.
+     * Finally, it sets the mount state to unmount, which will trigger the exitForm callback after the unmount animation ends.
+     */
     const onSubmit = () => {
         if(!checkValidation())
             return;
@@ -53,11 +65,21 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
         setCurrentRecipe(emptyRecipe);
         setMountState(MountState.Unmount);
     }
+
+    /**
+     * Handles the cancellation of the recipe form. Resets the current recipe to the input recipe and sets the mount state to unmount.
+     * This will trigger the exitForm callback after the unmount animation ends.
+     */
     const onCancel = () => {
         setCurrentRecipe(inputRecipe);
         setMountState(MountState.Unmount);
     }
 
+    /**
+     * Adds a new blank ingredient to the current recipe's ingredients list. Updates the current recipe state with the new list of ingredients.
+     * This allows the user to add multiple ingredients to a recipe.
+     * The new ingredient is initialized with empty name and undefined quantity.
+     */
     const addNewRecipeIngredient = () => {
         const newIngredients = [
             ...(currentRecipe.Recipe_Ingredients || []),
@@ -72,6 +94,11 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
         });
     }
 
+    /**
+     * Deletes an ingredient from the current recipe's ingredients list at the specified index. Updates the current recipe state with the new list of ingredients.
+     * This allows the user to remove ingredients from a recipe.
+     * @param index - The index of the ingredient to delete in the current recipe's ingredients list.
+     */
     const deleteRecipeIngredient = (index: number) => {
         const newIngredients = [...(currentRecipe.Recipe_Ingredients || [])];
         newIngredients.splice(index, 1);
@@ -83,6 +110,30 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
 
     const exitFormWrapper = () => {
         exitForm();
+    }
+
+
+    /**
+     * Validates the current recipe form fields. Checks the recipe name, time, difficulty, and each ingredient's name and quantity.
+     * Returns true if all fields are valid, false otherwise.
+     * This function is called before submitting the form to ensure that all required fields are filled out correctly.
+     * @returns boolean - true if the form is valid, false otherwise
+     */
+    const checkValidation = () => {
+        if(validateRecipeName(currentRecipe.Recipe_Name) !== true 
+            || validateRecipeTime(currentRecipe.Recipe_Time?.toString() || "") !== true 
+            || validateRecipeDifficulty(currentRecipe.Recipe_Difficulty?.toString() || "") !== true){
+            return false;
+        }
+        if(currentRecipe.Recipe_Ingredients) {
+            for(const ingredient of currentRecipe.Recipe_Ingredients) {
+                if(validateRecipeIngredientName(ingredient.Recipe_Ingredient_Name) !== true 
+                    || validateRecipeIngredientQuantity(ingredient.Recipe_Ingredient_Quantity?.toString() || "") !== true){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     const validateRecipeName = (name: string) => {
@@ -137,23 +188,6 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
         }
         if(quantityNumber < 0) {
             return "Cannot be negative";
-        }
-        return true;
-    }
-
-    const checkValidation = () => {
-        if(validateRecipeName(currentRecipe.Recipe_Name) !== true 
-            || validateRecipeTime(currentRecipe.Recipe_Time?.toString() || "") !== true 
-            || validateRecipeDifficulty(currentRecipe.Recipe_Difficulty?.toString() || "") !== true){
-            return false;
-        }
-        if(currentRecipe.Recipe_Ingredients) {
-            for(const ingredient of currentRecipe.Recipe_Ingredients) {
-                if(validateRecipeIngredientName(ingredient.Recipe_Ingredient_Name) !== true 
-                    || validateRecipeIngredientQuantity(ingredient.Recipe_Ingredient_Quantity?.toString() || "") !== true){
-                    return false;
-                }
-            }
         }
         return true;
     }
