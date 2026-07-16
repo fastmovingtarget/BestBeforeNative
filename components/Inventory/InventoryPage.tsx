@@ -1,3 +1,5 @@
+//2026-07-16 : Added function description
+
 //2026-07-01 : Moving Add button to Search bar
 
 //2026-06-30 : Icon for Add Inventory Item
@@ -19,6 +21,10 @@ import InventoryItemForm from "./InventoryItemForm/InventoryItemForm";
 import { PageView } from "@/ui/BestBeforeUI";
 import { MountState } from "@/ui/Types/MountState";
 
+/**
+ * InventoryPage component
+ * @returns The main inventory page, which includes a search bar, a list of inventory items, and a form for adding or editing inventory items
+ */
 export default function InventoryPage() {
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [mountState, setMountState] = useState(MountState.Mount);
@@ -27,7 +33,7 @@ export default function InventoryPage() {
         <PageView>
             <InventorySearch setIsFormVisible={setIsFormVisible} />
             {
-                isFormVisible &&
+                isFormVisible && /* If the form is visible, render the InventoryItemForm component */
                 <InventoryItemForm onCancel={() =>{ setMountState(MountState.Mount); setIsFormVisible(false); }} isFormVisible={isFormVisible} />
             }
             <InventoryList onEdit={() => setIsFormVisible(false)} />
