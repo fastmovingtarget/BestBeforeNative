@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-07-13 : Saving Token to local storage
 
 //2026-07-10 : Calls for login and signup
@@ -6,6 +7,15 @@
 import { SyncState } from "@/Types/DataLoadingState";
 import log from "@/utils/log";
 
+/**
+ * Signup function
+ * Attempts to sign up a new user with the provided username and password. If successful, it sets the user ID and saves the authentication token.
+ * @param username - The username of the new user attempting to sign up
+ * @param password - The password of the new user attempting to sign up
+ * @param setUserId - A callback function to set the user ID upon successful signup
+ * @param saveToken - A callback function to save the authentication token upon successful signup
+ * @returns A promise that resolves to a SyncState indicating the result of the signup attempt (Successful or Failed)
+ */
 export default function Signup(username: string, password: string, setUserId: (id: number) => void, saveToken: (token: string, userId: number) => void): Promise<SyncState> {
 
  const serverProps = {
