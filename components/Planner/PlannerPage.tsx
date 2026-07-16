@@ -1,3 +1,5 @@
+//2026-07-16 : Added function description
+
 //2026-07-16 : Using updated import names
 
 //2026-06-12 : Removed extra imports
@@ -17,6 +19,12 @@ import PlannerCalendar from "./PlannerCalendar/PlannerCalendar";
 import PlannerActiveDay from "./PlannerActiveDay/PlannerActiveDay";
 import { PageView} from '@/ui/BestBeforeUI';
 
+/**
+ * PlannerPage component
+ * @returns The main planner page, which includes a calendar view and an active day view
+ * The calendar view is shown when no date is selected, and the active day view is shown when a date is selected
+ * The selected date is managed in the state of this component
+ */
 export default function PlannerPage() {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
