@@ -1,3 +1,5 @@
+//2026-07-16 : Removing unnecessary imports
+
 //2026-06-29 : Improvements to pressable visuals
 
 //2026-06-01 : File location changed
@@ -15,7 +17,7 @@
 import React from 'react';
 import { usePlans } from '@/Contexts/Plans/PlansDataProvider';
 
-import {Component, FadeComponent, LabelText, PressableComponent} from '@/ui/BestBeforeUI';
+import {Component, LabelText, PressableComponent} from '@/ui/BestBeforeUI';
 import { Colours } from '@/constants/Colors';
 
 /**
