@@ -1,3 +1,4 @@
+//2026-07-16 : Added function description
 //2026-07-10 : Basic user login page
 
 
@@ -6,6 +7,10 @@ import { ButtonView, FadeComponent, FormTextInput, PageView, RowContainer } from
 import { useState } from 'react';
 import { Text } from 'react-native';
 
+/**
+ * LoginPage component
+ * @returns The login page, which includes input fields for username and password, and buttons for login and sign up
+ */
 export default function LoginPage(){
 
     const {attemptLogin, signup} = useAuthenticationData();
