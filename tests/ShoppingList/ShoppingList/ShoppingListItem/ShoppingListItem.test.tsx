@@ -1,3 +1,4 @@
+//2026-07-20 : Selecting components via aria-label
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Item_... fields now have Shopping_ as a prefix
@@ -99,14 +100,14 @@ describe('Shopping List Item calls correctly', () => {
           Shopping_Item_Quantity: 1
     };
 
-    const {getByText} = render(
+    const {getByLabelText} = render(
       <ShoppingListItem
         item={testItemData}
         onEdit={onEditMock}
       />,
     );
 
-    const editButton = getByText(/Edit/i);
+    const editButton = getByLabelText(/edit-shopping-list-item-button/i);
 
     await user.press(editButton);
 
@@ -122,14 +123,14 @@ describe('Shopping List Item calls correctly', () => {
           Shopping_Item_Quantity: 1
     };
 
-    const {getByText} = render(
+    const {getByLabelText} = render(
       <ShoppingListItem
         item={testItemData}
         onEdit={onEditMock}
       />,
     );
 
-    const deleteButton = getByText(/Delete/i);
+    const deleteButton = getByLabelText(/delete-shopping-list-item-button/i);
 
     await user.press(deleteButton);
 
@@ -145,14 +146,14 @@ describe('Shopping List Item calls correctly', () => {
           Shopping_Item_Quantity: 1
     };
 
-    const {getByText} = render(
+    const {getByLabelText} = render(
       <ShoppingListItem
         item={testItemData}
         onEdit={onEditMock}
       />,
     );
 
-    const purchaseButton = getByText(/Purchase/i);
+    const purchaseButton = getByLabelText(/purchase-shopping-list-item-button/i);
 
     await user.press(purchaseButton);
 
@@ -177,14 +178,14 @@ describe('Shopping List Item calls correctly', () => {
           Plan_Ingredient_ID: 3,
     };
 
-    const {getByText} = render(
+    const {getByLabelText} = render(
       <ShoppingListItem
         item={testItemData}
         onEdit={onEditMock}
       />,
     );
 
-    const purchaseButton = getByText(/Purchase/i);
+    const purchaseButton = getByLabelText(/purchase-shopping-list-item-button/i);
 
     await user.press(purchaseButton);
 
