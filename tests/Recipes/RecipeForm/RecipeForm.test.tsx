@@ -1,10 +1,8 @@
+//2026-07-20 : minor fix
 //2026-07-20 : Updating to match validation and icon changes
 //2026-06-10 : Test now works with FadeComponent
-
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
-
 //2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
-
 //2025-10-24 : Fixing import and mock to use correct context provider
 
 import {render, userEvent } from '@testing-library/react-native';
@@ -202,7 +200,7 @@ describe("Recipe form exits after animation", () => {
 describe("Recipe Ingredients", () => {
     describe("When blank input", () => {
         it("renders no ingredients", () => {
-            const {queryByText, queryByLabelText} = render(
+            const {queryByLabelText} = render(
                 <RecipeForm exitForm={mockExitForm}/>
             );
             expect(queryByLabelText(/recipe-ingredient-delete/i)).toBeFalsy();//there should be no button to delete an ingredient if there are no ingredients
