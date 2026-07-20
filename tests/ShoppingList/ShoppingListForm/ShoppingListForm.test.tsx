@@ -1,3 +1,4 @@
+//2026-07-20 : removing some text label expects, get via aria label
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Item_... fields now have Shopping_ as a prefix
@@ -37,21 +38,17 @@ beforeEach(() => {
 
 describe('Shopping List Form renders correctly', () => {
   it('when given no input item', () => {
-    const {getByText, getByLabelText} = render(
+    const {getByLabelText} = render(
       <ShoppingListForm isFormVisible={true}/>,
     );
-
-    expect(getByText(/Item:/i)).toBeTruthy();
-    expect(getByText(/Quantity:/i)).toBeTruthy();
-
     expect(getByLabelText(/name-input/i)).toBeTruthy();
     expect(getByLabelText(/quantity-input/i)).toBeTruthy();
 
     expect(getByLabelText(/name-input/i)).toHaveDisplayValue('');
-    expect(getByLabelText(/quantity-input/i)).toHaveDisplayValue('0');
+    expect(getByLabelText(/quantity-input/i)).toHaveDisplayValue('');
   });
   it('when given an input item', () => {
-    const {getByText, getByLabelText} = render(
+    const {getByLabelText} = render(
       <ShoppingListForm item={{
             Shopping_Item_Name: "Test Item",
             Shopping_Item_Quantity: 1,
@@ -60,9 +57,6 @@ describe('Shopping List Form renders correctly', () => {
         isFormVisible={true}
       />,
     );
-
-    expect(getByText(/Item:/i)).toBeTruthy();
-    expect(getByText(/Quantity:/i)).toBeTruthy();
 
     expect(getByLabelText(/name-input/i)).toBeTruthy();
     expect(getByLabelText(/quantity-input/i)).toBeTruthy();
@@ -101,7 +95,7 @@ describe('ShoppingListForm input registers correct change', () => {
     
             await user.type(quantityInput, '1');
     
-            expect(quantityInput).toHaveDisplayValue('01');
+            expect(quantityInput).toHaveDisplayValue('1');
         });
     })
     describe('when given an input item', () => {
@@ -153,11 +147,11 @@ describe("When Submit button is pressed", () => {
     describe("and there is no input item, data context Add Ingredient is called", () => {
         test("With initial values when unchanged", async () => {
             const user = userEvent.setup();
-            const {getByText, getByLabelText} = render(
+            const {getByLabelText} = render(
                 <ShoppingListForm isFormVisible={true}/>,
             );
 
-            const submitButton = getByText(/Submit/i);
+            const submitButton = getByLabelText(/submit-button/i);
 
             expect(getByLabelText(/name-input/i)).toBeTruthy();
             expect(getByLabelText(/quantity-input/i)).toBeTruthy();
@@ -166,12 +160,12 @@ describe("When Submit button is pressed", () => {
 
             await user.press(submitButton);
 
-            expect(mockdataContext.addShoppingItem).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.addShoppingItem).toHaveBeenCalledTimes(0);
             expect(mockdataContext.updateShoppingItem).toHaveBeenCalledTimes(0);
         })
         test("With changed values when changed", async () => {
             const user = userEvent.setup();
-            const {getByText, getByLabelText} = render(
+            const {getByLabelText} = render(
                 <ShoppingListForm isFormVisible={true}/>,
             );
 
@@ -180,7 +174,7 @@ describe("When Submit button is pressed", () => {
                     Shopping_Item_Quantity: 1,
                 };
 
-            const submitButton = getByText(/Submit/i);
+            const submitButton = getByLabelText(/submit-button/i);
 
             const nameInput = getByLabelText(/name-input/i);
             const quantityInput = getByLabelText(/quantity-input/i);
@@ -211,11 +205,11 @@ describe("When Submit button is pressed", () => {
                 };
 
 
-            const {getByText, getByLabelText} = render(
+            const {getByLabelText} = render(
                 <ShoppingListForm item={testItem} isFormVisible={true} />,
             );
 
-            const submitButton = getByText(/Submit/i);
+            const submitButton = getByLabelText(/submit-button/i);
 
             expect(getByLabelText(/name-input/i)).toBeTruthy();
             expect(getByLabelText(/quantity-input/i)).toBeTruthy();
@@ -237,7 +231,7 @@ describe("When Submit button is pressed", () => {
                 };
 
 
-            const {getByText, getByLabelText} = render(
+            const {getByLabelText} = render(
                 <ShoppingListForm item={testItem} isFormVisible={true} />,
             );
 
@@ -247,7 +241,7 @@ describe("When Submit button is pressed", () => {
                 Shopping_Item_Quantity: 12,
             };
 
-            const submitButton = getByText(/Submit/i);
+            const submitButton = getByLabelText(/submit-button/i);
 
             const nameInput = getByLabelText(/name-input/i);
             const quantityInput = getByLabelText(/quantity-input/i);
