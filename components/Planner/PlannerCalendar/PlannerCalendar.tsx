@@ -1,3 +1,4 @@
+//2026-07-20 : Adding aria-labels to iconised buttons
 //2026-07-16 : Removing unnecessary imports
 
 //2026-07-01 : Making top page component sizes consistent
@@ -54,13 +55,13 @@ export default function PlannerCalendar({setSelectedDate} : {setSelectedDate: (d
     return (
         <ColumnContainer style={{flex:1, marginHorizontal:0}}>
             <FadeComponent style={{flexDirection:"row", justifyContent: "space-between", alignItems: "center", padding: 0}}>
-                <PressableComponent onPress={() => setMonthIndex(monthIndex - 1)} style={{ width: "20%", flexGrow: 0, marginVertical: 8}}>
+                <PressableComponent onPress={() => setMonthIndex(monthIndex - 1)} style={{ width: "20%", flexGrow: 0, marginVertical: 8}} aria-label="previous-month-button">
                     <BackIcon />
                 </PressableComponent>
                 <LabelText style={{fontSize: 18, fontWeight: "bold", textAlign: "center", width: "50%", marginVertical: 8}}>
                     {monthStartDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
                 </LabelText>
-                <PressableComponent onPress={() => setMonthIndex(monthIndex + 1)} style={{ width: "20%", flexGrow: 0, marginVertical: 8}}>
+                <PressableComponent onPress={() => setMonthIndex(monthIndex + 1)} style={{ width: "20%", flexGrow: 0, marginVertical: 8}} aria-label="next-month-button">
                     <ForwardIcon />
                 </PressableComponent>
             </FadeComponent>
