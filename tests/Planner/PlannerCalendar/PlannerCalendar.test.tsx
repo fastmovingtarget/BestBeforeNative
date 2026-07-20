@@ -1,3 +1,4 @@
+//2026-07-20 : Removing extra import
 //2026-07-20 : Updating to match iconised components
 //2026-06-11 : Text Changes
 
@@ -19,7 +20,6 @@ import { Text } from 'react-native';
 
 import PlannerCalendar from '@/components/Planner/PlannerCalendar/PlannerCalendar';
 import PlannerCalendarDay from '@/components/Planner/PlannerCalendar/PlannerCalendarGrid/PlannerCalendarDay/PlannerCalendarDay';
-import { usePlans } from '@/Contexts/Plans/PlansDataProvider';
 
 jest.mock("@/components/Planner/PlannerCalendar/PlannerCalendarGrid/PlannerCalendarDay/PlannerCalendarDay", () => {
     return {
