@@ -1,3 +1,4 @@
+//2026-07-20 : Amending to test iconified components
 //2026-06-10 : Test now works with FadeComponent
 
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
@@ -118,7 +119,7 @@ describe('Ingredient calls correctly', () => {
     jest.useFakeTimers(); // Use fake timers to control the timing of the test
     const user = userEvent.setup();
 
-    const {getByText} = render(
+    const {getByLabelText} = render(
       <InventoryItemComponent
         inventoryItem={{
           Inventory_Item_ID: 123,
@@ -128,7 +129,7 @@ describe('Ingredient calls correctly', () => {
       />,
     );
 
-    const editButton = getByText(/Edit/i);
+    const editButton = getByLabelText(/edit-button/i);
     expect(editButton).toBeTruthy();
 
     await user.press(editButton);
@@ -144,7 +145,7 @@ describe('Ingredient calls correctly', () => {
     jest.useFakeTimers(); // Use fake timers to control the timing of the test
     const user = userEvent.setup();
 
-    const {getByText} = render(
+    const {getByLabelText} = render(
       <InventoryItemComponent
         inventoryItem={{
           Inventory_Item_ID: 123,
@@ -154,7 +155,7 @@ describe('Ingredient calls correctly', () => {
       />,
     );
 
-    const deleteButton = getByText(/Delete/i);
+    const deleteButton = getByLabelText(/delete-button/i);
     expect(deleteButton).toBeTruthy();
 
     await user.press(deleteButton);
@@ -168,7 +169,7 @@ describe('Ingredient calls correctly', () => {
     jest.useFakeTimers(); // Use fake timers to control the timing of the test
     const user = userEvent.setup();
 
-    const {getByText} = render(
+    const {getByLabelText} = render(
       <InventoryItemComponent
         inventoryItem={{
           Inventory_Item_Name: 'Test Ingredient',
@@ -177,7 +178,7 @@ describe('Ingredient calls correctly', () => {
       />,
     );
 
-    const deleteButton = getByText(/Delete/i);
+    const deleteButton = getByLabelText(/delete-button/i);
     expect(deleteButton).toBeTruthy();
 
     await user.press(deleteButton);
