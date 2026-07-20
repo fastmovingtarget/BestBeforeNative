@@ -1,3 +1,4 @@
+//2026-07-20 : Updating to match iconised components
 //2025-11-21 : Moving common UI elements into their own folder
 
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
@@ -78,24 +79,24 @@ describe("Planner Active Day Recipes Renders", () => {
             <PlannerActiveDayRecipes date={new Date("2023-10-01")} setSelectedPlan={jest.fn()} />
         );
 
-        expect(getAllByText(/View Ingredients/i).length).toEqual(2);
+        expect(getAllByText(/Ingredients/i).length).toEqual(2);
     });
     test("The Remove button", () => {
 
-        const {getAllByText} = render(
+        const {getAllByLabelText} = render(
             <PlannerActiveDayRecipes date={new Date("2023-10-01")} setSelectedPlan={jest.fn()} />
         );
 
-        expect(getAllByText(/Remove/i).length).toEqual(2);
+        expect(getAllByLabelText(/delete-recipe-plan-\d+-button/i).length).toEqual(2);
     });
 });
 describe("Planner Active Day Recipes Interactions", () => {
     test("Clicking Remove calls to delete planned recipes", async () => {
         const user = userEvent.setup();
 
-        const {getAllByText} = render(<PlannerActiveDayRecipes date={new Date("2023-10-01")} setSelectedPlan={jest.fn()} />);
+        const {getAllByLabelText} = render(<PlannerActiveDayRecipes date={new Date("2023-10-01")} setSelectedPlan={jest.fn()} />);
 
-        const removeButton = getAllByText(/Remove/i)[1];
+        const removeButton = getAllByLabelText(/delete-recipe-plan-/i)[1];
         await user.press(removeButton);
 
         expect(mockDataContext.deletePlan).toHaveBeenCalledTimes(1);
@@ -107,7 +108,7 @@ describe("Planner Active Day Recipes Interactions", () => {
         const mockSetSelectedPlan = jest.fn();
         const {getAllByText} = render(<PlannerActiveDayRecipes date={new Date("2023-10-01")} setSelectedPlan={mockSetSelectedPlan} />);
 
-        const viewIngredientsButton = getAllByText(/View Ingredients/i)[0];
+        const viewIngredientsButton = getAllByText(/Ingredients/i)[0];
         await user.press(viewIngredientsButton);
         expect(mockSetSelectedPlan).toHaveBeenCalledTimes(1);
         expect(mockSetSelectedPlan).toHaveBeenCalledWith({
