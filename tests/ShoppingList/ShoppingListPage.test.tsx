@@ -1,3 +1,4 @@
+//2026-07-20 : update for add button moved
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-10-23 : Converted to use Shopping List Context
@@ -47,42 +48,9 @@ describe("ShoppingList Page renders", () => {
         const {queryByText} = render(<ShoppingListPage />);
         expect(queryByText(/Form:/i)).toBeFalsy();
     })
-    test("The Add Shopping List Item component", () => {
-        const {getByText} = render(<ShoppingListPage />);
-        expect(getByText(/Add Item/i)).toBeTruthy();
-    })
     test("The List component", () => {
         (ShoppingListList as jest.Mock).mockReturnValue(<Text>List:</Text>);
         const {getByText} = render(<ShoppingListPage />);
         expect(getByText(/List:/i)).toBeTruthy();
     })
-})
-test("When The Add Shopping List Item button is pressed, change the visibility of Add Shopping List Item button", async () => {
-    const user = userEvent.setup();
-
-    (ShoppingListForm as jest.Mock).mockImplementation(({style}) => <Text style={style}>Form:</Text>);
-
-    const {queryByText, getByText} = render(<ShoppingListPage />);
-    const addButton = getByText(/Add Item/i);
-
-    await user.press(addButton);
-
-    expect(queryByText(/Add Item/i)).toBeFalsy();
-    expect(getByText(/Form:/i)).toBeTruthy();
-
-})
-test("When The Form Cancel button is pressed, change the form to", async () => {
-    const user = userEvent.setup();
-
-    (ShoppingListForm as jest.Mock).mockImplementation(({onCancel}) => <Text onPress={onCancel}>Form:</Text>);
-
-    const {queryByText, getByText} = render(<ShoppingListPage />);
-    const addButton = getByText(/Add Item/i);
-
-    await user.press(addButton);
-
-    await user.press(getByText(/Form:/i))
-
-    expect(getByText(/Add Item/i)).toBeTruthy();
-    expect(queryByText(/Form:/i)).toBeFalsy();
 })
