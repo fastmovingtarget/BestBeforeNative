@@ -1,3 +1,4 @@
+//2026-07-20 : Updating to match validation and icon changes
 //2026-06-10 : Test now works with FadeComponent
 
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
@@ -6,7 +7,7 @@
 
 //2025-10-24 : Fixing import and mock to use correct context provider
 
-import {render, userEvent, screen, waitFor} from '@testing-library/react-native';
+import {render, userEvent } from '@testing-library/react-native';
 import RecipeForm from '@/components/Recipes/RecipeForm/RecipeForm';
 import {useRecipes} from '@/Contexts/Recipes/RecipesDataProvider';
 import Recipe from '@/Types/Recipe';
@@ -49,15 +50,6 @@ beforeEach(() => {
 });
 
 describe('Recipe Form Renders ', () => {
-    it("all field labels correctly", () => {
-        const {getByText} = render(
-            <RecipeForm exitForm={mockExitForm}/>
-        );
-        expect(getByText(/Recipe Name/i)).toBeTruthy();
-        expect(getByText(/Recipe Time/i)).toBeTruthy();
-        expect(getByText(/Recipe Difficulty/i)).toBeTruthy();
-        expect(getByText(/Recipe Instructions/i)).toBeTruthy();
-    })
     it("all input fields correctly when adding (blank recipe input)", () => {
         const {getByLabelText} = render(
             <RecipeForm exitForm={mockExitForm}/>
@@ -68,8 +60,8 @@ describe('Recipe Form Renders ', () => {
         expect(getByLabelText(/recipe-difficulty/i)).toBeTruthy();
         expect(getByLabelText(/recipe-instructions/i)).toBeTruthy();
         expect(getByLabelText(/recipe-name/i)).toHaveDisplayValue("");
-        expect(getByLabelText(/recipe-time/i)).toHaveDisplayValue("0");
-        expect(getByLabelText(/recipe-difficulty/i)).toHaveDisplayValue("0");
+        expect(getByLabelText(/recipe-time/i)).toHaveDisplayValue("");
+        expect(getByLabelText(/recipe-difficulty/i)).toHaveDisplayValue("");
         expect(getByLabelText(/recipe-instructions/i)).toHaveDisplayValue("");
     })
     it("all input fields correctly when updating/editing", () => {
@@ -105,7 +97,7 @@ describe('Recipe Form Submit Button Functionality', () => {
         await user.type(difficultyInput, '2');
         await user.type(instructionsInput, 'New Instructions');
 
-        const submitButton = screen.getByText(/submit/i);
+        const submitButton = getByLabelText(/submit-button/i);
         await user.press(submitButton);
 
         expect(mockDataContext.addRecipe).toHaveBeenCalledWith({
@@ -128,20 +120,21 @@ describe('Recipe Form Submit Button Functionality', () => {
         const difficultyInput = getByLabelText(/recipe-difficulty/i);
         const instructionsInput = getByLabelText(/recipe-instructions/i);
         
-        await user.type(nameInput, ' Updated Recipe');
+        await user.type(nameInput, 'Updated Recipe');
         await user.type(timeInput, '0');
+        await user.clear(difficultyInput);
         await user.type(difficultyInput, '3');
-        await user.type(instructionsInput, ' Updated Instructions');
+        await user.type(instructionsInput, 'Updated Instructions');
 
-        const submitButton = screen.getByText(/submit/i);
+        const submitButton = getByLabelText(/submit-button/i);
         await user.press(submitButton);
 
         expect(mockDataContext.updateRecipe).toHaveBeenCalledWith({
             ...mockRecipe,
-            Recipe_Name: 'Test Recipe Updated Recipe',
+            Recipe_Name: 'Test RecipeUpdated Recipe',
             Recipe_Time: 300,
-            Recipe_Difficulty: 33,
-            Recipe_Instructions: 'Test Instructions Updated Instructions',
+            Recipe_Difficulty: 3,
+            Recipe_Instructions: 'Test InstructionsUpdated Instructions',
         });
     });
 });   
@@ -153,14 +146,37 @@ describe("Recipe form exits after animation", () => {
     afterEach(() => {
         jest.useRealTimers();
     });
-    it("calls exitForm when submit button is pressed", async () => {
+    it("Does not call exitForm when submit button is pressed if validation fails", async () => {
         const user = userEvent.setup();
         mockExitForm.mockReset();
-        const {getByText} = render(
+        const {getByLabelText} = render(
             <RecipeForm exitForm={mockExitForm}/>
         );
 
-        const submitButton = getByText(/submit/i);
+        const submitButton = getByLabelText(/submit-button/i);
+        await user.press(submitButton);
+
+        expect(mockExitForm).not.toHaveBeenCalled();
+        jest.advanceTimersByTime(300); //advance timers to trigger the end of the animation
+        expect(mockExitForm).not.toHaveBeenCalled();
+    });
+    it("calls exitForm when submit button is pressed and validation passes", async () => {
+        const user = userEvent.setup();
+        mockExitForm.mockReset();
+        const {getByLabelText} = render(
+            <RecipeForm exitForm={mockExitForm}/>
+        );
+
+        const nameInput = getByLabelText(/recipe-name/i);
+        await user.type(nameInput, 'New Recipe');
+        const timeInput = getByLabelText(/recipe-time/i);
+        await user.type(timeInput, '45');
+        const difficultyInput = getByLabelText(/recipe-difficulty/i);
+        await user.type(difficultyInput, '2');
+        const instructionsInput = getByLabelText(/recipe-instructions/i);
+        await user.type(instructionsInput, 'New Instructions');
+
+        const submitButton = getByLabelText(/submit-button/i);
         await user.press(submitButton);
 
         expect(mockExitForm).not.toHaveBeenCalled();
@@ -170,11 +186,11 @@ describe("Recipe form exits after animation", () => {
     it("calls exitForm when cancel button is pressed", async () => {
         const user = userEvent.setup();
         mockExitForm.mockReset();
-        const {getByText} = render(
+        const {getByLabelText} = render(
             <RecipeForm exitForm={mockExitForm}/>
         );
 
-        const cancelButton = getByText(/cancel/i);
+        const cancelButton = getByLabelText(/cancel-button/i);
         await user.press(cancelButton);
 
         expect(mockExitForm).not.toHaveBeenCalled();
@@ -189,7 +205,7 @@ describe("Recipe Ingredients", () => {
             const {queryByText, queryByLabelText} = render(
                 <RecipeForm exitForm={mockExitForm}/>
             );
-            expect(queryByText("X")).toBeFalsy();//there should be no button to delete an ingredient if there are no ingredients
+            expect(queryByLabelText(/recipe-ingredient-delete/i)).toBeFalsy();//there should be no button to delete an ingredient if there are no ingredients
             expect(queryByLabelText(/recipe-ingredient-name/i)).toBeFalsy();
             expect(queryByLabelText(/recipe-ingredient-quantity/i)).toBeFalsy();
         })
@@ -207,7 +223,7 @@ describe("Recipe Ingredients", () => {
         })
         it("can delete an ingredient", async () => {
             const user = userEvent.setup();
-            const {getByText, getAllByText, queryByText} = render(
+            const {getByText, getAllByLabelText, queryByLabelText} = render(
                 <RecipeForm exitForm={mockExitForm}/>
             );
 
@@ -215,17 +231,17 @@ describe("Recipe Ingredients", () => {
             
             await user.press(addIngredientButton);
 
-            expect(getAllByText("X").length).toBe(1);
+            expect(getAllByLabelText(/recipe-ingredient-delete/i).length).toBe(1);
 
-            const deleteIngredientButton = getAllByText("X")[0];
+            const deleteIngredientButton = getAllByLabelText(/recipe-ingredient-delete/i)[0];
             await user.press(deleteIngredientButton);
 
-            expect(queryByText("X")).toBeFalsy();
+            expect(queryByLabelText(/recipe-ingredient-delete/i)).toBeFalsy();
         })
     })
     describe("When editing an existing recipe", () => {
         it("renders the ingredients correctly", () => {
-            const {getByLabelText, getAllByText} = render(
+            const {getByLabelText, getAllByLabelText} = render(
                 <RecipeForm inputRecipe={mockRecipe} exitForm={mockExitForm}/>
             );
 
@@ -233,7 +249,7 @@ describe("Recipe Ingredients", () => {
             expect(getByLabelText(/recipe-ingredient-name-1/i)).toHaveDisplayValue("Test Ingredient 2");
             expect(getByLabelText(/recipe-ingredient-quantity-0/i)).toHaveDisplayValue("2");
             expect(getByLabelText(/recipe-ingredient-quantity-1/i)).toHaveDisplayValue("1");
-            expect(getAllByText("X").length).toBe(2);
+            expect(getAllByLabelText(/recipe-ingredient-delete/i).length).toBe(2);
         })
         it("can add an ingredient", async () => {
             const user = userEvent.setup();
