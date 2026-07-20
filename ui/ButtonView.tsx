@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-06-01 : UI Tweaking
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -14,6 +15,18 @@ type PressableViewProps = PropsWithChildren<{
     ["aria-label"]?: string,
     duration?: number,
 }>
+
+/**
+ * ButtonView component
+ * A customizable button component that changes its background color when pressed.
+ * @param style - Optional styles to apply to the button
+ * @param children - The content to display inside the button
+ * @param onPress - Function to call when the button is pressed
+ * @param accessibilityRole - Accessibility role for the button
+ * @param aria-label - Accessibility label for the button
+ * @param duration - Duration of the press effect in milliseconds
+ * @returns A pressable button component
+ */
 
 const ButtonView : React.FC<PressableViewProps> = ({style, children, onPress, "aria-label" : ariaLabel, accessibilityRole, duration} : PressableViewProps ) => {
 

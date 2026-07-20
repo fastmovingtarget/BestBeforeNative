@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-06-01 : Custom container for row/column
 
 import {View} from "react-native";
@@ -17,6 +18,7 @@ type RowContainerProps = {
  * @param {ViewStyle} style - Optional additional styles to apply to the container.
  * @param {React.ReactNode} children - Child components to be rendered inside the container.
  * @param {string} aria-label - Accessibility label for the container.
+ * @returns {JSX.Element} A React component that renders a row container with the specified styles and children.
  */
 
 const RowContainer = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildren<RowContainerProps>) => {

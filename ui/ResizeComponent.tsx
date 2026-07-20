@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-06-12 : Resize component created
 
 //2026-06-11 : Removing an extra console log
@@ -30,6 +31,9 @@ type ComponentProps = {
  * @param {string} aria-label - Accessibility label for the component.
  * @param {number} duration - Duration of the fade in/out effect in milliseconds.
  * @param {any} dependency - Dependency to trigger the fade effect when changed.
+ * @param {function} onResizeAnimationEnd - Callback function to be called when the resize animation ends.
+ * @param {number} targetHeight - The target height to which the component should resize.
+ * @returns {JSX.Element} A React component that renders a resize component with the specified styles and children.
  */
 
 const ResizeComponent = ({style, children, 'aria-label' : ariaLabel, duration = 300, onResizeAnimationEnd, targetHeight } : PropsWithChildren<ComponentProps>) => {

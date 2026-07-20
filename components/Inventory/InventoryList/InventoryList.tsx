@@ -1,3 +1,5 @@
+//2026-07-16 : Added function description
+
 //2026-06-01 : Replaced ListView with ScrollableContainer
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -13,7 +15,12 @@ import InventoryItemComponent from "./InventoryItemComponent/InventoryItemCompon
 import InventoryItemForm from "../InventoryItemForm/InventoryItemForm";
 import { ScrollableContainer} from "@/ui/BestBeforeUI";
 
-export default function IngredientsList({onEdit}: {onEdit: () => void}) {
+/**
+ * InventoryList component
+ * @param onEdit - Callback function to call when an inventory item is being edited - lets the inventory page know to hide the add inventory item form so that only one form is present at a time
+ * @returns A list of inventory items, with the ability to edit or delete each item
+ */
+export default function InventoryList({onEdit}: {onEdit: () => void}) {
     const [editId, setEditId] = useState<number | undefined>(undefined);
     const {inventory} = useInventory();
     

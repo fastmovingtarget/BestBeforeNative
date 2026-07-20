@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-06-01 : UI Tweaking
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -7,16 +8,26 @@ import type { PropsWithChildren } from "react";
 import type { ViewStyle } from "react-native";
 import { Colours } from "@/constants/Colors";
 
-type ComponentViewProps = {
+type ScrollableComponentProps = {
     style?: ViewStyle,
     ["aria-label"]?:string
 }
 
-const ComponentView = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildren<ComponentViewProps>) => {
+/**
+ * ScrollableComponent
+ * A styled scrollable container that arranges its children in a column, so flex direction is column
+ * ScrollableComponent has default styles including background color, text color, border radius, padding, and margin.
+ * @component
+ * @param {ViewStyle} style - Optional additional styles to apply to the component.
+ * @param {React.ReactNode} children - Child components to be rendered inside the component.
+ * @param {string} aria-label - Accessibility label for the component.
+ * @returns {JSX.Element} A React component that renders a styled scrollable container with the specified styles and children.
+ */
+const ScrollableComponent = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildren<ScrollableComponentProps>) => {
     return (
         <ScrollView 
             contentContainerStyle={{ 
-                ...componentViewStyles,
+                ...scrollableComponentStyles,
                 ...style,
             }}
             aria-label={ariaLabel}>
@@ -25,7 +36,7 @@ const ComponentView = ({style, children, 'aria-label' : ariaLabel} : PropsWithCh
     );
 }
 
-const componentViewStyles = {
+const scrollableComponentStyles = {
     display: "flex",
     flexGrow: 1,
     flexDirection: "column",
@@ -38,4 +49,4 @@ const componentViewStyles = {
     margin: 5,
 } as ViewStyle;
 
-export default ComponentView;
+export default ScrollableComponent;

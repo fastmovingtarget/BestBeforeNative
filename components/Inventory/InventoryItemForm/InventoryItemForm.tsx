@@ -1,3 +1,5 @@
+//2026-07-16 : Added function description
+
 //2026-07-01 : Adding Cancel and Submit Icons
 
 //2026-06-19 : allow submission of items on today's date
@@ -23,6 +25,14 @@ import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 import { MountState } from '@/ui/Types/MountState';
 import { CancelIcon, SubmitInventoryIcon } from '@/ui/ReactIcon';
 
+/**
+ * InventoryItemForm component
+ * @param inventoryItem - The inventory item to edit (optional)
+ * @param onCancel - Callback function to call when the form is cancelled (optional)
+ * @param isFormVisible - Boolean indicating whether the form is visible (default: false)
+ * @returns A form for adding or editing an inventory item
+ */
+
 export default function InventoryItemForm({inventoryItem, onCancel, isFormVisible = false} : {inventoryItem?: Inventory_Item, onCancel?: () => void, isFormVisible?: boolean}) {
 
     const blankInventoryItem : Inventory_Item = {
@@ -34,6 +44,11 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
     const [pickerVisible, setPickerVisible] = useState(false);
     const {addInventoryItem, updateInventoryItem} = useInventory();
     const [mountState, setMountState] = useState<MountState>(MountState.Mount);
+
+    /*
+        When the cancel button is pressed, reset the form to either the passed in inventory item or a blank item, and set the mount state to unmount. 
+        With both of those set, if an onCancel callback is provided it will be called after the unmount animation ends.
+     */
     const cancelHandler = () => {
         if(formInventoryItem.Inventory_Item_ID) 
             setFormInventoryItem(inventoryItem || blankInventoryItem);
@@ -43,6 +58,11 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
         setMountState(MountState.Unmount);
     }
 
+    /*
+        When the submit button is pressed, validate the form fields. 
+        If valid, either update the existing inventory item or add a new one. 
+        After submission, set the mount state to unmount.
+     */
     const submitHandler = () => {
         if(validateName(formInventoryItem.Inventory_Item_Name || "") !== true || validateQuantity(formInventoryItem.Inventory_Item_Quantity?.toString() || "") !== true || validateDate(formInventoryItem.Inventory_Item_Date || undefined) !== true){
             return;
@@ -57,6 +77,13 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
         setMountState(MountState.Unmount);
     }
 
+
+    /**
+     * Form validation functions:
+     * validateName - Ensures the item name is not empty
+     * validateQuantity - Ensures the quantity is not empty and is a number
+     * validateDate - Ensures the date is not empty and is not in the past
+     */
     const validateName = (text: string) => {
         if(text.trim() === "") return "Item name cannot be empty";
         return true;

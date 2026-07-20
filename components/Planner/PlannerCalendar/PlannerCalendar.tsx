@@ -1,3 +1,5 @@
+//2026-07-16 : Removing unnecessary imports
+
 //2026-07-01 : Making top page component sizes consistent
 
 //2026-06-30 : Improved consistency of month scroll button sizing
@@ -19,8 +21,7 @@
 //2025-10-14 : Initial Implementation of Recipe Plan Page
 
 import React, { useState } from 'react';
-import PlannerCalendarDay from './PlannerCalendarGrid/PlannerCalendarDay/PlannerCalendarDay';
-import {ColumnContainer, FadeComponent, LabelText, PressableComponent, RowContainer} from '@/ui/BestBeforeUI';
+import {ColumnContainer, FadeComponent, LabelText, PressableComponent} from '@/ui/BestBeforeUI';
 import PlannerCalendarGrid from './PlannerCalendarGrid/PlannerCalendarGrid';
 import { BackIcon, ForwardIcon } from '@/ui/ReactIcon';
 

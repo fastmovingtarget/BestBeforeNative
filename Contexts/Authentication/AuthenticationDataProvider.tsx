@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-07-13 : Saving and loading token in Secure Store
 
 //2026-07-10 : Calls for login and signup
@@ -11,6 +12,11 @@ import * as SecureStore from "expo-secure-store";
 import Login from "./Login";
 import Signup from "./Signup";
 
+/**
+ * AuthenticationDataContext
+ * This context provides authentication-related data and functions to the components that consume it. It includes the user ID, colour scheme, and functions for login, logout, and signup.
+ * @returns A context providing authentication data and functions
+ */
 const AuthenticationDataContext = createContext({
     userId: 1 as number | null,
     colours: {

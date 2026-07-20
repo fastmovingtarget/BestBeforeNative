@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-06-11 : Removing an extra console log
 
 //2026-06-01 : Animated fade in/out component
@@ -33,6 +34,12 @@ type ComponentProps = {
  * @param {string} aria-label - Accessibility label for the component.
  * @param {number} duration - Duration of the fade in/out effect in milliseconds.
  * @param {any} dependency - Dependency to trigger the fade effect when changed.
+ * @param {MountState} mountState - State indicating whether the component is mounting or unmounting.
+ * @param {function} onMountAnimationEnd - Callback function to be called when the mount animation ends.
+ * @param {function} onUnmountAnimationEnd - Callback function to be called when the unmount animation ends.
+ * @param {function} onUpdateMountAnimationEnd - Callback function to be called when the update mount animation ends.
+ * @param {function} onUpdateUnmountAnimationEnd - Callback function to be called when the update unmount animation ends.
+ * @returns {JSX.Element} A React component that renders a fade component with the specified styles and children.
  */
 
 const FadeComponent = ({style, children, 'aria-label' : ariaLabel, duration = 300, mountState = MountState.Mount, onUnmountAnimationEnd, onMountAnimationEnd, onUpdateUnmountAnimationEnd, onUpdateMountAnimationEnd} : PropsWithChildren<ComponentProps>) => {

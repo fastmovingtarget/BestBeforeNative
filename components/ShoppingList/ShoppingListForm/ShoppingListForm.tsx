@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-07-01 : Icons for Submit and Cancel
 
 //2026-06-18 : Quantity now starts undefined, adds validation
@@ -26,6 +27,13 @@ const blankItem : Shopping_List_Item = {
     Shopping_Item_Quantity: undefined,
 }
 
+/**
+ * ShoppingListForm component
+ * @param item - The shopping list item to edit (optional)
+ * @param isFormVisible - Boolean indicating whether the form is visible
+ * @param onCancel - Callback function to call when the form is cancelled (optional)
+ * @returns A form for adding or editing a shopping list item
+ */
 export default function ShoppingListForm({item = blankItem, isFormVisible, onCancel} : {item? : Shopping_List_Item, isFormVisible : boolean, onCancel? : () => void}) {
 
     const blankItem : Shopping_List_Item = {

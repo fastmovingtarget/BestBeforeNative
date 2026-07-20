@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-06-30 : Added Buy, Edit and Delete icons
 
 //2026-06-15 : 0 quantity now displays correctly
@@ -20,9 +21,20 @@ import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 import {RowContainer, ButtonView, LabelText, FadeComponent} from "@/ui/BestBeforeUI";
 import { AddInventoryIcon, DeleteIcon, EditShoppingListIcon } from "@/ui/ReactIcon";
 
+/**
+ * ShoppingListItem component
+ * @param item - The shopping list item to display
+ * @param onEdit - Callback function to call when the edit button is pressed
+ * @returns A component that displays a shopping list item with purchase, edit and delete buttons
+ */
 export default function ShoppingListItem({ item, onEdit } : { item: Shopping_List_Item, onEdit: (itemID: number) => void }) {
     const { deleteShoppingItem } = useShoppingList();
-    const { addInventoryItem } = useInventory();       
+    const { addInventoryItem } = useInventory();   
+    
+    /**
+     * Handles the purchase of a shopping list item. When the purchase button is pressed, the item is added to the inventory and removed from the shopping list.
+     * If the item has a Shopping_Item_ID, it is added to the inventory with its name and quantity, and any associated plan information. The item is then deleted from the shopping list.
+     */
     const onPurchase = () => {
         if (item.Shopping_Item_ID) {
             addInventoryItem({

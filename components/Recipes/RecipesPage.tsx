@@ -1,3 +1,4 @@
+//2026-07-16 : Added function descriptions
 //2026-07-01 : Pruning imports
 
 //2026-06-01 : removed context bar
@@ -14,6 +15,11 @@ import RecipeSelected from "./RecipeSelected/RecipeSelected"
 import { useRecipes } from "../../Contexts/Recipes/RecipesDataProvider";
 import { PageView } from "@/ui/BestBeforeUI";
 
+/**
+ * RecipesPage component
+ * The selected recipe and editing state are managed in the state of this component
+ * @returns The main recipes page, which includes a list of recipes, a search bar, and the ability to view or edit a selected recipe
+ */
 export default function RecipesPage() {
 
     const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
