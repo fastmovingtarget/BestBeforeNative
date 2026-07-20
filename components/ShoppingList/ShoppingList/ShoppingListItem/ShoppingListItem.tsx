@@ -1,3 +1,4 @@
+//2026-07-20 : Adding aria-labels to iconised components
 //2026-07-16 : Added function descriptions
 //2026-06-30 : Added Buy, Edit and Delete icons
 
@@ -57,13 +58,13 @@ export default function ShoppingListItem({ item, onEdit } : { item: Shopping_Lis
                 <LabelText>Buy By: {item.Plan_Date.toLocaleDateString()} for {item.Plan_Recipe_Name}</LabelText>
             ) : null}
             <RowContainer style={{justifyContent: "space-around", width: "100%"}}>
-                <ButtonView onPress={onPurchase}>
+                <ButtonView onPress={onPurchase} aria-label="purchase-shopping-list-item-button">
                     <AddInventoryIcon />
                 </ButtonView>
-                <ButtonView onPress={() => onEdit(item.Shopping_Item_ID || -1)}>
+                <ButtonView onPress={() => onEdit(item.Shopping_Item_ID || -1)} aria-label="edit-shopping-list-item-button">
                     <EditShoppingListIcon />
                 </ButtonView>
-                <ButtonView onPress={() => {deleteShoppingItem(item.Shopping_Item_ID || -1)}}>
+                <ButtonView onPress={() => {deleteShoppingItem(item.Shopping_Item_ID || -1)}} aria-label="delete-shopping-list-item-button">
                     <DeleteIcon />
                 </ButtonView>
             </RowContainer>

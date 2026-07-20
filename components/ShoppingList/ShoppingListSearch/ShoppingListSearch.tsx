@@ -1,3 +1,4 @@
+//2026-07-20 : Adding aria-labels to iconised components
 //2026-07-16 : Added function descriptions
 //2026-07-01 : Moving Add button onto the Search bar
 
@@ -34,7 +35,7 @@ export default function ShoppingListSearch({ setIsFormVisible }: { setIsFormVisi
                     defaultValue = {shoppingListSearchOptions?.searchText || ""}
                     style={{flex:1, margin:5, width:"85%", height:57}}
                 />
-                <ButtonView accessibilityRole="button" onPress={() => setIsFormVisible(true)} style={{margin:5}}>
+                <ButtonView aria-label="add-shopping-list-item-button" onPress={() => setIsFormVisible(true)} style={{margin:5}}>
                     <AddShoppingListItemIcon />
                 </ButtonView> 
             </RowContainer>
