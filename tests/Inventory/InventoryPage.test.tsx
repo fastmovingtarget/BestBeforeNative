@@ -1,3 +1,4 @@
+//2026-07-20 : Removed unnecessary import
 //2026-07-20 : Removing tests for adding inventory item
 //2026-06-10 : Test now works with FadeComponent
 
@@ -9,7 +10,7 @@
 
 //2025-10-14 : Removed improperly described test
 
-import { Text, Pressable } from "react-native";
+import { Text } from "react-native";
 import {userEvent, render, waitFor} from '@testing-library/react-native';
 import React from "react";
 
