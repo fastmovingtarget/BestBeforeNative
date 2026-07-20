@@ -1,3 +1,4 @@
+//2026-07-20 : Using aria-label to indicate role
 //2026-07-16 : Added function description
 
 //2026-06-30 : Icons for Edit and Delete
@@ -61,13 +62,15 @@ export default function InventoryItemComponent({ inventoryItem, onEdit } : { inv
                 <ButtonView onPress={() => {
                     setUnmountAction("edit");
                     setMountState(MountState.Unmount);
-                }}>
+                }}
+                            aria-label="edit-button">
                     <EditInventoryItemIcon />
                 </ButtonView>
                 <ButtonView onPress={() => {
                     setUnmountAction("delete");
                     setMountState(MountState.Unmount);
-                }}>
+                }}
+                            aria-label="delete-button">
                     <DeleteIcon />
                 </ButtonView>
             </RowContainer>

@@ -1,3 +1,4 @@
+//2026-07-20 : Using aria-label to indicate role
 //2026-07-16 : Added function description
 
 //2026-07-01 : Adding Cancel and Submit Icons
@@ -122,8 +123,9 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
                 <ButtonView
                     onPress={() => setPickerVisible(!pickerVisible)}
                     style={{width: "100%", padding:0}}
+                    aria-label="date-input-button"
                 >
-                    <LabelText aria-label="date-input-button">
+                    <LabelText aria-label="date-button-label">
                         {`Use By: ${formInventoryItem.Inventory_Item_Date?.toLocaleDateString("en-UK", { year: "numeric", month: "2-digit", day: "2-digit" })}`}
                     </LabelText>
                 </ButtonView>
@@ -147,10 +149,10 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
                 />
             </RowContainer>
             <RowContainer style={{justifyContent:"space-around"}} >
-                <ButtonView onPress={cancelHandler} style={{flexGrow:1, marginRight: 5}}>
+                <ButtonView onPress={cancelHandler} style={{flexGrow:1, marginRight: 5}} aria-label="cancel-button">
                     <CancelIcon />
                 </ButtonView>
-                <ButtonView onPress={submitHandler} style={{flexGrow:1, marginLeft: 5}}>
+                <ButtonView onPress={submitHandler} style={{flexGrow:1, marginLeft: 5}} aria-label="submit-button">
                     <SubmitInventoryIcon />
                 </ButtonView>
             </RowContainer>
