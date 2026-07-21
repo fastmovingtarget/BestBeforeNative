@@ -1,3 +1,4 @@
+//2026-07-21 : Added stars and star outlines
 //2026-07-16 : Added function descriptions
 //2026-07-01 : Adding Icons for Submit and Cancel
 
@@ -177,5 +178,17 @@ export function SubmitShoppingListIcon({size = defaultSize, color = Colours.text
                 <MaterialDesignIcons name={"check-bold"} size={size/2} color={color} />
             </RowContainer>
         </RowContainer>
+    );  
+}
+
+export function StarOutlineIcon({size = defaultSize, color = Colours.text}: {size?: number, color?: string}) {
+    return (
+        <MaterialDesignIcons name={"star-outline"} size={size} color={color} style={{padding:5}} />
+    );  
+}
+
+export function StarFilledIcon({size = defaultSize, color = Colours.text}: {size?: number, color?: string}) {
+    return (
+        <MaterialDesignIcons name={"star"} size={size} color={color} style={{padding:5}} />
     );  
 }
