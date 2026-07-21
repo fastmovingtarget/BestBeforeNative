@@ -1,3 +1,4 @@
+//2026-07-21 : Test recipe rating for iconised display
 //2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
@@ -22,7 +23,7 @@ beforeEach(() => {
 
 describe('Recipe List Item renders correctly', () => {
   it('when given all basic recipe data', () => {
-    const {getByText} = render(
+    const {getByText, queryAllByLabelText} = render(
       <RecipesListItem
         key={(mockRecipe.Recipe_ID || 0).toString()}
         recipe={mockRecipe}
@@ -30,8 +31,9 @@ describe('Recipe List Item renders correctly', () => {
     );
 
     expect(getByText(/Test Recipe/i)).toBeTruthy();
-    expect(getByText(/Time: 30 min/i)).toBeTruthy();
-    expect(getByText(/Rating: 3/i)).toBeTruthy();
+    expect(getByText(/30 min/i)).toBeTruthy();
+    expect(queryAllByLabelText(/recipe-rating-empty/i)).toHaveLength(2);
+    expect(queryAllByLabelText(/recipe-rating-filled/i)).toHaveLength(3);
   });
 });
 it("Calls to set the selected recipe when the recipe component is pressed", async () => {

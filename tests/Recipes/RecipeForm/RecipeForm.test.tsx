@@ -1,3 +1,4 @@
+//2026-07-21 : Test recipe rating for iconised display
 //2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2026-07-20 : minor fix
 //2026-07-20 : Updating to match validation and icon changes
@@ -50,31 +51,33 @@ beforeEach(() => {
 
 describe('Recipe Form Renders ', () => {
     it("all input fields correctly when adding (blank recipe input)", () => {
-        const {getByLabelText} = render(
+        const {getByLabelText, queryAllByLabelText} = render(
             <RecipeForm exitForm={mockExitForm}/>
         );
 
         expect(getByLabelText(/recipe-name/i)).toBeTruthy();
         expect(getByLabelText(/recipe-time/i)).toBeTruthy();
-        expect(getByLabelText(/recipe-rating/i)).toBeTruthy();
+        expect(queryAllByLabelText(/recipe-rating-pressable/i)).toHaveLength(5);
         expect(getByLabelText(/recipe-instructions/i)).toBeTruthy();
         expect(getByLabelText(/recipe-name/i)).toHaveDisplayValue("");
         expect(getByLabelText(/recipe-time/i)).toHaveDisplayValue("");
-        expect(getByLabelText(/recipe-rating/i)).toHaveDisplayValue("");
+        expect(queryAllByLabelText(/recipe-rating-filled/i)).toHaveLength(0);
+        expect(queryAllByLabelText(/recipe-rating-empty/i)).toHaveLength(5);
         expect(getByLabelText(/recipe-instructions/i)).toHaveDisplayValue("");
     })
     it("all input fields correctly when updating/editing", () => {
-        const {getByLabelText} = render(
+        const {getByLabelText, queryAllByLabelText} = render(
             <RecipeForm inputRecipe={mockRecipe} exitForm={mockExitForm}/>
         );
 
         expect(getByLabelText(/recipe-name/i)).toBeTruthy();
         expect(getByLabelText(/recipe-time/i)).toBeTruthy();
-        expect(getByLabelText(/recipe-rating/i)).toBeTruthy();
+        expect(queryAllByLabelText(/recipe-rating-pressable/i)).toHaveLength(5);
         expect(getByLabelText(/recipe-instructions/i)).toBeTruthy();
         expect(getByLabelText(/recipe-name/i)).toHaveDisplayValue("Test Recipe");
         expect(getByLabelText(/recipe-time/i)).toHaveDisplayValue("30");
-        expect(getByLabelText(/recipe-rating/i)).toHaveDisplayValue("3");
+        expect(queryAllByLabelText(/recipe-rating-filled/i)).toHaveLength(3);
+        expect(queryAllByLabelText(/recipe-rating-empty/i)).toHaveLength(2);
         expect(getByLabelText(/recipe-instructions/i)).toHaveDisplayValue("Test Instructions");
     })
 })
@@ -88,12 +91,12 @@ describe('Recipe Form Submit Button Functionality', () => {
 
         const nameInput = getByLabelText(/recipe-name/i);
         const timeInput = getByLabelText(/recipe-time/i);
-        const ratingInput = getByLabelText(/recipe-rating/i);
         const instructionsInput = getByLabelText(/recipe-instructions/i);
         
         await user.type(nameInput, 'New Recipe');
         await user.type(timeInput, '45');
-        await user.type(ratingInput, '2');
+        const ratingButton1 = getByLabelText(/recipe-rating-pressable-1/i);
+        await user.press(ratingButton1);
         await user.type(instructionsInput, 'New Instructions');
 
         const submitButton = getByLabelText(/submit-button/i);
@@ -102,7 +105,7 @@ describe('Recipe Form Submit Button Functionality', () => {
         expect(mockDataContext.addRecipe).toHaveBeenCalledWith({
             Recipe_Name: 'New Recipe',
             Recipe_Time: 45,
-            Recipe_Rating: 2,
+            Recipe_Rating: 1,
             Recipe_Instructions: 'New Instructions',
             Recipe_Ingredients: [],
         });
@@ -116,13 +119,12 @@ describe('Recipe Form Submit Button Functionality', () => {
 
         const nameInput = getByLabelText(/recipe-name/i);
         const timeInput = getByLabelText(/recipe-time/i);
-        const ratingInput = getByLabelText(/recipe-rating/i);
         const instructionsInput = getByLabelText(/recipe-instructions/i);
         
         await user.type(nameInput, 'Updated Recipe');
         await user.type(timeInput, '0');
-        await user.clear(ratingInput);
-        await user.type(ratingInput, '3');
+        const ratingButton3 = getByLabelText(/recipe-rating-pressable-3/i);
+        await user.press(ratingButton3);
         await user.type(instructionsInput, 'Updated Instructions');
 
         const submitButton = getByLabelText(/submit-button/i);
@@ -170,8 +172,8 @@ describe("Recipe form exits after animation", () => {
         await user.type(nameInput, 'New Recipe');
         const timeInput = getByLabelText(/recipe-time/i);
         await user.type(timeInput, '45');
-        const ratingInput = getByLabelText(/recipe-rating/i);
-        await user.type(ratingInput, '2');
+        const ratingButton2 = getByLabelText(/recipe-rating-pressable-2/i);
+        await user.press(ratingButton2);
         const instructionsInput = getByLabelText(/recipe-instructions/i);
         await user.type(instructionsInput, 'New Instructions');
 
@@ -294,5 +296,23 @@ describe("Recipe Ingredients", () => {
             expect(getAllByLabelText(/recipe-ingredient-name/i)[0]).toHaveDisplayValue(/Test Ingredient 1 Updated/i);
             expect(getAllByLabelText(/recipe-ingredient-quantity/i)[0]).toHaveDisplayValue(/20/i);
         })
+    })
+})
+
+describe("Recipe Rating buttons", () => {
+    it("can set the rating to 1", async () => {
+        const user = userEvent.setup();
+        const {getByLabelText} = render(
+            <RecipeForm inputRecipe={mockRecipe} exitForm={mockExitForm}/>
+        );
+        const ratingButton1 = getByLabelText(/recipe-rating-pressable-1/i);
+        await user.press(ratingButton1);
+
+        const submitButton = getByLabelText(/submit-button/i);
+        await user.press(submitButton);
+
+        expect(mockDataContext.updateRecipe).toHaveBeenCalledWith(expect.objectContaining({
+            Recipe_Rating: 1,
+        }));
     })
 })

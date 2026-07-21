@@ -1,3 +1,4 @@
+//2026-07-21 : Test recipe rating for iconised display
 //2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2026-07-20 : Updated to use aria-label for iconised components
 //2026-06-11 : Testing exit functionality
@@ -33,7 +34,7 @@ const mockRecipe: Recipe = {
 
 describe('Selected Recipe List Item renders correctly', () => {
   it('when given all basic recipe data', () => {
-    const {getByText} = render(
+    const {getByText, queryAllByLabelText} = render(
       <RecipeSelected
         recipe={mockRecipe}
         setSelectedRecipe={jest.fn()}
@@ -43,7 +44,8 @@ describe('Selected Recipe List Item renders correctly', () => {
 
     expect(getByText(/Test Recipe/i)).toBeTruthy();
     expect(getByText(/Time: 30 min/i)).toBeTruthy();
-    expect(getByText(/Rating: 3/i)).toBeTruthy();
+    expect(queryAllByLabelText(/recipe-rating-empty/i)).toHaveLength(2);
+    expect(queryAllByLabelText(/recipe-rating-filled/i)).toHaveLength(3);
     expect(getByText(/Test Ingredient 1/i)).toBeTruthy();
     expect(getByText(/Test Ingredient 2/i)).toBeTruthy();
     expect(getByText(/Test Instructions/i)).toBeTruthy();
