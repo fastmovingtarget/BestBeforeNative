@@ -1,3 +1,4 @@
+//2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2026-07-20 : Adding aria-label for iconised buttons
 //2026-07-16 : Added function descriptions
 //2026-07-01 : Icons for Cancel, Submit and Remove Ingredient
@@ -27,7 +28,6 @@ import Recipe_Ingredient from '@/Types/Recipe_Ingredient';
 import {RowContainer, ButtonView, LabelText, FormTextInput, ScrollableContainer, FadeComponent} from '@/ui/BestBeforeUI';
 import { MountState } from '@/ui/Types/MountState';
 import { CancelIcon, DeleteIcon, SubmitRecipeIcon } from '@/ui/ReactIcon';
-import log from '@/utils/log';
 
 const emptyRecipe = {
     Recipe_Name: "",
@@ -125,7 +125,7 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
     const checkValidation = () => {
         if(validateRecipeName(currentRecipe.Recipe_Name) !== true 
             || validateRecipeTime(currentRecipe.Recipe_Time?.toString() || "") !== true 
-            || validateRecipeDifficulty(currentRecipe.Recipe_Difficulty?.toString() || "") !== true){
+            || validateRecipeRating(currentRecipe.Recipe_Rating?.toString() || "") !== true){
             return false;
         }
         if(currentRecipe.Recipe_Ingredients) {
@@ -160,15 +160,15 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
         return true;
     }
 
-    const validateRecipeDifficulty = (difficulty: string) => {
-        if(difficulty.trim() === "" || difficulty === null) {
-            return "Difficulty cannot be empty";
+    const validateRecipeRating = (rating: string) => {
+        if(rating.trim() === "" || rating === null) {
+            return "Rating cannot be empty";
         }
-        const difficultyNumber = Number.parseInt(difficulty, 10);
-        if(isNaN(difficultyNumber)) {
+        const ratingNumber = Number.parseInt(rating, 10);
+        if(isNaN(ratingNumber)) {
             return "Must be a number";
         }
-        if(difficultyNumber < 0 || difficultyNumber > 5) {
+        if(ratingNumber < 0 || ratingNumber > 5) {
             return "Must be between 0 and 5";
         }
         return true;
@@ -239,12 +239,12 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
                             style={{ width: "48.5%"}}
                         />
                         <FormTextInput
-                            placeholder="Difficulty"
-                            aria-label="recipe-difficulty"
-                            onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Difficulty: text === "" ? undefined : Number.parseInt(text)})}}
-                            defaultValue={currentRecipe.Recipe_Difficulty?.toString() || ""}
+                            placeholder="Rating"
+                            aria-label="recipe-rating"
+                            onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Rating: text === "" ? undefined : Number.parseInt(text)})}}
+                            defaultValue={currentRecipe.Recipe_Rating?.toString() || ""}
                             inputMode="numeric"
-                            validationFunction={validateRecipeDifficulty}
+                            validationFunction={validateRecipeRating}
                             style={{ width: "48.5%"}}
                         />
                     </RowContainer>

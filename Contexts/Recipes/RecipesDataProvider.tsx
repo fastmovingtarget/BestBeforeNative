@@ -1,3 +1,4 @@
+//2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2025-11-20 : Cleanup of debug logs
 
 //2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
@@ -75,7 +76,7 @@ export const RecipesDataProvider = ({children}:{children:React.ReactNode}) => {
 
     const setRecipesSearchOptions = (options: RecipesSearchOptions) => {setRecipesSearchOptionsState((oldOptions) => {return {...oldOptions, ...options}}); checkStartSync(UpdateState.Successful);};
     const deleteRecipe = (recipeID: number) => deleteRecipeData(recipes, setRecipes, recipeID).then((result) => checkStartSync(result));
-    const addRecipe = (recipe: Recipe) => addRecipeData(userId, recipes, setRecipes, recipe).then((result) => checkStartSync(result));
+    const addRecipe = (recipe: Recipe) => addRecipeData(userId || 0,recipes, setRecipes, recipe).then((result) => checkStartSync(result));
     const updateRecipe = (recipe: Recipe) => updateRecipeData(recipes, setRecipes, recipe).then((result) => checkStartSync(result));
 
     return (

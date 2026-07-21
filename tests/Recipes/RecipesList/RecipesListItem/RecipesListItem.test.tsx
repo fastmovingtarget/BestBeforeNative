@@ -1,3 +1,4 @@
+//2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-10-24 : Fixing import and mock to use correct context provider
@@ -9,7 +10,7 @@ import Recipe from '@/Types/Recipe';
 const mockRecipe: Recipe = {
   Recipe_ID: 123,
     Recipe_Name: 'Test Recipe',
-    Recipe_Difficulty: 3,
+    Recipe_Rating: 3,
     Recipe_Time: 30,
     Recipe_Ingredients: [],
     Recipe_Instructions: 'Test Instructions',
@@ -30,7 +31,7 @@ describe('Recipe List Item renders correctly', () => {
 
     expect(getByText(/Test Recipe/i)).toBeTruthy();
     expect(getByText(/Time: 30 min/i)).toBeTruthy();
-    expect(getByText(/Difficulty: 3/i)).toBeTruthy();
+    expect(getByText(/Rating: 3/i)).toBeTruthy();
   });
 });
 it("Calls to set the selected recipe when the recipe component is pressed", async () => {

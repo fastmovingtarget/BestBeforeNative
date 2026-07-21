@@ -1,3 +1,4 @@
+//2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2026-07-16 : Added function descriptions
 //2026-06-01 : Using FadeComponent for animations
 
@@ -25,7 +26,7 @@ export default function RecipesListItem({ recipe, setSelectedRecipe }: { key: st
             > 
                 <LabelText >{recipe.Recipe_Name}</LabelText>
                 <LabelText >Time: {recipe.Recipe_Time} min</LabelText>
-                <LabelText >Difficulty: {recipe.Recipe_Difficulty}</LabelText>
+                <LabelText >Rating: {recipe.Recipe_Rating}</LabelText>
             </PressableComponent>
         </FadeComponent>
     );

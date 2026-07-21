@@ -1,3 +1,4 @@
+//2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2026-07-20 : Adding aria-label for iconised buttons
 //2026-07-16 : Added function descriptions
 //2026-07-01 : Top page component sizing consistency
@@ -84,7 +85,7 @@ export default function RecipeSelected({recipe, setSelectedRecipe, setIsEditing,
                 <ScrollableContainer style={{ width:"100%"}}>
                     <LabelText >{recipe.Recipe_Name}</LabelText>
                     <LabelText >Time: {recipe.Recipe_Time} min</LabelText>
-                    <LabelText >Difficulty: {recipe.Recipe_Difficulty}</LabelText>
+                    <LabelText >Rating: {recipe.Recipe_Rating}</LabelText>
                     <LabelText >Ingredients:</LabelText>
                     {recipe.Recipe_Ingredients?.map((ingredient) => (
                         <LabelText key={ingredient.Recipe_Ingredient_ID}>
