@@ -1,3 +1,4 @@
+//2026-07-21 : Visualise rating with stars
 //2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2026-07-16 : Added function descriptions
 //2026-06-01 : Using FadeComponent for animations
@@ -8,7 +9,8 @@
 
 import React from "react";
 import Recipe from "@/Types/Recipe";
-import { PressableComponent, LabelText, FadeComponent } from "@/ui/BestBeforeUI";
+import { PressableComponent, LabelText, FadeComponent, RowContainer } from "@/ui/BestBeforeUI";
+import { StarFilledIcon, StarOutlineIcon } from "@/ui/ReactIcon";
 
 /**
  * RecipesListItem component
@@ -25,8 +27,16 @@ export default function RecipesListItem({ recipe, setSelectedRecipe }: { key: st
                 style={{margin : 0}}
             > 
                 <LabelText >{recipe.Recipe_Name}</LabelText>
-                <LabelText >Time: {recipe.Recipe_Time} min</LabelText>
-                <LabelText >Rating: {recipe.Recipe_Rating}</LabelText>
+                <RowContainer style={{width: "100%", justifyContent: "space-between", paddingHorizontal: 10}}>
+                    <LabelText >{recipe.Recipe_Time} min</LabelText>
+                    <RowContainer style={{ width: "48.5%", justifyContent: "center", alignItems: "center"}}>
+                        {recipe.Recipe_Rating && recipe.Recipe_Rating >= 1 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                        {recipe.Recipe_Rating && recipe.Recipe_Rating >= 2 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                        {recipe.Recipe_Rating && recipe.Recipe_Rating >= 3 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                        {recipe.Recipe_Rating && recipe.Recipe_Rating >= 4 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                        {recipe.Recipe_Rating && recipe.Recipe_Rating === 5 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                    </RowContainer>
+                </RowContainer>
             </PressableComponent>
         </FadeComponent>
     );

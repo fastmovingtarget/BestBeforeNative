@@ -1,3 +1,4 @@
+//2026-07-21 : Visualise rating with stars
 //2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2026-07-20 : Adding aria-label for iconised buttons
 //2026-07-16 : Added function descriptions
@@ -19,7 +20,7 @@ import React from "react";
 import Recipe from "@/Types/Recipe";
 import { ScrollableContainer, LabelText, FadeComponent, RowContainer, ButtonView } from "@/ui/BestBeforeUI";
 import { MountState } from "@/ui/Types/MountState";
-import { BackIcon, DeleteIcon, EditRecipeIcon } from "@/ui/ReactIcon";
+import { BackIcon, DeleteIcon, EditRecipeIcon, StarFilledIcon, StarOutlineIcon } from "@/ui/ReactIcon";
 
 /**
  * RecipeSelected component
@@ -85,7 +86,13 @@ export default function RecipeSelected({recipe, setSelectedRecipe, setIsEditing,
                 <ScrollableContainer style={{ width:"100%"}}>
                     <LabelText >{recipe.Recipe_Name}</LabelText>
                     <LabelText >Time: {recipe.Recipe_Time} min</LabelText>
-                    <LabelText >Rating: {recipe.Recipe_Rating}</LabelText>
+                    <RowContainer style={{ width: "48.5%", justifyContent: "center", alignItems: "center"}}>
+                        {recipe.Recipe_Rating && recipe.Recipe_Rating >= 1 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                        {recipe.Recipe_Rating && recipe.Recipe_Rating >= 2 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                        {recipe.Recipe_Rating && recipe.Recipe_Rating >= 3 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                        {recipe.Recipe_Rating && recipe.Recipe_Rating >= 4 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                        {recipe.Recipe_Rating && recipe.Recipe_Rating === 5 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                    </RowContainer>
                     <LabelText >Ingredients:</LabelText>
                     {recipe.Recipe_Ingredients?.map((ingredient) => (
                         <LabelText key={ingredient.Recipe_Ingredient_ID}>
