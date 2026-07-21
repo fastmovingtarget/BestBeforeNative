@@ -1,3 +1,6 @@
+//2026-07-21 : Adding aria labels for the buttons and icons
+//2026-07-21 : Switch to Recipe_Rating, Using stars instead of numeric input
+//2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2026-07-20 : Adding aria-label for iconised buttons
 //2026-07-16 : Added function descriptions
 //2026-07-01 : Icons for Cancel, Submit and Remove Ingredient
@@ -24,14 +27,13 @@ import React from 'react';
 import Recipe from '@/Types/Recipe';
 import { useRecipes } from "@/Contexts/Recipes/RecipesDataProvider"
 import Recipe_Ingredient from '@/Types/Recipe_Ingredient';
-import {RowContainer, ButtonView, LabelText, FormTextInput, ScrollableContainer, FadeComponent} from '@/ui/BestBeforeUI';
+import {RowContainer, ButtonView, LabelText, FormTextInput, ScrollableContainer, FadeComponent, PressableComponent} from '@/ui/BestBeforeUI';
 import { MountState } from '@/ui/Types/MountState';
-import { CancelIcon, DeleteIcon, SubmitRecipeIcon } from '@/ui/ReactIcon';
-import log from '@/utils/log';
+import { CancelIcon, DeleteIcon, StarFilledIcon, StarOutlineIcon, SubmitRecipeIcon } from '@/ui/ReactIcon';
 
 const emptyRecipe = {
     Recipe_Name: "",
-    Recipe_Difficulty: undefined,
+    Recipe_Rating: undefined,
     Recipe_Time: undefined,
     Recipe_Ingredients: [],
     Recipe_Instructions: "",
@@ -125,7 +127,7 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
     const checkValidation = () => {
         if(validateRecipeName(currentRecipe.Recipe_Name) !== true 
             || validateRecipeTime(currentRecipe.Recipe_Time?.toString() || "") !== true 
-            || validateRecipeDifficulty(currentRecipe.Recipe_Difficulty?.toString() || "") !== true){
+            || validateRecipeRating(currentRecipe.Recipe_Rating?.toString() || "") !== true){
             return false;
         }
         if(currentRecipe.Recipe_Ingredients) {
@@ -160,15 +162,15 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
         return true;
     }
 
-    const validateRecipeDifficulty = (difficulty: string) => {
-        if(difficulty.trim() === "" || difficulty === null) {
-            return "Difficulty cannot be empty";
+    const validateRecipeRating = (rating: string) => {
+        if(rating.trim() === "" || rating === null) {
+            return "Rating cannot be empty";
         }
-        const difficultyNumber = Number.parseInt(difficulty, 10);
-        if(isNaN(difficultyNumber)) {
+        const ratingNumber = Number.parseInt(rating, 10);
+        if(isNaN(ratingNumber)) {
             return "Must be a number";
         }
-        if(difficultyNumber < 0 || difficultyNumber > 5) {
+        if(ratingNumber < 0 || ratingNumber > 5) {
             return "Must be between 0 and 5";
         }
         return true;
@@ -238,15 +240,63 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
                             validationFunction={validateRecipeTime}
                             style={{ width: "48.5%"}}
                         />
-                        <FormTextInput
-                            placeholder="Difficulty"
-                            aria-label="recipe-difficulty"
-                            onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Difficulty: text === "" ? undefined : Number.parseInt(text)})}}
-                            defaultValue={currentRecipe.Recipe_Difficulty?.toString() || ""}
-                            inputMode="numeric"
-                            validationFunction={validateRecipeDifficulty}
-                            style={{ width: "48.5%"}}
-                        />
+                        <RowContainer style={{ width: "48.5%", justifyContent: "center", alignItems: "center"}}>
+                            <PressableComponent
+                                aria-label="recipe-rating-pressable-1"
+                                onPress={() => {setCurrentRecipe({...currentRecipe, Recipe_Rating: 1})}}
+                                style={{width: "20%", padding: 0, margin: 0}}
+                                >
+                                    {
+                                        currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 1 ? 
+                                        <StarFilledIcon size={24} color="black" aria-label="recipe-rating-filled-1" /> : 
+                                        <StarOutlineIcon size={24} color="black" aria-label="recipe-rating-empty-1" />
+                                    }
+                            </PressableComponent>
+                            <PressableComponent
+                                aria-label="recipe-rating-pressable-2"
+                                onPress={() => {setCurrentRecipe({...currentRecipe, Recipe_Rating: 2})}}
+                                style={{width: "20%", padding: 0, margin: 0}}
+                                >
+                                    {
+                                        currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 2 ? 
+                                        <StarFilledIcon size={24} color="black" aria-label="recipe-rating-filled-2" /> : 
+                                        <StarOutlineIcon size={24} color="black" aria-label="recipe-rating-empty-2" />
+                                    }
+                            </PressableComponent>
+                            <PressableComponent
+                                aria-label="recipe-rating-pressable-3"
+                                onPress={() => {setCurrentRecipe({...currentRecipe, Recipe_Rating: 3})}}
+                                style={{width: "20%", padding: 0, margin: 0}}
+                                >
+                                    {
+                                        currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 3 ? 
+                                        <StarFilledIcon size={24} color="black" aria-label="recipe-rating-filled-3" /> : 
+                                        <StarOutlineIcon size={24} color="black" aria-label="recipe-rating-empty-3" />
+                                    }
+                            </PressableComponent>
+                            <PressableComponent
+                                aria-label="recipe-rating-pressable-4"
+                                onPress={() => {setCurrentRecipe({...currentRecipe, Recipe_Rating: 4})}}
+                                style={{width: "20%", padding: 0, margin: 0}}
+                                >
+                                    {
+                                        currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 4 ? 
+                                        <StarFilledIcon size={24} color="black" aria-label="recipe-rating-filled-4" /> : 
+                                        <StarOutlineIcon size={24} color="black" aria-label="recipe-rating-empty-4" />
+                                    }
+                            </PressableComponent>
+                            <PressableComponent
+                                aria-label="recipe-rating-pressable-5"
+                                onPress={() => {setCurrentRecipe({...currentRecipe, Recipe_Rating: 5})}}
+                                style={{width: "20%", padding: 0, margin: 0}}
+                                >
+                                    {
+                                        currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating === 5 ? 
+                                        <StarFilledIcon size={24} color="black" aria-label="recipe-rating-filled-5" /> : 
+                                        <StarOutlineIcon size={24} color="black" aria-label="recipe-rating-empty-5" />
+                                    }
+                            </PressableComponent>
+                        </RowContainer>
                     </RowContainer>
 
                     {currentRecipe.Recipe_Ingredients?.map((ingredient, index) => (

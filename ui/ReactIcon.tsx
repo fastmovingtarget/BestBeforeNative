@@ -1,3 +1,5 @@
+//2026-07-21 : Added aria-label to star and outline-star icons
+//2026-07-21 : Added stars and star outlines
 //2026-07-16 : Added function descriptions
 //2026-07-01 : Adding Icons for Submit and Cancel
 
@@ -177,5 +179,17 @@ export function SubmitShoppingListIcon({size = defaultSize, color = Colours.text
                 <MaterialDesignIcons name={"check-bold"} size={size/2} color={color} />
             </RowContainer>
         </RowContainer>
+    );  
+}
+
+export function StarOutlineIcon({size = defaultSize, color = Colours.text, "aria-label" : ariaLabel}: {size?: number, color?: string, "aria-label"?: string}) {
+    return (
+        <MaterialDesignIcons name={"star-outline"} size={size} color={color} style={{padding:5}} aria-label={ariaLabel} />
+    );  
+}
+
+export function StarFilledIcon({size = defaultSize, color = Colours.text, "aria-label" : ariaLabel}: {size?: number, color?: string, "aria-label"?: string}) {
+    return (
+        <MaterialDesignIcons name={"star"} size={size} color={color} style={{padding:5}} aria-label={ariaLabel} />
     );  
 }

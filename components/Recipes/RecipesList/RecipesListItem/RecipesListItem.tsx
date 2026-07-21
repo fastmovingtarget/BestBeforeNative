@@ -1,3 +1,6 @@
+//2026-07-21 : Adding aria labels for the buttons and icons
+//2026-07-21 : Visualise rating with stars
+//2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2026-07-16 : Added function descriptions
 //2026-06-01 : Using FadeComponent for animations
 
@@ -7,7 +10,8 @@
 
 import React from "react";
 import Recipe from "@/Types/Recipe";
-import { PressableComponent, LabelText, FadeComponent } from "@/ui/BestBeforeUI";
+import { PressableComponent, LabelText, FadeComponent, RowContainer } from "@/ui/BestBeforeUI";
+import { StarFilledIcon, StarOutlineIcon } from "@/ui/ReactIcon";
 
 /**
  * RecipesListItem component
@@ -24,8 +28,36 @@ export default function RecipesListItem({ recipe, setSelectedRecipe }: { key: st
                 style={{margin : 0}}
             > 
                 <LabelText >{recipe.Recipe_Name}</LabelText>
-                <LabelText >Time: {recipe.Recipe_Time} min</LabelText>
-                <LabelText >Difficulty: {recipe.Recipe_Difficulty}</LabelText>
+                <RowContainer style={{width: "100%", justifyContent: "space-between", paddingHorizontal: 10}}>
+                    <LabelText >{recipe.Recipe_Time} min</LabelText>
+                    <RowContainer style={{ width: "48.5%", justifyContent: "center", alignItems: "center"}}>
+                        {
+                            recipe.Recipe_Rating && recipe.Recipe_Rating >= 1 ? 
+                            <StarFilledIcon size={24} color="black" aria-label="recipe-rating-filled-1"/> : 
+                            <StarOutlineIcon size={24} color="black" aria-label="recipe-rating-empty-1"/>
+                        }
+                        {
+                            recipe.Recipe_Rating && recipe.Recipe_Rating >= 2 ? 
+                            <StarFilledIcon size={24} color="black" aria-label="recipe-rating-filled-2"/> : 
+                            <StarOutlineIcon size={24} color="black" aria-label="recipe-rating-empty-2"/>
+                        }
+                        {
+                            recipe.Recipe_Rating && recipe.Recipe_Rating >= 3 ? 
+                            <StarFilledIcon size={24} color="black" aria-label="recipe-rating-filled-3"/> : 
+                            <StarOutlineIcon size={24} color="black" aria-label="recipe-rating-empty-3"/>
+                        }
+                        {
+                            recipe.Recipe_Rating && recipe.Recipe_Rating >= 4 ? 
+                            <StarFilledIcon size={24} color="black" aria-label="recipe-rating-filled-4"/> : 
+                            <StarOutlineIcon size={24} color="black" aria-label="recipe-rating-empty-4"/>
+                        }
+                        {   
+                            recipe.Recipe_Rating && recipe.Recipe_Rating === 5 ? 
+                            <StarFilledIcon size={24} color="black" aria-label="recipe-rating-filled-5"/> : 
+                            <StarOutlineIcon size={24} color="black" aria-label="recipe-rating-empty-5"/>
+                        }
+                    </RowContainer>
+                </RowContainer>
             </PressableComponent>
         </FadeComponent>
     );
