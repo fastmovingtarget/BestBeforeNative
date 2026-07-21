@@ -1,3 +1,4 @@
+//2026-07-21 : Adding aria labels for the buttons and icons
 //2026-07-21 : Switch to Recipe_Rating, Using stars instead of numeric input
 //2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2026-07-20 : Adding aria-label for iconised buttons
@@ -241,39 +242,59 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
                         />
                         <RowContainer style={{ width: "48.5%", justifyContent: "center", alignItems: "center"}}>
                             <PressableComponent
-                                aria-label="recipe-rating"
+                                aria-label="recipe-rating-pressable-1"
                                 onPress={() => {setCurrentRecipe({...currentRecipe, Recipe_Rating: 1})}}
                                 style={{width: "20%", padding: 0, margin: 0}}
                                 >
-                                    {currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 1 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                                    {
+                                        currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 1 ? 
+                                        <StarFilledIcon size={24} color="black" aria-label="recipe-rating-filled-1" /> : 
+                                        <StarOutlineIcon size={24} color="black" aria-label="recipe-rating-empty-1" />
+                                    }
                             </PressableComponent>
                             <PressableComponent
-                                aria-label="recipe-rating"
+                                aria-label="recipe-rating-pressable-2"
                                 onPress={() => {setCurrentRecipe({...currentRecipe, Recipe_Rating: 2})}}
                                 style={{width: "20%", padding: 0, margin: 0}}
                                 >
-                                    {currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 2 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                                    {
+                                        currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 2 ? 
+                                        <StarFilledIcon size={24} color="black" aria-label="recipe-rating-filled-2" /> : 
+                                        <StarOutlineIcon size={24} color="black" aria-label="recipe-rating-empty-2" />
+                                    }
                             </PressableComponent>
                             <PressableComponent
-                                aria-label="recipe-rating"
+                                aria-label="recipe-rating-pressable-3"
                                 onPress={() => {setCurrentRecipe({...currentRecipe, Recipe_Rating: 3})}}
                                 style={{width: "20%", padding: 0, margin: 0}}
                                 >
-                                    {currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 3 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                                    {
+                                        currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 3 ? 
+                                        <StarFilledIcon size={24} color="black" aria-label="recipe-rating-filled-3" /> : 
+                                        <StarOutlineIcon size={24} color="black" aria-label="recipe-rating-empty-3" />
+                                    }
                             </PressableComponent>
                             <PressableComponent
-                                aria-label="recipe-rating"
+                                aria-label="recipe-rating-pressable-4"
                                 onPress={() => {setCurrentRecipe({...currentRecipe, Recipe_Rating: 4})}}
                                 style={{width: "20%", padding: 0, margin: 0}}
                                 >
-                                    {currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 4 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                                    {
+                                        currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 4 ? 
+                                        <StarFilledIcon size={24} color="black" aria-label="recipe-rating-filled-4" /> : 
+                                        <StarOutlineIcon size={24} color="black" aria-label="recipe-rating-empty-4" />
+                                    }
                             </PressableComponent>
                             <PressableComponent
-                                aria-label="recipe-rating"
+                                aria-label="recipe-rating-pressable-5"
                                 onPress={() => {setCurrentRecipe({...currentRecipe, Recipe_Rating: 5})}}
                                 style={{width: "20%", padding: 0, margin: 0}}
                                 >
-                                    {currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating === 5 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                                    {
+                                        currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating === 5 ? 
+                                        <StarFilledIcon size={24} color="black" aria-label="recipe-rating-filled-5" /> : 
+                                        <StarOutlineIcon size={24} color="black" aria-label="recipe-rating-empty-5" />
+                                    }
                             </PressableComponent>
                         </RowContainer>
                     </RowContainer>
