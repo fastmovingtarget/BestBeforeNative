@@ -1,3 +1,4 @@
+//2026-07-21 : Switch to Recipe_Rating, Using stars instead of numeric input
 //2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2026-07-20 : Adding aria-label for iconised buttons
 //2026-07-16 : Added function descriptions
@@ -25,13 +26,13 @@ import React from 'react';
 import Recipe from '@/Types/Recipe';
 import { useRecipes } from "@/Contexts/Recipes/RecipesDataProvider"
 import Recipe_Ingredient from '@/Types/Recipe_Ingredient';
-import {RowContainer, ButtonView, LabelText, FormTextInput, ScrollableContainer, FadeComponent} from '@/ui/BestBeforeUI';
+import {RowContainer, ButtonView, LabelText, FormTextInput, ScrollableContainer, FadeComponent, PressableComponent} from '@/ui/BestBeforeUI';
 import { MountState } from '@/ui/Types/MountState';
-import { CancelIcon, DeleteIcon, SubmitRecipeIcon } from '@/ui/ReactIcon';
+import { CancelIcon, DeleteIcon, StarFilledIcon, StarOutlineIcon, SubmitRecipeIcon } from '@/ui/ReactIcon';
 
 const emptyRecipe = {
     Recipe_Name: "",
-    Recipe_Difficulty: undefined,
+    Recipe_Rating: undefined,
     Recipe_Time: undefined,
     Recipe_Ingredients: [],
     Recipe_Instructions: "",
@@ -238,15 +239,43 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
                             validationFunction={validateRecipeTime}
                             style={{ width: "48.5%"}}
                         />
-                        <FormTextInput
-                            placeholder="Rating"
-                            aria-label="recipe-rating"
-                            onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Rating: text === "" ? undefined : Number.parseInt(text)})}}
-                            defaultValue={currentRecipe.Recipe_Rating?.toString() || ""}
-                            inputMode="numeric"
-                            validationFunction={validateRecipeRating}
-                            style={{ width: "48.5%"}}
-                        />
+                        <RowContainer style={{ width: "48.5%", justifyContent: "center", alignItems: "center"}}>
+                            <PressableComponent
+                                aria-label="recipe-rating"
+                                onPress={() => {setCurrentRecipe({...currentRecipe, Recipe_Rating: 1})}}
+                                style={{width: "20%", padding: 0, margin: 0}}
+                                >
+                                    {currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 1 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                            </PressableComponent>
+                            <PressableComponent
+                                aria-label="recipe-rating"
+                                onPress={() => {setCurrentRecipe({...currentRecipe, Recipe_Rating: 2})}}
+                                style={{width: "20%", padding: 0, margin: 0}}
+                                >
+                                    {currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 2 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                            </PressableComponent>
+                            <PressableComponent
+                                aria-label="recipe-rating"
+                                onPress={() => {setCurrentRecipe({...currentRecipe, Recipe_Rating: 3})}}
+                                style={{width: "20%", padding: 0, margin: 0}}
+                                >
+                                    {currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 3 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                            </PressableComponent>
+                            <PressableComponent
+                                aria-label="recipe-rating"
+                                onPress={() => {setCurrentRecipe({...currentRecipe, Recipe_Rating: 4})}}
+                                style={{width: "20%", padding: 0, margin: 0}}
+                                >
+                                    {currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating >= 4 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                            </PressableComponent>
+                            <PressableComponent
+                                aria-label="recipe-rating"
+                                onPress={() => {setCurrentRecipe({...currentRecipe, Recipe_Rating: 5})}}
+                                style={{width: "20%", padding: 0, margin: 0}}
+                                >
+                                    {currentRecipe.Recipe_Rating && currentRecipe.Recipe_Rating === 5 ? <StarFilledIcon size={24} color="black" /> : <StarOutlineIcon size={24} color="black" />}
+                            </PressableComponent>
+                        </RowContainer>
                     </RowContainer>
 
                     {currentRecipe.Recipe_Ingredients?.map((ingredient, index) => (
