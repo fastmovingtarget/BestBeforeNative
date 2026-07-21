@@ -1,3 +1,4 @@
+//2026-07-20 : Adding aria-label for iconised buttons
 //2026-07-16 : Added function descriptions
 //2026-07-01 : Top page component sizing consistency
 
@@ -68,13 +69,13 @@ export default function RecipeSelected({recipe, setSelectedRecipe, setIsEditing,
             >
             <FadeComponent style={{flexGrow:0, marginTop:0}}>
                 <RowContainer style={{justifyContent:"space-between", alignItems:"center", width:"100%"}}>
-                    <ButtonView style={{flexGrow:1, margin:5, marginVertical: 8}} onPress={() => {setEndSelectMethod("Back"); setMountState(MountState.Unmount)}}>
+                    <ButtonView style={{flexGrow:1, margin:5, marginVertical: 8}} onPress={() => {setEndSelectMethod("Back"); setMountState(MountState.Unmount)}} aria-label="back-button">
                         <BackIcon />
                     </ButtonView>
-                    <ButtonView style={{flexGrow:1, margin:5, marginVertical: 8}} onPress={() => {setEndSelectMethod("Edit"); setMountState(MountState.Unmount)}}>
+                    <ButtonView style={{flexGrow:1, margin:5, marginVertical: 8}} onPress={() => {setEndSelectMethod("Edit"); setMountState(MountState.Unmount)}} aria-label="edit-button">
                         <EditRecipeIcon />
                     </ButtonView>
-                    <ButtonView style={{flexGrow:1, margin:5, marginVertical: 8}} onPress={() => {setEndSelectMethod("Delete"); setMountState(MountState.Unmount)}}>
+                    <ButtonView style={{flexGrow:1, margin:5, marginVertical: 8}} onPress={() => {setEndSelectMethod("Delete"); setMountState(MountState.Unmount)}} aria-label="delete-button">
                         <DeleteIcon />
                     </ButtonView>
                 </RowContainer>

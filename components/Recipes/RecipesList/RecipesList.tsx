@@ -1,3 +1,4 @@
+//2026-07-20 : Adding aria-label for iconised buttons
 //2026-07-16 : Added function descriptions
 //2026-07-01 : Putting Search and Add in same row
 
@@ -75,6 +76,7 @@ export default function RecipesList({ setSelectedRecipe, setIsEditing }: { setSe
                             }
                         }
                         style={{margin : 5}}
+                        aria-label="add-new-recipe-button"
                     >
                         <AddRecipeIcon />
                     </ButtonView>

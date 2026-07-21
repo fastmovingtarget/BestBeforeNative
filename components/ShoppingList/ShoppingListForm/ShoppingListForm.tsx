@@ -1,3 +1,4 @@
+//2026-07-20 : Adding aria-labels to iconised components
 //2026-07-16 : Added function descriptions
 //2026-07-01 : Icons for Submit and Cancel
 
@@ -104,10 +105,10 @@ export default function ShoppingListForm({item = blankItem, isFormVisible, onCan
                 />
             </RowContainer>
             <RowContainer style={{justifyContent:"space-around", marginTop: 10}} >
-                <ButtonView onPress={cancelHandler} style={{flexGrow:1, marginRight: 5}}>
+                <ButtonView onPress={cancelHandler} style={{flexGrow:1, marginRight: 5}} aria-label="cancel-button">
                     <CancelIcon />
                 </ButtonView>
-                <ButtonView onPress={submitHandler} style={{flexGrow:1, marginLeft: 5}}>
+                <ButtonView onPress={submitHandler} style={{flexGrow:1, marginLeft: 5}} aria-label="submit-button">
                     <SubmitShoppingListIcon />
                 </ButtonView>
             </RowContainer>

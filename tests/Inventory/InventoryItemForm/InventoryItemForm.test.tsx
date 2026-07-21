@@ -1,3 +1,4 @@
+//2026-07-20 : Amending to test iconified components
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Renamed "Ingredient(s)" to "Inventory(_Items)"
@@ -43,29 +44,25 @@ beforeEach(() => {
     mockDateTimePicker.mockImplementation(originalModule.default);
 });
 
-describe('Ingredient renders correctly', () => {
-  it('when given no ingredient', () => {
+describe('InventoryItemForm renders correctly', () => {
+  it('when given no inventory item', () => {
 
-    const {getByText, getByLabelText} = render(
+    const {getByLabelText} = render(
       <InventoryItemForm isFormVisible={true}/>,
     );
-
-    expect(getByText(/Ingredient:/i)).toBeTruthy();
-    expect(getByText(/Quantity:/i)).toBeTruthy();
-    expect(getByText(/Use By:/i)).toBeTruthy();
 
     expect(getByLabelText(/name-input/i)).toBeTruthy();
     expect(getByLabelText(/quantity-input/i)).toBeTruthy();
     expect(getByLabelText(/date-input-button/i)).toBeTruthy();
 
     expect(getByLabelText(/name-input/i)).toHaveDisplayValue('');
-    expect(getByLabelText(/quantity-input/i)).toHaveDisplayValue('0');
+    expect(getByLabelText(/quantity-input/i)).toHaveDisplayValue('');
   });
-  it('when given an ingredient', () => {
+  it('when given an inventory item', () => {
     const mockDateTimePicker = DateTimePicker as jest.Mock;
     mockDateTimePicker.mockImplementation(originalModule.default);
 
-    const {getByText, getByLabelText} = render(
+    const {getByLabelText} = render(
       <InventoryItemForm inventoryItem={{
             Inventory_Item_Name: 'Test Ingredient',
             Inventory_Item_Quantity: 1,
@@ -76,10 +73,6 @@ describe('Ingredient renders correctly', () => {
       />,
     );
 
-    expect(getByText(/Ingredient:/i)).toBeTruthy();
-    expect(getByText(/Quantity:/i)).toBeTruthy();
-    expect(getByText(/Use By:/i)).toBeTruthy();
-
     expect(getByLabelText(/name-input/i)).toBeTruthy();
     expect(getByLabelText(/quantity-input/i)).toBeTruthy();
     expect(getByLabelText(/date-input-button/i)).toBeTruthy();
@@ -88,8 +81,8 @@ describe('Ingredient renders correctly', () => {
     expect(getByLabelText(/quantity-input/i)).toHaveDisplayValue('1');
   });
 });
-describe('IngredientForm input registers correct change', () => {
-    describe('when given no ingredient', () => {
+describe('InventoryItemForm input registers correct change', () => {
+    describe('when given no inventory item', () => {
         test('and name input is changed', async () => {
             const user = userEvent.setup();
     
@@ -127,7 +120,7 @@ describe('IngredientForm input registers correct change', () => {
                     utcOffset: 0,
                 }}, dateInput);
 
-            expect(getByText(testDate.toLocaleDateString("en-UK", { year: "numeric", month: "2-digit", day: "2-digit" }))).toBeTruthy();
+            expect(getByText(`Use By: ${testDate.toLocaleDateString("en-UK", { year: "numeric", month: "2-digit", day: "2-digit" })}`)).toBeTruthy();
         });
         test('and quantity input is changed', async () => {
             const user = userEvent.setup();
@@ -142,10 +135,10 @@ describe('IngredientForm input registers correct change', () => {
     
             await user.type(quantityInput, '1');
     
-            expect(quantityInput).toHaveDisplayValue('01');
+            expect(quantityInput).toHaveDisplayValue('1');
         });
     })
-    describe('when given an ingredient', () => {
+    describe('when given an inventory item', () => {
         test('and name input is changed', async() => {
             const user = userEvent.setup();
     
@@ -193,14 +186,14 @@ describe('IngredientForm input registers correct change', () => {
     })
 })
 describe("When Submit button is pressed", () => {
-    describe("and there is no ingredient, data context Add Ingredient is called", () => {
-        test("With initial values when unchanged", async () => {
+    describe("and there is no ingredient", () => {
+        test("data context Add Ingredient is not called when values are unchanged", async () => {
             const user = userEvent.setup();
-            const {getByText, getByLabelText} = render(
+            const {getByLabelText} = render(
                 <InventoryItemForm isFormVisible={true}/>,
             );
 
-            const submitButton = getByText(/Submit/i);
+            const submitButton = getByLabelText(/submit-button/i);
 
             expect(getByLabelText(/name-input/i)).toBeTruthy();
             expect(getByLabelText(/quantity-input/i)).toBeTruthy();
@@ -210,12 +203,12 @@ describe("When Submit button is pressed", () => {
 
             await user.press(submitButton);
 
-            expect(mockdataContext.addInventoryItem).toHaveBeenCalledTimes(1);
+            expect(mockdataContext.addInventoryItem).toHaveBeenCalledTimes(0);
             expect(mockdataContext.updateInventoryItem).toHaveBeenCalledTimes(0);
         })
-        test("With changed values when changed", async () => {
+        test("data context Add Ingredient is called with changed values when changed", async () => {
             const user = userEvent.setup();
-            const {getByText, getByLabelText} = render(
+            const { getByLabelText} = render(
                 <InventoryItemForm isFormVisible={true}/>,
             );
 
@@ -225,7 +218,7 @@ describe("When Submit button is pressed", () => {
                 Inventory_Item_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
             };
 
-            const submitButton = getByText(/Submit/i);
+            const submitButton = getByLabelText(/submit-button/i);
 
             const nameInput = getByLabelText(/name-input/i);
             const quantityInput = getByLabelText(/quantity-input/i);
@@ -266,11 +259,11 @@ describe("When Submit button is pressed", () => {
                 Inventory_Item_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
             };
 
-            const {getByText, getByLabelText} = render(
+            const {getByLabelText} = render(
                 <InventoryItemForm inventoryItem={testInventoryItem} isFormVisible={true} />,
             );
 
-            const submitButton = getByText(/Submit/i);
+            const submitButton = getByLabelText(/submit-button/i);
 
             expect(getByLabelText(/name-input/i)).toBeTruthy();
             expect(getByLabelText(/quantity-input/i)).toBeTruthy();
@@ -293,7 +286,7 @@ describe("When Submit button is pressed", () => {
                 Inventory_Item_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
             };
 
-            const {getByText, getByLabelText} = render(
+            const {getByLabelText} = render(
                 <InventoryItemForm inventoryItem={testInventoryItem} isFormVisible={true}/>,
             );
 
@@ -304,7 +297,7 @@ describe("When Submit button is pressed", () => {
                 Inventory_Item_Date: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 4), // 1 week from now
             };
 
-            const submitButton = getByText(/Submit/i);
+            const submitButton = getByLabelText(/submit-button/i);
 
             const nameInput = getByLabelText(/name-input/i);
             const quantityInput = getByLabelText(/quantity-input/i);

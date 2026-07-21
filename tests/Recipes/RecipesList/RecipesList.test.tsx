@@ -1,3 +1,4 @@
+//2026-07-20 : Updated to use aria-label for iconised components
 //2026-06-10 : Test now works with FadeComponent
 
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
@@ -125,11 +126,11 @@ test('Set Selected Recipe is called when add new recipe is clicked', async () =>
     const mockSetSelectedRecipe = jest.fn();
     const mockSetIsEditing = jest.fn();
 
-    const {getByText} = render(
+    const {getByLabelText} = render(
             <RecipesList setSelectedRecipe={mockSetSelectedRecipe} setIsEditing={mockSetIsEditing}/>
         );
 
-    const addNewRecipeButton = getByText(/Add New Recipe/i); // Get the "Add New Recipe" button
+    const addNewRecipeButton = getByLabelText(/add-new-recipe-button/i); // Get the "Add New Recipe" button
 
     await user.press(addNewRecipeButton); // Simulate the press event
 

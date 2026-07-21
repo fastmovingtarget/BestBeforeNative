@@ -1,3 +1,4 @@
+//2026-07-20 : Adding aria-label for iconised buttons
 //2026-07-16 : Added function descriptions
 //2026-07-01 : Icons for Cancel, Submit and Remove Ingredient
 
@@ -26,6 +27,7 @@ import Recipe_Ingredient from '@/Types/Recipe_Ingredient';
 import {RowContainer, ButtonView, LabelText, FormTextInput, ScrollableContainer, FadeComponent} from '@/ui/BestBeforeUI';
 import { MountState } from '@/ui/Types/MountState';
 import { CancelIcon, DeleteIcon, SubmitRecipeIcon } from '@/ui/ReactIcon';
+import log from '@/utils/log';
 
 const emptyRecipe = {
     Recipe_Name: "",
@@ -53,8 +55,9 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
      * Finally, it sets the mount state to unmount, which will trigger the exitForm callback after the unmount animation ends.
      */
     const onSubmit = () => {
-        if(!checkValidation())
+        if(!checkValidation()){
             return;
+        }
         
         if(inputRecipe.Recipe_ID) {
             updateRecipe(currentRecipe);
@@ -201,10 +204,10 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
             >
             <FadeComponent style={{flexGrow:0, marginTop:0}}>
                 <RowContainer style={{padding:0, columnGap:10}}>
-                    <ButtonView style={{flexGrow:1, margin: 5, marginVertical: 8}} onPress={onCancel}>
+                    <ButtonView style={{flexGrow:1, margin: 5, marginVertical: 8}} onPress={onCancel} aria-label="cancel-button">
                         <CancelIcon />
                     </ButtonView>
-                    <ButtonView style={{flexGrow:1, margin: 5, marginVertical: 8}} onPress={onSubmit}>
+                    <ButtonView style={{flexGrow:1, margin: 5, marginVertical: 8}} onPress={onSubmit} aria-label="submit-button">
                         <SubmitRecipeIcon />
                     </ButtonView>
                 </RowContainer>
@@ -215,7 +218,10 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
                         <FormTextInput
                             placeholder="Recipe Name"
                             aria-label="recipe-name"
-                            onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Name: text})}}
+                            onChangeText={(text) => {
+                                setCurrentRecipe({...currentRecipe, Recipe_Name: text})
+                                }
+                            }
                             defaultValue={currentRecipe.Recipe_Name || ""}
                             validationFunction={validateRecipeName}
                             style={{width: "100%"}}

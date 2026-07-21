@@ -1,3 +1,4 @@
+//2026-07-20 : Adding aria-labels to iconised buttons
 //2026-06-30 : Icon for delete plan
 
 //2026-06-18 : Added recipe search functionality
@@ -91,7 +92,8 @@ export default function PlanActiveDayRecipes({date, setSelectedPlan}: {date: Dat
                                                         if(plan.Plan_ID !== undefined) 
                                                             deletePlan(plan.Plan_ID)
                                                     }}
-                                                    style={{ width: "30%"}}>
+                                                    style={{ width: "30%"}}
+                                                    aria-label={`delete-recipe-plan-${plan.Plan_ID}-button`} >
                                                     <DeleteIcon/>
                                                 </ButtonView>
                                             </RowContainer>

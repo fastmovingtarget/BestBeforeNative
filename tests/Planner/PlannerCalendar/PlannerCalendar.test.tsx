@@ -1,3 +1,5 @@
+//2026-07-20 : Removing extra import
+//2026-07-20 : Updating to match iconised components
 //2026-06-11 : Text Changes
 
 //2026-06-02 : changed location of PlannerCalendarDay
@@ -25,6 +27,12 @@ jest.mock("@/components/Planner/PlannerCalendar/PlannerCalendarGrid/PlannerCalen
         default: jest.fn(),
     };
 });
+jest.mock("@/contexts/Plans/PlansDataProvider", () => {
+    return {
+        __esModule: true,
+        usePlans: jest.fn()
+    };
+});
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -43,15 +51,15 @@ describe("Recipe Plan Calendar Renders", () => {
             <PlannerCalendar setSelectedDate={mockSetSelectedDate} />
         );
 
-        expect(getByText(`${currentMonth}`)).toBeTruthy();
+        expect(getByText(new RegExp(currentMonth, 'i'))).toBeTruthy();
     });
     test("Month navigation buttons", () => {
-        const {getByText} = render(
+        const {getByLabelText} = render(
             <PlannerCalendar setSelectedDate={mockSetSelectedDate} />
         );
         
-        expect(getByText(/</i)).toBeTruthy();
-        expect(getByText(/>/i)).toBeTruthy();
+        expect(getByLabelText(/previous-month-button/i)).toBeTruthy();
+        expect(getByLabelText(/next-month-button/i)).toBeTruthy();
     });
     test("The calendar day headers", () => {
         const {getByText} = render(
@@ -80,23 +88,20 @@ describe("Recipe Plan Calendar Renders", () => {
             expect(getAllByText(`${i}`).length).toBeGreaterThan(0);// Check that each day of the month is rendered at least once
         }        
     });
-    test("The recipe names each day", () => {
-        
-    })
 });
 describe("Recipe Plan Calendar functionality", () => {
     test("The month changes when the left button is pressed", async () => {
         const user = userEvent.setup();
-        const {getByText, getAllByText} = render(
+        const {getByText, getAllByText, getByLabelText} = render(
             <PlannerCalendar setSelectedDate={mockSetSelectedDate} />
         );
 
         const currentMonth = new Date().getMonth();
         const previousMonth = new Date().setMonth(currentMonth - 1);
 
-        await user.press(getByText(/</i));
+        await user.press(getByLabelText(/previous-month-button/i));
 
-        expect(getByText(new Date(previousMonth).toLocaleString('default', { month: 'long' }))).toBeTruthy();
+        expect(getByText(new Date(previousMonth).toLocaleString('default', { month: 'long', year: 'numeric' }))).toBeTruthy();
         const daysInMonth = new Date(new Date().getFullYear(), currentMonth, 0).getDate();
 
         for(let i = 1; i <= daysInMonth; i++) {
@@ -106,16 +111,16 @@ describe("Recipe Plan Calendar functionality", () => {
 
     test("The month changes when the right button is pressed", async () => {
         const user = userEvent.setup();
-        const {getByText, getAllByText} = render(
+        const {getByText, getAllByText, getByLabelText} = render(
             <PlannerCalendar setSelectedDate={mockSetSelectedDate} />
         );
 
         const currentMonth = new Date().getMonth();
         const nextMonth = new Date().setMonth(currentMonth + 1);
 
-        await user.press(getByText(/>/i));
+        await user.press(getByLabelText(/next-month-button/i));
 
-        expect(getByText(new Date(nextMonth).toLocaleString('default', { month: 'long' }))).toBeTruthy();
+        expect(getByText(new Date(nextMonth).toLocaleString('default', { month: 'long', year: 'numeric' }))).toBeTruthy();
         const daysInMonth = new Date(new Date().getFullYear(), currentMonth + 2, 0).getDate();
 
         for(let i = 1; i <= daysInMonth; i++) {

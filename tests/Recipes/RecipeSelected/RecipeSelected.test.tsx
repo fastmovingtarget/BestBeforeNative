@@ -1,3 +1,4 @@
+//2026-07-20 : Updated to use aria-label for iconised components
 //2026-06-11 : Testing exit functionality
 
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
@@ -57,11 +58,11 @@ describe("SelectedRecipe exits correctly", () => {
     const setIsEditingMock = jest.fn();
     const deleteRecipeMock = jest.fn();
 
-    const {getByText} = render(
+    const {getByLabelText} = render(
       <RecipeSelected recipe={mockRecipe} setSelectedRecipe={setSelectedRecipeMock} setIsEditing={setIsEditingMock} deleteRecipe={deleteRecipeMock}/>,
     );
 
-    const backButton = getByText(/Back/i);
+    const backButton = getByLabelText(/back-button/i);
     expect(backButton).toBeTruthy();    
     await user.press(backButton);
 
@@ -80,11 +81,11 @@ describe("SelectedRecipe exits correctly", () => {
     const setIsEditingMock = jest.fn();
     const deleteRecipeMock = jest.fn();
 
-    const {getByText} = render(
+    const {getByLabelText} = render(
       <RecipeSelected recipe={mockRecipe} setSelectedRecipe={setSelectedRecipeMock} setIsEditing={setIsEditingMock} deleteRecipe={deleteRecipeMock}/>,
     );
 
-    const editButton = getByText(/Edit Recipe/i);
+    const editButton = getByLabelText(/edit-button/i);
     expect(editButton).toBeTruthy();   
     await user.press(editButton);
 
@@ -102,11 +103,11 @@ describe("SelectedRecipe exits correctly", () => {
     const setIsEditingMock = jest.fn();
     const deleteRecipeMock = jest.fn();
 
-    const {getByText} = render(
+    const {getByLabelText} = render(
       <RecipeSelected recipe={mockRecipe} setSelectedRecipe={setSelectedRecipeMock} setIsEditing={setIsEditingMock} deleteRecipe={deleteRecipeMock}/>,
     );
 
-    const deleteButton = getByText(/Delete Recipe/i);
+    const deleteButton = getByLabelText(/delete-button/i);
     expect(deleteButton).toBeTruthy();   
     await user.press(deleteButton);
 
