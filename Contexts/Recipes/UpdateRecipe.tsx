@@ -1,3 +1,4 @@
+//2026-08-04 : Updating api calls to use correct env variable
 //2026-07-10 : Changes to pick up env server props
 
 //2026-06-19 : Logs for API calls
@@ -31,18 +32,12 @@ export const updateRecipeData = (
     setRecipes : React.Dispatch<React.SetStateAction<Recipe[]>>, 
     recipe : Recipe,
 ) => {
-    
-    const serverProps = {
-        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
-        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
-        DatabaseProtocol: process.env.REACT_APP_PROTOCOL || "http",
-    }
 
     log(`Updating recipe with ID: ${recipe.Recipe_ID}`, "debug");
 
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
-            `${serverProps.DatabaseProtocol}://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/recipes/${recipe.Recipe_ID}`, 
+            `${process.env.EXPO_PUBLIC_API_URL}/recipes/${recipe.Recipe_ID}`, 
             {
                 method: "PUT",
                 headers: {

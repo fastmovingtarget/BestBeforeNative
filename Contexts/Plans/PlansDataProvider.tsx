@@ -1,3 +1,4 @@
+//2026-08-04 : Updating api calls to use correct env variable
 //2025-11-19 : Renamed RecipePlan(s) to just Plan(s)
 
 //2025-11-10 : Renamed for sanity and consistency
@@ -19,6 +20,7 @@ import Plan from "@/Types/Plan";
 const PlansDataContext = createContext({
     plans: [] as Plan[],
     plansDataState: SyncState.Loading as SyncState | UpdateState,
+    setPlansDataState: (state: SyncState | UpdateState) => {},
     deletePlan: (planID: number) => {},
     addPlan: (plan: Plan) => {},
     updatePlan: (plan: Plan) => {},
@@ -44,13 +46,14 @@ export const PlansDataProvider = ({children}:{children:React.ReactNode}) => {
     }
 
     const deletePlan = (planID: number) => deletePlanData(plans, setPlans, planID).then((result) => checkStartSync(result));
-    const addPlan = (plan: Plan) => addPlanData(userId, plans, setPlans, plan).then((result) => checkStartSync(result));
+    const addPlan = (plan: Plan) => addPlanData(userId || -1, plans, setPlans, plan).then((result) => checkStartSync(result));
     const updatePlan = (plan: Plan) => updatePlanData(plans, setPlans, plan).then((result) => checkStartSync(result));
 
     return (
         <PlansDataContext.Provider value={{
             plans,
             plansDataState,
+            setPlansDataState,
             deletePlan,
             addPlan,
             updatePlan

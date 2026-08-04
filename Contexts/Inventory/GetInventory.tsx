@@ -1,3 +1,4 @@
+//2026-08-04 : Updating api calls to use correct env variable
 //2026-07-10 : Changes to pick up env server props
 
 //2026-06-19 : Logs for API calls
@@ -33,12 +34,6 @@ export const getInventoryData = async (
     setInventory : React.Dispatch<React.SetStateAction<Inventory_Item[]>>, 
     searchOptions : InventorySearchOptions = {},
 ) => {
-    
-    const serverProps = {
-        DatabaseServer: process.env.EXPO_PUBLIC_DATABASE_SERVER || "192.168.50.201",
-        DatabasePort: process.env.EXPO_PUBLIC_DATABASE_PORT || "5091",
-        DatabaseProtocol: process.env.EXPO_PUBLIC_PROTOCOL || "http",
-    }
 
     const optionsString = Object.entries(searchOptions).map(([key, value]) => {//map the key and uri encoded value pairs to a string joined by &
         if (value === undefined) return ""; // Skip undefined values
@@ -49,7 +44,7 @@ export const getInventoryData = async (
 
     let returnPromise = new Promise<SyncState>((resolve) => {
         fetch(
-            `${serverProps.DatabaseProtocol}://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/inventory/${userID}?${optionsString}`, 
+            `${process.env.EXPO_PUBLIC_API_URL}/inventory/${userID}?${optionsString}`, 
             {
                 method: "GET",
                 headers: {

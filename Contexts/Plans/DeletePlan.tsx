@@ -1,3 +1,4 @@
+//2026-08-04 : Updating api calls to use correct env variable
 //2026-07-10 : Changes to pick up env server props
 
 //2026-06-19 : Logs for API calls
@@ -34,12 +35,6 @@ export const deletePlanData = async (
     planID? : number,
 ) => {
 
-    const serverProps = {
-        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
-        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
-        DatabaseProtocol: process.env.REACT_APP_PROTOCOL || "http",
-    };
-
     log(`Deleting plan with ID: ${planID}`, "debug");
 
     const returnPromise = new Promise<UpdateState>((resolve) => {
@@ -50,7 +45,7 @@ export const deletePlanData = async (
 
         
         fetch(
-            `${serverProps.DatabaseProtocol}://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/plans/${planID}`, 
+            `${process.env.EXPO_PUBLIC_API_URL}/plans/${planID}`, 
             {
                 method: "DELETE",
                 headers: {
