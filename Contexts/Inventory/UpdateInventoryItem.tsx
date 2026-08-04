@@ -1,3 +1,4 @@
+//2026-08-04 : Updating api calls to use correct env variable
 //2026-07-10 : Changes to pick up env server props
 
 //2026-06-19 : Logs for API calls
@@ -39,12 +40,6 @@ export const updateInventoryItemData = async (
     inventoryItem : Inventory_Item,
 ) => {
 
-    const serverProps = {
-        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
-        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
-        DatabaseProtocol: process.env.REACT_APP_PROTOCOL || "http",
-    }
-
     const updateBody = JSON.stringify({ 
         ...inventoryItem,
         Inventory_Item_Date: inventoryItem.Inventory_Item_Date ? new Date(inventoryItem.Inventory_Item_Date).toISOString().slice(0, 10) : null, // Format date to YYYY-MM-DD
@@ -55,7 +50,7 @@ export const updateInventoryItemData = async (
     let returnPromise = new Promise<UpdateState>((resolve) => {
 
         fetch(
-            `${serverProps.DatabaseProtocol}://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/inventory/${inventoryItem.Inventory_Item_ID}`, 
+            `${process.env.EXPO_PUBLIC_API_URL}/inventory/${inventoryItem.Inventory_Item_ID}`, 
             {
                 method: "PUT",
                 headers: {

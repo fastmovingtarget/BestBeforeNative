@@ -1,3 +1,4 @@
+//2026-08-04 : Updating api calls to use correct env variable
 //2026-07-10 : Changes to pick up env server props
 
 //2026-06-19 : Logs for API calls
@@ -37,13 +38,6 @@ export const addPlanData = async (
     setRecipes : React.Dispatch<React.SetStateAction<Plan[]>>,
     Plan : Plan, ) => {
 
-    const serverProps = {
-        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
-        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
-        DatabaseProtocol: process.env.REACT_APP_PROTOCOL || "http",
-    };
-    
-
     const addBody = JSON.stringify({
         ...Plan,
         Plan_Date: Plan.Plan_Date ? `${Plan.Plan_Date.getFullYear()}-${(Plan.Plan_Date.getMonth() + 1).toString().padStart(2, '0')}-${Plan.Plan_Date.getDate().toString().padStart(2, '0')}` : undefined, // Format date to YYYY-MM-DD, keep it undefined if not provided
@@ -54,7 +48,7 @@ export const addPlanData = async (
 
     const returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
-            `${serverProps.DatabaseProtocol}://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/plans/`, 
+            `${process.env.EXPO_PUBLIC_API_URL}/plans/`, 
             {
                 method: "POST",
                 headers: {

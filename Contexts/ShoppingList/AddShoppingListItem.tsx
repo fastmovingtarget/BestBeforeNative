@@ -1,3 +1,4 @@
+//2026-08-04 : Updating api calls to use correct env variable
 //2026-07-10 : Changes to pick up env server props
 
 //2026-06-19 : Logs for API calls
@@ -37,34 +38,33 @@ export const addShoppingListItemData = (
     setShoppingList : React.Dispatch<React.SetStateAction<Shopping_List_Item[]>>, 
     shoppingListItem : Shopping_List_Item,
 ) => {
-    
-    const serverProps = {
-        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
-        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
-        DatabaseProtocol: process.env.REACT_APP_PROTOCOL || "http",
-    }
 
     log(`Adding shopping list item: ${shoppingListItem.Shopping_Item_Name} for user ID: ${userID}`, "debug");
 
+    const updateBody = JSON.stringify({ 
+        ...shoppingListItem,
+        Plan_Date: shoppingListItem.Plan_Date ? new Date(shoppingListItem.Plan_Date).toISOString().slice(0, 10) : undefined, // Format date to YYYY-MM-DD, keep it undefined if not provided
+        User_ID: userID,
+    } as Shopping_List_Item);
+
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
-            `${serverProps.DatabaseProtocol}://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/shoppinglist/`, 
+            `${process.env.EXPO_PUBLIC_API_URL}/shoppinglist/`, 
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body : JSON.stringify({
-                    ...shoppingListItem,
-                    User_ID: userID,
-                })
+                body : updateBody
             }
         ).then((rawData) => {
             if(!rawData.ok) {
-                log(`Error adding shopping list item: ${rawData.statusText}`, "error");
+                log(`Error ${rawData.status} adding shopping list item: ${rawData.statusText}`, "error");
+                log(`Failed to add shopping list item: ${JSON.stringify(shoppingListItem)} for user ID: ${userID}`, "debug");
                 resolve(UpdateState.Failed);
             }
             else{
+                log(`Successfully added shopping list item: ${JSON.stringify(shoppingListItem)} for user ID: ${userID}`, "debug");
                 rawData.json().then((data) => {//the data returned should be the shopping item that was added including the id
                     setShoppingList([
                         ...shoppingList,

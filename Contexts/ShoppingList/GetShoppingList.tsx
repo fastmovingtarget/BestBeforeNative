@@ -1,3 +1,4 @@
+//2026-08-04 : Updating api calls to use correct env variable
 //2026-07-10 : Changes to pick up env server props
 
 //2026-06-19 : Logs for API calls
@@ -34,12 +35,6 @@ export const getShoppingListData = (
     searchOptions : ShoppingListSearchOptions = {}
 ) => {
 
-    const serverProps = {
-        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
-        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
-        DatabaseProtocol: process.env.REACT_APP_PROTOCOL || "http",
-    }
-
     const optionsString = Object.entries(searchOptions).map(([key, value]) => {//map the key and uri encoded value pairs to a string joined by &
         if (value === undefined) return ""; // Skip undefined values
         return `${key}=${encodeURIComponent(value)}`;
@@ -49,7 +44,7 @@ export const getShoppingListData = (
 
     let returnPromise = new Promise<SyncState>((resolve) => {
         fetch(
-            `${serverProps.DatabaseProtocol}://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/shoppinglist/${userID}?${optionsString}`, 
+            `${process.env.EXPO_PUBLIC_API_URL}/shoppinglist/${userID}?${optionsString}`, 
             {
                 method: "GET",
                 headers: {

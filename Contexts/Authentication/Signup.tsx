@@ -1,3 +1,4 @@
+//2026-08-04 : Updating api calls to use correct env variable
 //2026-07-16 : Added function descriptions
 //2026-07-13 : Saving Token to local storage
 
@@ -18,20 +19,14 @@ import log from "@/utils/log";
  */
 export default function Signup(username: string, password: string, setUserId: (id: number) => void, saveToken: (token: string, userId: number) => void): Promise<SyncState> {
 
- const serverProps = {
-        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
-        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
-        DatabaseProtocol: process.env.REACT_APP_PROTOCOL || "http",
-    }
-
     log(`Signing up: ${username}`, "debug");
 
     let returnPromise = new Promise<SyncState>((resolve) => {
         fetch(
-            `${serverProps.DatabaseProtocol}://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/authentication/signup`, 
+            `${process.env.EXPO_PUBLIC_API_URL}/authentication/signup`, 
             {
                 method: "POST",
-                headers: {
+                headers: { 
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({Username : username, Password : password}),

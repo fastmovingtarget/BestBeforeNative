@@ -1,3 +1,4 @@
+//2026-08-04 : Updating api calls to use correct env variable
 //2026-07-10 : Changes to pick up env server props
 
 //2026-06-19 : Logs for API calls
@@ -31,17 +32,11 @@ export const getPlansData = async (
     setPlans : React.Dispatch<React.SetStateAction<Plan[]>>
 ) => {
 
-    const serverProps = {
-        DatabaseServer: process.env.REACT_APP_DATABASE_SERVER || "192.168.50.201",
-        DatabasePort: process.env.REACT_APP_DATABASE_PORT || "5091",
-        DatabaseProtocol: process.env.REACT_APP_PROTOCOL || "http",
-    };
-
     log(`Fetching plans for user ID: ${userID}`, "debug");
 
     const returnPromise = new Promise<SyncState>((resolve) => {
         fetch(
-            `${serverProps.DatabaseProtocol}://${serverProps.DatabaseServer}:${serverProps.DatabasePort}/plans/${userID}`, 
+            `${process.env.EXPO_PUBLIC_API_URL}/plans/${userID}`, 
             {
                 method: "GET",
                 headers: {
