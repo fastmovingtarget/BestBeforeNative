@@ -1,3 +1,4 @@
+//2026-08-11 : Log improvements
 //2025-11-19 : Renamed RecipePlan(s) to just Plan(s)
 
 //2025-11-10 : Removed server call, added documentation
@@ -5,6 +6,7 @@
 //2025-10-28 : Added promise wrapper, getting server props internally
 
 import React from "react";
+import log from "@/utils/log";
 import Plan from "../../Types/Plan";
 import { UpdateState } from "../../Types/DataLoadingState";
 
@@ -29,5 +31,6 @@ export const updatePlanData = async (
         else //otherwise return the plan that was input
             return plan;
     }));
+    log(`Updated plan with ID: ${plan.Plan_ID} in local state`, "debug");
     return Promise.resolve(UpdateState.Successful);
 }
