@@ -1,3 +1,4 @@
+//2026-08-11 : feed plan id rather than plan object
 //2026-07-20 : Adding aria-labels to iconised buttons
 //2026-06-30 : Icon for delete plan
 
@@ -42,7 +43,7 @@ import { DeleteIcon } from '@/ui/ReactIcon';
  * @returns React Component
  */
 
-export default function PlanActiveDayRecipes({date, setSelectedPlan}: {date: Date, setSelectedPlan: (plan: Plan) => void}) {
+export default function PlanActiveDayRecipes({date, setSelectedPlanID}: {date: Date, setSelectedPlanID: (index: number) => void}) {
 
     const { plans, addPlan, deletePlan } = usePlans();
     const { recipes } = useRecipes();
@@ -82,7 +83,7 @@ export default function PlanActiveDayRecipes({date, setSelectedPlan}: {date: Dat
                                                 {plan.Recipe_Name}
                                             </LabelText>
                                             <RowContainer style={{width: "42%"}}>
-                                                <ButtonView onPress={() => setSelectedPlan(plan)} style={{marginRight: 5}}>
+                                                <ButtonView onPress={() => setSelectedPlanID(plan.Plan_ID || -1)} style={{marginRight: 5}}>
                                                     <LabelText>
                                                         Ingredients
                                                     </LabelText>
