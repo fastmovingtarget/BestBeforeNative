@@ -1,15 +1,17 @@
+//2026-08-11 : Added optional refresh handler on pull
 //2026-07-16 : Added function descriptions
 //2026-06-01 : Container for item lists
 
 //2025-11-21 : Moving common UI elements into their own folder
 
-import {ScrollView} from "react-native";
-import type { PropsWithChildren } from "react";
+import {ScrollView, RefreshControl} from "react-native";
+import { useCallback, type PropsWithChildren } from "react";
 import type { ViewStyle } from "react-native";
 
 type ScrollableContainerProps = {
     style?: ViewStyle,
     ["aria-label"]?:string
+    onRefresh?: () => void,
 }
 
 /**
@@ -23,7 +25,12 @@ type ScrollableContainerProps = {
  * @returns {JSX.Element} A React component that renders a scrollable container with the specified styles and children.
  */
 
-const ScrollableContainer = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildren<ScrollableContainerProps>) => {
+const ScrollableContainer = ({style, children, 'aria-label' : ariaLabel, onRefresh} : PropsWithChildren<ScrollableContainerProps>) => {
+
+    const handleRefresh = useCallback(() => {
+        onRefresh && onRefresh();
+    }, [onRefresh]);
+
     return (
         <ScrollView 
             contentContainerStyle={{ 
@@ -32,6 +39,9 @@ const ScrollableContainer = ({style, children, 'aria-label' : ariaLabel} : Props
             }}
             accessibilityLabel={ariaLabel}
             scrollEnabled={true}
+            refreshControl={
+                onRefresh ? <RefreshControl refreshing={false} onRefresh={handleRefresh} /> : undefined
+            }
             >
             {children}
         </ScrollView>
