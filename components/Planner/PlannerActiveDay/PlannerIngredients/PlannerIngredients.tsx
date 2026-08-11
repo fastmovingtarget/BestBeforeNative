@@ -1,3 +1,4 @@
+//2026-08-11 : improvements to visuals and fixing sync bugs
 //2026-06-30 : Text Fix
 
 //2026-06-30 : Improvements to formatting, adding React Icons
@@ -12,15 +13,19 @@
 
 //2025-10-29 : Placeholder implementation
 
-import React, {useState} from "react";
-import Recipe_Plan, {Plan_Ingredient} from "@/Types/Plan";
+import React, {useEffect, useState} from "react";
+import {Plan_Ingredient} from "@/Types/Plan";
 import Shopping_List_Item from "@/Types/Shopping_List_Item";
 import Inventory_Item from "@/Types/Inventory_Item";
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 import { useShoppingList } from "@/Contexts/ShoppingList/ShoppingListDataProvider";
 import { usePlans } from "@/Contexts/Plans/PlansDataProvider";
-import { FadeComponent, LabelText, PressableComponent, RowContainer, ScrollableContainer, ButtonView} from '@/ui/BestBeforeUI';
+import { FadeComponent, LabelText, PressableComponent, RowContainer, ScrollableContainer, ButtonView, ColumnContainer, FormTextInput} from '@/ui/BestBeforeUI';
 import { AddShoppingListItemIcon, InventoryIcon, LinkInventoryItemIcon, ShoppingListIcon, WarningIcon } from "@/ui/ReactIcon";
+import { SyncState } from "@/Types/DataLoadingState";
+import ResizeComponent from "@/ui/ResizeComponent";
+import { Colours } from "@/constants/Colors";
+import { Keyboard } from "react-native";
 
 /**
  * React Component for displaying the ingredients of a selected recipe plan
@@ -38,16 +43,46 @@ import { AddShoppingListItemIcon, InventoryIcon, LinkInventoryItemIcon, Shopping
  * @returns React Component
  */
 
-export default function RecipePlanActiveDayRecipeIngredients({recipePlan}: {recipePlan: Recipe_Plan}) {
+export default function PlannerIngredients({recipePlanID}: {recipePlanID?: number}) {
 
     const [selectedPlanIngredientIndex, setSelectedPlanIngredientIndex] = useState<number | null>(null);
     const {inventory, matchInventoryItem} = useInventory();
-    const {addShoppingItem} = useShoppingList();
-    const {updatePlan} = usePlans();
+    const [filteredInventory, setFilteredInventory] = useState<Inventory_Item[]>([]);
+    const {addShoppingItemAsync} = useShoppingList();
+    const {updatePlan, setPlansDataState, plans} = usePlans();
+    const [containerHeight, setContainerHeight] = useState<number>(0);
+    const [keyboardVisible, setKeyboardVisible] = useState<boolean>(false);
+    
+    useEffect(() => {
+        const showListener = Keyboard.addListener('keyboardDidShow', () => {
+            setKeyboardVisible(true);
+        });
+        const hideListener = Keyboard.addListener('keyboardDidHide', () => {
+            setKeyboardVisible(false);
+        });
 
+        return () => {
+            showListener.remove();
+            hideListener.remove();
+        };
+    }, []);
+
+    if(!recipePlanID) {
+        return (
+            <FadeComponent style={{flex:1, padding:10, marginVertical:5, width:"100%", justifyContent: "flex-start", alignItems: "flex-start"}}>
+                <LabelText>No Recipe Plan Selected</LabelText>
+            </FadeComponent>
+        );
+    }
+
+    const onIngredientSearchChange = (text: string) => {
+        const filtered = inventory.filter(inventoryItem => inventoryItem?.Inventory_Item_Name?.toLowerCase().includes(text.toLowerCase()));
+        setFilteredInventory(filtered);
+    }
 
     const attachPlanIngredient = (inventoryItem: Inventory_Item ) => {
-        if(selectedPlanIngredientIndex === null || !recipePlan.Plan_Ingredients || !inventoryItem.Inventory_Item_ID) return;
+        const recipePlan = plans.find(plan => plan.Plan_ID === recipePlanID);
+        if(selectedPlanIngredientIndex === null || !recipePlan || !recipePlan.Plan_Ingredients || !inventoryItem.Inventory_Item_ID) return;
 
         matchInventoryItem(inventoryItem, recipePlan.Plan_Ingredients[selectedPlanIngredientIndex], recipePlan);
 
@@ -63,7 +98,8 @@ export default function RecipePlanActiveDayRecipeIngredients({recipePlan}: {reci
     }
 
     const addToShoppingList = (index: number) => {
-        if(!recipePlan.Plan_Ingredients) return;
+        const recipePlan = plans.find(plan => plan.Plan_ID === recipePlanID);
+        if(!recipePlan || !recipePlan.Plan_Ingredients) return;
         const planIngredient : Plan_Ingredient = recipePlan.Plan_Ingredients[index];
         
         const newShoppingListItem : Shopping_List_Item = {
@@ -76,66 +112,115 @@ export default function RecipePlanActiveDayRecipeIngredients({recipePlan}: {reci
         }
 
         //Add to shopping list context
-        addShoppingItem(newShoppingListItem);
-
-        updatePlan({
-            ...recipePlan,
-            Plan_Ingredients: recipePlan.Plan_Ingredients.map((planIngredient : Plan_Ingredient, index) => {
-                if (index === selectedPlanIngredientIndex) {
-                    return {
-                        ...planIngredient,
-                        Item_ID: 1 // Indicate that this ingredient has been added to the shopping list with a placeholder ID
-                    } as Plan_Ingredient;
-                }
-                return planIngredient;
+        addShoppingItemAsync(newShoppingListItem).then((result) => {
+            updatePlan({
+                ...recipePlan,
+                Plan_Ingredients: recipePlan.Plan_Ingredients?.map((planIngredient : Plan_Ingredient, index) => {
+                    if (index === selectedPlanIngredientIndex) {
+                        return {
+                            ...planIngredient,
+                            Item_ID: 1 // Indicate that this ingredient has been added to the shopping list with a placeholder ID
+                        } as Plan_Ingredient;
+                    }
+                    return planIngredient;
+                })
             })
-        })
+            setPlansDataState(SyncState.Loading);
+        });
+
     };
 
     return (
-        <FadeComponent style={{flex:1, padding:10, marginVertical:5, width:"100%", justifyContent: "flex-start", alignItems: "flex-start"}}>
-            <LabelText>Ingredients to make {recipePlan.Recipe_Name}</LabelText>
-            {/* Implementation for displaying ingredients goes here */}
-            <ScrollableContainer style={{flexGrow:1, marginTop:10, width:"100%"}}>
-            {
-                recipePlan.Plan_Ingredients?.map((planIngredient, index) => {
-                    return (
-                        <FadeComponent key={`plan-ingredient-container-${index}`} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "100%"}}>
-                            <RowContainer style={{alignItems: 'center', width: "auto"}}>
-                                {planIngredient.Inventory_Item_ID ? 
-                                <InventoryIcon /> :
-                                planIngredient.Shopping_Item_ID ? 
-                                <ShoppingListIcon /> :
-                                <WarningIcon />}
-                                
-                                <LabelText> {planIngredient.Recipe_Ingredient_Name}</LabelText>
-                            </RowContainer>
-                            {
-                                !planIngredient.Shopping_Item_ID && !planIngredient.Inventory_Item_ID && (
-                                <RowContainer style={{alignItems: 'center', width: "auto"}}>
-                                    <ButtonView style={{marginHorizontal: 5}} key={`plan-ingredient-${index}`} aria-label="attach-inventory-item" onPress={() => selectedPlanIngredientIndex !== index && setSelectedPlanIngredientIndex(index)}>
-                                        <LinkInventoryItemIcon />
-                                    </ButtonView>
-                                    <ButtonView style={{marginHorizontal: 5}} key={`add-to-shopping-list-${index}`} aria-label="add-to-shopping-list" onPress={() => addToShoppingList(index)}>
-                                        <AddShoppingListItemIcon />
-                                    </ButtonView>
-                                </RowContainer>
-                            )}
-                        </FadeComponent>
-                    )
-                })
-            }
-            </ScrollableContainer>
+        <ColumnContainer style={{ flex: 1, width: "100%"}}>
+            <ColumnContainer style={{flex:1, marginVertical:5, width:"100%", justifyContent: "flex-start", alignItems: "flex-start"}} onLayout={(event) => setContainerHeight(event.nativeEvent.layout.height || 0)}>
+                <ResizeComponent targetHeight={(containerHeight - 10)*(selectedPlanIngredientIndex === null ? 1 : keyboardVisible ? 0 : 0.4)} style={{ width: "100%", borderWidth: 1, borderColor: Colours.primary}} aria-label="planner-ingredients-container">
+                    <LabelText>Ingredients to make {plans.find(plan => plan.Plan_ID === recipePlanID)?.Recipe_Name}</LabelText>
+                    {/* Implementation for displaying ingredients goes here */}
+                        <ScrollableContainer style={{flexGrow:1, marginTop:10, width:"100%",}}>
+                        {
+                            plans.find(plan => plan.Plan_ID === recipePlanID)?.Plan_Ingredients?.map((planIngredient, index) => {
+                                return (
+                                    
+                                    <FadeComponent key={`plan-ingredient-container-${index}`} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "100%"}}>
+                                        <RowContainer style={{alignItems: 'center', width: !planIngredient.Shopping_Item_ID && !planIngredient.Inventory_Item_ID ? "auto" : "100%"}}>
+                                            {planIngredient.Inventory_Item_ID ? 
+                                            <InventoryIcon /> :
+                                            planIngredient.Shopping_Item_ID ? 
+                                            <ShoppingListIcon /> :
+                                            <WarningIcon />}
+                                            
+                                            <LabelText> {planIngredient.Recipe_Ingredient_Name}</LabelText>
+                                        </RowContainer>
+                                        {
+                                        !planIngredient.Shopping_Item_ID && !planIngredient.Inventory_Item_ID && (
+                                        <RowContainer style={{alignItems: 'center', width: "auto"}}>
+                                            <ButtonView style={{marginHorizontal: 5}} key={`plan-ingredient-${index}`} aria-label="attach-inventory-item" onPress={() => {
+                                                    if(selectedPlanIngredientIndex === index) return;
+                                                    setSelectedPlanIngredientIndex(index)
+                                                    const recipePlanIngredientName = plans.find(plan => plan.Plan_ID === recipePlanID)?.Plan_Ingredients?.[index]?.Recipe_Ingredient_Name || '';
+                                                    setFilteredInventory(inventory.filter(inventoryItem => inventoryItem?.Inventory_Item_Name?.toLowerCase().includes(recipePlanIngredientName.toLowerCase())));
+                                                }}>
+                                                <LinkInventoryItemIcon />
+                                            </ButtonView>
+                                            <ButtonView style={{marginHorizontal: 5}} key={`add-to-shopping-list-${index}`} aria-label="add-to-shopping-list" onPress={() => addToShoppingList(index)}>
+                                                <AddShoppingListItemIcon />
+                                            </ButtonView>
+                                        </RowContainer>
+                                        )}
+                                    </FadeComponent>
+                                )
+                            })
+                        }
+                    </ScrollableContainer>
+                </ResizeComponent>
             {selectedPlanIngredientIndex !== null && (
-                <ScrollableContainer>
-                    <LabelText>Available Ingredients:</LabelText>
-                    {inventory.map((inventoryItem, index) => (
-                        <PressableComponent key={`available-ingredient-${index}`} onPress={() => attachPlanIngredient(inventoryItem)}>
-                            <LabelText>{inventoryItem.Inventory_Item_Name}</LabelText>
-                        </PressableComponent>
-                    ))}
-                </ScrollableContainer>
+                <ColumnContainer style={{flex:1, marginTop: 10, width:"100%", justifyContent: "flex-start", alignItems: "flex-start", borderWidth: 1, borderRadius: 10, borderColor: Colours.primary}} aria-label="available-ingredients-container">
+                    <LabelText style={{width: "100%", textAlign: "center"}}>Linkable Ingredients:</LabelText>
+                    <FadeComponent style={{width: "100%", marginTop: 10, padding: 5}}>
+                        <RowContainer style={{width: "100%", justifyContent: "space-between", alignItems: "center"}}>
+                            <FormTextInput 
+                                defaultValue={selectedPlanIngredientIndex !== null ? plans.find(plan => plan.Plan_ID === recipePlanID)?.Plan_Ingredients?.[selectedPlanIngredientIndex]?.Recipe_Ingredient_Name || "" : ''}
+                                placeholder="Search Ingredients..."
+                                aria-label='available-ingredients-search'
+                                onChangeText={(text) => {
+                                    onIngredientSearchChange(text);
+                                }}
+                                />
+                        </RowContainer>
+                    </FadeComponent>
+                        <ScrollableContainer >
+                            {
+
+                                filteredInventory.map((inventoryItem, index) => {
+                                if(index % 2 === 1) return null;
+                                return (
+                                    <RowContainer key={`available-ingredient-row-${index}`} style={{flexDirection: 'row', justifyContent: 'space-between', width: "100%", padding: 0}}>
+                                        <PressableComponent 
+                                            key={`available-ingredient-${index}`} 
+                                            onPress={() => attachPlanIngredient(filteredInventory[index])} 
+                                            style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "49%", marginVertical: 5, borderWidth: 1, borderColor: "black", margin: 0, flexGrow: 0}}
+                                            aria-label={`available-ingredient-${index}`}>
+                                            <LabelText>{filteredInventory[index]?.Inventory_Item_Name}</LabelText>
+                                        </PressableComponent>
+                                        {index + 1 < filteredInventory.length && (
+                                            <PressableComponent 
+                                                key={`available-ingredient-${index + 1}`} 
+                                                onPress={() => attachPlanIngredient(filteredInventory[index + 1])} 
+                                                style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "49%", marginVertical: 5, borderWidth: 1, borderColor: "black", margin: 0, flexGrow: 0}} 
+                                                aria-label={`available-ingredient-${index + 1}`}>
+                                                <LabelText>{filteredInventory[index + 1]?.Inventory_Item_Name}</LabelText>
+                                            </PressableComponent>
+                                        )}
+                                    </RowContainer>
+                                )}
+                            )}
+                        </ScrollableContainer>
+                    <ButtonView style={{marginTop: 10, width: "100%"}} onPress={() => setSelectedPlanIngredientIndex(null)}>
+                        <LabelText>Close</LabelText>
+                    </ButtonView>
+                </ColumnContainer>
             )}
-        </FadeComponent>
+            </ColumnContainer>
+        </ColumnContainer>
     );
 }
