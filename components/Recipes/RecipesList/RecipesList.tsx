@@ -1,3 +1,4 @@
+//2026-08-11 : added handling for refresh
 //2026-07-20 : Adding aria-label for iconised buttons
 //2026-07-16 : Added function descriptions
 //2026-07-01 : Putting Search and Add in same row
@@ -16,10 +17,11 @@ import React from "react";
 import Recipe from "@/Types/Recipe";
 import RecipesListItem from "./RecipesListItem/RecipesListItem";
 import { useRecipes } from "@/Contexts/Recipes/RecipesDataProvider";
-import { FadeComponent, ListView, ButtonView, RowContainer } from "@/ui/BestBeforeUI";
+import { FadeComponent, ButtonView, RowContainer, ScrollableContainer } from "@/ui/BestBeforeUI";
 import RecipesSearch from "../RecipesSearch/RecipesSearch";
 import { MountState } from "@/ui/Types/MountState";
 import { AddRecipeIcon } from "@/ui/ReactIcon";
+import { SyncState } from "@/Types/DataLoadingState";
 
 /**
  * RecipesList component
@@ -28,7 +30,7 @@ import { AddRecipeIcon } from "@/ui/ReactIcon";
  * @returns A component that displays a list of recipes with options to search and add new recipes
  */
 export default function RecipesList({ setSelectedRecipe, setIsEditing }: { setSelectedRecipe: (recipe: Recipe) => void, setIsEditing: (editing: boolean) => void }) {
-    const { recipes } = useRecipes();
+    const { recipes, setRecipesDataState } = useRecipes();
     const [mountState, setMountState] = React.useState<MountState>(MountState.Mount);
 
     const [selectedRecipe, setSelectedRecipeInternal] = React.useState<Recipe | null>(null);
@@ -82,7 +84,7 @@ export default function RecipesList({ setSelectedRecipe, setIsEditing }: { setSe
                     </ButtonView>
                 </RowContainer>
             </FadeComponent>
-            <ListView>
+            <ScrollableContainer onRefresh={()=> {setRecipesDataState(SyncState.Loading)}} >
                 {recipes.map((recipe: Recipe) => (
                     <RecipesListItem
                         key={`recipe-list-item-${recipe.Recipe_ID}`}
@@ -90,7 +92,7 @@ export default function RecipesList({ setSelectedRecipe, setIsEditing }: { setSe
                         setSelectedRecipe={selectRecipe}
                     />
                 ))}
-            </ListView>
+            </ScrollableContainer>
         </FadeComponent>
     );
 }

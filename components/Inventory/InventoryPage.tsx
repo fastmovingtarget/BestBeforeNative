@@ -1,3 +1,4 @@
+//2026-08-11 : Added LoadingBar
 //2026-07-16 : Added function description
 
 //2026-07-01 : Moving Add button to Search bar
@@ -20,6 +21,9 @@ import InventoryList from "./InventoryList/InventoryList";
 import InventoryItemForm from "./InventoryItemForm/InventoryItemForm";
 import { PageView } from "@/ui/BestBeforeUI";
 import { MountState } from "@/ui/Types/MountState";
+import LoadingBar from "@/ui/LoadingBar";
+import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
+import { UpdateState, SyncState } from "@/Types/DataLoadingState";
 
 /**
  * InventoryPage component
@@ -29,8 +33,11 @@ export default function InventoryPage() {
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [mountState, setMountState] = useState(MountState.Mount);
 
+    const {inventoryDataState} = useInventory();
+
     return (
         <PageView>
+            <LoadingBar isLoading={inventoryDataState === UpdateState.Loading || inventoryDataState === SyncState.Loading}/>
             <InventorySearch setIsFormVisible={setIsFormVisible} />
             {
                 isFormVisible && /* If the form is visible, render the InventoryItemForm component */

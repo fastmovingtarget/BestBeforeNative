@@ -1,3 +1,4 @@
+//2026-08-11 : Added LoadingBar
 //2026-07-16 : Added function descriptions
 //2026-07-01 : Moving Add button onto the Search bar
 
@@ -16,6 +17,9 @@ import ShoppingListSearch from "./ShoppingListSearch/ShoppingListSearch";
 import ShoppingList from "./ShoppingList/ShoppingList";
 import ShoppingListForm from "./ShoppingListForm/ShoppingListForm";
 import { PageView} from '@/ui/BestBeforeUI';
+import LoadingBar from "@/ui/LoadingBar";
+import { useShoppingList } from "@/Contexts/ShoppingList/ShoppingListDataProvider";
+import { SyncState, UpdateState } from "@/Types/DataLoadingState";
 
 /**
  * ShoppingListPage component
@@ -24,9 +28,11 @@ import { PageView} from '@/ui/BestBeforeUI';
  */
 export default function ShoppingListPage() {
     const [isFormVisible, setIsFormVisible] = useState(false);
+    const {shoppingListDataState} = useShoppingList();
 
     return (
         <PageView>
+            <LoadingBar isLoading={shoppingListDataState === UpdateState.Loading || shoppingListDataState === SyncState.Loading} />
             <ShoppingListSearch setIsFormVisible={setIsFormVisible} />
                 {isFormVisible &&
                     <ShoppingListForm onCancel={() => setIsFormVisible(false)} isFormVisible={isFormVisible} />

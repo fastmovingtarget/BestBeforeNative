@@ -1,3 +1,4 @@
+//2026-08-11 : Added LoadingBar
 //2026-07-16 : Added function description
 
 //2026-07-16 : Using updated import names
@@ -18,6 +19,9 @@ import React, { useState } from "react";
 import PlannerCalendar from "./PlannerCalendar/PlannerCalendar";
 import PlannerActiveDay from "./PlannerActiveDay/PlannerActiveDay";
 import { PageView} from '@/ui/BestBeforeUI';
+import LoadingBar from "@/ui/LoadingBar";
+import { SyncState, UpdateState } from "@/Types/DataLoadingState";
+import { usePlans } from "@/Contexts/Plans/PlansDataProvider";
 
 /**
  * PlannerPage component
@@ -27,12 +31,14 @@ import { PageView} from '@/ui/BestBeforeUI';
  */
 export default function PlannerPage() {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const {plansDataState} = usePlans();
 
     //Planner page flips between 2 states depending on if a date is selected or not
     //Calendar view when no date is selected
     //Active day view when a date is selected
     return (
         <PageView>
+            <LoadingBar isLoading={plansDataState === UpdateState.Loading || plansDataState === SyncState.Loading}/>
             {
                 selectedDate === null ?
                 <PlannerCalendar setSelectedDate={setSelectedDate} /> :
