@@ -1,3 +1,4 @@
+//2026-08-11 : causes plans to refresh when a relevant item is deleted
 //2026-07-20 : Adding aria-labels to iconised components
 //2026-07-16 : Added function descriptions
 //2026-06-30 : Added Buy, Edit and Delete icons
@@ -19,8 +20,10 @@
 import type Shopping_List_Item from "@/Types/Shopping_List_Item";
 import { useShoppingList } from "@/Contexts/ShoppingList/ShoppingListDataProvider";
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
+import { usePlans } from "@/Contexts/Plans/PlansDataProvider"; 
 import {RowContainer, ButtonView, LabelText, FadeComponent} from "@/ui/BestBeforeUI";
 import { AddInventoryIcon, DeleteIcon, EditShoppingListIcon } from "@/ui/ReactIcon";
+import { SyncState } from "@/Types/DataLoadingState";
 
 /**
  * ShoppingListItem component
@@ -31,6 +34,7 @@ import { AddInventoryIcon, DeleteIcon, EditShoppingListIcon } from "@/ui/ReactIc
 export default function ShoppingListItem({ item, onEdit } : { item: Shopping_List_Item, onEdit: (itemID: number) => void }) {
     const { deleteShoppingItem } = useShoppingList();
     const { addInventoryItem } = useInventory();   
+    const { setPlansDataState } = usePlans();
     
     /**
      * Handles the purchase of a shopping list item. When the purchase button is pressed, the item is added to the inventory and removed from the shopping list.
@@ -45,6 +49,18 @@ export default function ShoppingListItem({ item, onEdit } : { item: Shopping_Lis
                 Plan_Ingredient_ID: item.Plan_Ingredient_ID || undefined,
             });
             deleteShoppingItem(item.Shopping_Item_ID);
+            if(item.Plan_ID && item.Plan_Ingredient_ID) {
+                setPlansDataState(SyncState.Loading);
+            }
+        }
+    }
+
+    const onDelete = () => {
+        if (item.Shopping_Item_ID) {
+            deleteShoppingItem(item.Shopping_Item_ID);
+            if(item.Plan_ID && item.Plan_Ingredient_ID) {
+                setPlansDataState(SyncState.Loading);
+            }
         }
     }
 
@@ -64,7 +80,7 @@ export default function ShoppingListItem({ item, onEdit } : { item: Shopping_Lis
                 <ButtonView onPress={() => onEdit(item.Shopping_Item_ID || -1)} aria-label="edit-shopping-list-item-button">
                     <EditShoppingListIcon />
                 </ButtonView>
-                <ButtonView onPress={() => {deleteShoppingItem(item.Shopping_Item_ID || -1)}} aria-label="delete-shopping-list-item-button">
+                <ButtonView onPress={onDelete} aria-label="delete-shopping-list-item-button">
                     <DeleteIcon />
                 </ButtonView>
             </RowContainer>

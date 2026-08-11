@@ -1,3 +1,4 @@
+//2026-08-11 : Use plan id rather than plan object
 //2026-07-01 : Making top page component size consistent
 
 //2026-06-30 : Using back icon, improving button consistency
@@ -17,24 +18,24 @@
 //2025-10-28 : Simple initial implementation
 
 import React, { useState } from "react";
-import Recipe_Plan from "@/Types/Plan";
 import PlannerActiveDayRecipes from "./PlannerActiveDayRecipes/PlannerActiveDayRecipes";
 import PlannerIngredients from "./PlannerIngredients/PlannerIngredients";
 import { FadeComponent, LabelText, PressableComponent, RowContainer } from '@/ui/BestBeforeUI';
 import { BackIcon } from "@/ui/ReactIcon";
+import { usePlans } from "@/Contexts/Plans/PlansDataProvider";
 
 /**
  * React Component for displaying the active day view of the Recipe Planner
- * Switches between displaying the list of recipes for the selected day and the ingredients for the selected recipe
+ * Switches between displaying the list of recipes for the selected day and the ingredients for the selected plan
  * 
  * @param selectedDate The date selected in the calendar view
- * @states selectedRecipe/setSelectedRecipe The recipe selected from the list of recipes for the day
+ * @states selectedPlanID/setSelectedPlanID The plan selected from the list of recipes for the day
  * @returns React Component
  */ 
 
 export default function PlannerActiveDay({selectedDate, setSelectedDate}: {selectedDate: Date | null, setSelectedDate: (date: Date | null) => void}) {
-    const [selectedPlan, setSelectedPlan] = useState<Recipe_Plan | null>(null);
-    
+    const [selectedPlanID, setSelectedPlanID] = useState<number | null>(null);
+        
     return (
         <>
             <FadeComponent style={{padding: 0, margin: 0}}>
@@ -46,9 +47,9 @@ export default function PlannerActiveDay({selectedDate, setSelectedDate}: {selec
                     <RowContainer style={{ width: "20%", flexGrow: 0}}></RowContainer>
                 </RowContainer>
             </FadeComponent>
-            {selectedPlan ? 
-            (<PlannerIngredients recipePlan={selectedPlan} />) : 
-            (<PlannerActiveDayRecipes date={selectedDate ? selectedDate : new Date()} setSelectedPlan={setSelectedPlan} />)}
+            {selectedPlanID !== null ? 
+            (<PlannerIngredients recipePlanID={selectedPlanID} />) : 
+            (<PlannerActiveDayRecipes date={selectedDate ? selectedDate : new Date()} setSelectedPlanID={setSelectedPlanID} />)}
         </>
     );
 }

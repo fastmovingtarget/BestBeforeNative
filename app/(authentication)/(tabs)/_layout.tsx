@@ -1,3 +1,4 @@
+//2026-08-11 : Plan data used in other contexts
 //2026-07-16 : Adding function description
 
 //2026-07-10 : App tabs now require a user id to exist
@@ -38,10 +39,10 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <InventoryDataProvider>
-      <RecipesDataProvider>
-        <ShoppingListDataProvider>
-          <PlansDataProvider>
+    <PlansDataProvider>
+      <InventoryDataProvider>
+        <RecipesDataProvider>
+          <ShoppingListDataProvider>
             <Tabs
               screenOptions={{
                 tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -92,9 +93,9 @@ export default function TabLayout() {
                 }}
               />
             </Tabs>
-          </PlansDataProvider>
-        </ShoppingListDataProvider>
-      </RecipesDataProvider>
-    </InventoryDataProvider>
+          </ShoppingListDataProvider>
+        </RecipesDataProvider>
+      </InventoryDataProvider>
+    </PlansDataProvider>
   );
 }

@@ -1,3 +1,4 @@
+//2026-08-11 : Log improvements
 //2026-08-04 : Updating api calls to use correct env variable
 //2026-07-10 : Changes to pick up env server props
 
@@ -52,6 +53,7 @@ export const deleteRecipeData = async (
             else{
                 setRecipes(recipes.filter((recipe) => recipe.Recipe_ID !== recipeID));//remove the deleted recipe from the list
                 log(`Successfully deleted recipe with ID: ${recipeID}`, "debug");
+                
                 resolve(UpdateState.Successful);
             }
         }).catch((error) => {
