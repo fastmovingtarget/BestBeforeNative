@@ -1,3 +1,4 @@
+//2026-08-11 : minor refactor, removing imports
 //2026-07-20 : Using aria-label to indicate role
 //2026-07-16 : Added function description
 
@@ -38,9 +39,14 @@ export default function InventoryItemComponent({ inventoryItem, onEdit } : { inv
             onEdit(inventoryItem.Inventory_Item_ID || -1);
         }
         else if(unmountAction === "delete") {
-            deleteInventoryItem(inventoryItem.Inventory_Item_ID || -1);
+            deleteInventoryItem(inventoryItem.Inventory_Item_ID || -1)     
         }
     };
+
+    const onDelete = () => {
+        setUnmountAction("delete");
+        setMountState(MountState.Unmount);
+    }
 
     return (
         <FadeComponent style={{marginHorizontal : 0, padding : 10, width: "100%"}} mountState={mountState} onUnmountAnimationEnd={() => onUnmountAnimationEnd()}>
@@ -67,8 +73,7 @@ export default function InventoryItemComponent({ inventoryItem, onEdit } : { inv
                     <EditInventoryItemIcon />
                 </ButtonView>
                 <ButtonView onPress={() => {
-                    setUnmountAction("delete");
-                    setMountState(MountState.Unmount);
+                    onDelete();
                 }}
                             aria-label="delete-button">
                     <DeleteIcon />
