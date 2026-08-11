@@ -1,3 +1,4 @@
+//2026-08-11 : Async Add allows item to be added from planner correctly
 //2025-11-10 : Added improved documentation
 
 //2025-10-23 : Initial Commit
@@ -35,6 +36,7 @@ const ShoppingListDataContext = createContext({
     shoppingList: [] as Shopping_List_Item[],
     deleteShoppingItem: (itemID: number) => {},
     addShoppingItem: (item: Shopping_List_Item) => {},
+    addShoppingItemAsync: (item: Shopping_List_Item) => new Promise<UpdateState>((resolve) => {resolve(UpdateState.Failed)}),
     updateShoppingItem: (item: Shopping_List_Item) => {},
     shoppingListSearchOptions: {} as ShoppingListSearchOptions,
     setShoppingListSearchOptions: (options: ShoppingListSearchOptions) => {},
@@ -69,12 +71,21 @@ export const ShoppingListDataProvider = ({children}:{children:React.ReactNode}) 
 
     const setShoppingListSearchOptions = (options: ShoppingListSearchOptions) => {setShoppingListSearchOptionsState((oldOptions) => {return {...oldOptions, ...options}}); checkStartSync(UpdateState.Successful);};
     const deleteShoppingItem = (itemID: number) => deleteShoppingListItemData(shoppingList, setShoppingList, itemID).then((result) => checkStartSync(result));
-    const addShoppingItem = (item: Shopping_List_Item) => addShoppingListItemData(userId, shoppingList, setShoppingList, item).then((result) => checkStartSync(result));
+    const addShoppingItem = (item: Shopping_List_Item) => addShoppingListItemData(userId || -1, shoppingList, setShoppingList, item).then((result) => checkStartSync(result));
+    const addShoppingItemAsync = (item: Shopping_List_Item) => {
+        const asyncPromise = new Promise<UpdateState>((resolve) => {
+            addShoppingListItemData(userId || -1, shoppingList, setShoppingList, item).then((result) => {
+                checkStartSync(result);
+                resolve(result);
+            });
+        });
+        return asyncPromise;
+    };
     const updateShoppingItem = (item: Shopping_List_Item) => updateShoppingListItemData(shoppingList, setShoppingList, item).then((result) => checkStartSync(result));
 
     return (
         <ShoppingListDataContext.Provider
-            value={{ shoppingList, deleteShoppingItem, addShoppingItem, updateShoppingItem, shoppingListSearchOptions, setShoppingListSearchOptions, shoppingListDataState }}>
+            value={{ shoppingList, deleteShoppingItem, addShoppingItem, addShoppingItemAsync, updateShoppingItem, shoppingListSearchOptions, setShoppingListSearchOptions, shoppingListDataState }}>
             {children}
         </ShoppingListDataContext.Provider>
     )
@@ -88,6 +99,7 @@ export const useShoppingList = () => {
 export interface ShoppingListDataStruct {
     shoppingList: Shopping_List_Item[];
     addShoppingItem: (item: Shopping_List_Item) => void;
+    addShoppingItemAsync: (item: Shopping_List_Item) => Promise<UpdateState>;
     updateShoppingItem: (item: Shopping_List_Item) => void;
     deleteShoppingItem: (itemID: number) => void;
     shoppingListSearchOptions: ShoppingListSearchOptions;
