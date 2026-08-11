@@ -1,3 +1,4 @@
+//2026-08-11 : data state hook made available to facilitate refresh
 //2026-08-11 : force a plan data resync when an ingredient with a plan is deleted
 //2026-07-10 : Type guard for user === null
 
@@ -55,6 +56,7 @@ const InventoryDataContext = createContext({
     inventorySearchOptions: {} as InventorySearchOptions,
     setInventorySearchOptions: (options: InventorySearchOptions) => {},
     inventoryDataState: SyncState.Loading as SyncState | UpdateState,
+    setInventoryDataState: (state: SyncState | UpdateState) => {},
 });
 
 export const InventoryDataProvider = ({children}:{children:React.ReactNode}) => {
@@ -176,7 +178,8 @@ export const InventoryDataProvider = ({children}:{children:React.ReactNode}) => 
                 matchInventoryItem, 
                 inventorySearchOptions, 
                 setInventorySearchOptions, 
-                inventoryDataState 
+                inventoryDataState,
+                setInventoryDataState
             }}>
             {children}
         </InventoryDataContext.Provider>

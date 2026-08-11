@@ -1,3 +1,4 @@
+//2026-08-11 : data state hook made available to facilitate refresh
 //2026-08-11 : Async Add allows item to be added from planner correctly
 //2025-11-10 : Added improved documentation
 
@@ -41,6 +42,7 @@ const ShoppingListDataContext = createContext({
     shoppingListSearchOptions: {} as ShoppingListSearchOptions,
     setShoppingListSearchOptions: (options: ShoppingListSearchOptions) => {},
     shoppingListDataState: SyncState.Loading as SyncState | UpdateState,
+    setShoppingListDataState: (state: SyncState | UpdateState) => {},
 });
 
 export const ShoppingListDataProvider = ({children}:{children:React.ReactNode}) => {
@@ -85,7 +87,7 @@ export const ShoppingListDataProvider = ({children}:{children:React.ReactNode}) 
 
     return (
         <ShoppingListDataContext.Provider
-            value={{ shoppingList, deleteShoppingItem, addShoppingItem, addShoppingItemAsync, updateShoppingItem, shoppingListSearchOptions, setShoppingListSearchOptions, shoppingListDataState }}>
+            value={{ shoppingList, deleteShoppingItem, addShoppingItem, addShoppingItemAsync, updateShoppingItem, shoppingListSearchOptions, setShoppingListSearchOptions, shoppingListDataState, setShoppingListDataState }}>
             {children}
         </ShoppingListDataContext.Provider>
     )
@@ -104,5 +106,6 @@ export interface ShoppingListDataStruct {
     deleteShoppingItem: (itemID: number) => void;
     shoppingListSearchOptions: ShoppingListSearchOptions;
     shoppingListDataState: SyncState | UpdateState;
+    setShoppingListDataState: (state: SyncState | UpdateState) => void;
     setShoppingListSearchOptions: (options: ShoppingListSearchOptions) => void;
 }

@@ -1,3 +1,4 @@
+//2026-08-11 : data state hook made available to facilitate refresh
 //2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2025-11-20 : Cleanup of debug logs
 
@@ -44,6 +45,7 @@ const RecipesDataContext = createContext({
     recipesSearchOptions: {} as RecipesSearchOptions,
     setRecipesSearchOptions: (options: RecipesSearchOptions) => {},
     recipesDataState: SyncState.Loading as SyncState | UpdateState,
+    setRecipesDataState: (state: SyncState | UpdateState) => {},
 });
 
 export const RecipesDataProvider = ({children}:{children:React.ReactNode}) => {
@@ -81,7 +83,7 @@ export const RecipesDataProvider = ({children}:{children:React.ReactNode}) => {
 
     return (
         <RecipesDataContext.Provider
-            value={{ recipes, deleteRecipe, addRecipe, updateRecipe, recipesSearchOptions, setRecipesSearchOptions, recipesDataState }}>
+            value={{ recipes, deleteRecipe, addRecipe, updateRecipe, recipesSearchOptions, setRecipesSearchOptions, recipesDataState, setRecipesDataState }}>
             {children}
         </RecipesDataContext.Provider>
     )
