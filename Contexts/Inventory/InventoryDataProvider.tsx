@@ -1,3 +1,4 @@
+//2026-08-11 : force a plan data resync when an ingredient with a plan is deleted
 //2026-07-10 : Type guard for user === null
 
 //2026-06-19 : Logs for API calls
@@ -14,6 +15,7 @@ import { useState, createContext, useContext, useEffect  } from "react";
 
 import Inventory_Item, { InventorySearchOptions } from "@/Types/Inventory_Item";
 import { UpdateState, SyncState } from "@/Types/DataLoadingState";
+import log from "@/utils/log";
 
 import { getInventoryData } from "./GetInventory";
 import { deleteInventoryItemData } from "./DeleteInventoryItem";
@@ -21,6 +23,7 @@ import { addInventoryItemData } from "./AddInventoryItem";
 import { updateInventoryItemData } from "./UpdateInventoryItem";
 
 import { useAuthenticationData } from "@/Contexts/Authentication/AuthenticationDataProvider";
+import { usePlans } from "@/Contexts/Plans/PlansDataProvider";
 import Plan, { Plan_Ingredient } from "@/Types/Plan";
 
 /**
@@ -60,6 +63,7 @@ export const InventoryDataProvider = ({children}:{children:React.ReactNode}) => 
     const [inventoryDataState, setInventoryDataState] = useState<SyncState | UpdateState>(SyncState.Loading)
 
     const {userId} = useAuthenticationData();
+    const {setPlansDataState} = usePlans();
 
     useEffect(() => {
         if(inventoryDataState === SyncState.Loading && userId){
@@ -85,7 +89,12 @@ export const InventoryDataProvider = ({children}:{children:React.ReactNode}) => 
     }
 
     const setInventorySearchOptions = (options: InventorySearchOptions) => {setInventorySearchOptionsState((oldOptions) => {return {...oldOptions, ...options}}); checkStartSync(UpdateState.Successful);};
-    const deleteInventoryItem = (inventoryItemID: number) => deleteInventoryItemData(inventory, setInventory, inventoryItemID).then((result) => checkStartSync(result));
+    const deleteInventoryItem = (inventoryItemID: number) => deleteInventoryItemData(inventory, setInventory, inventoryItemID).then((result) => {
+        if(result === UpdateState.Successful && inventory.find(item => item.Inventory_Item_ID === inventoryItemID)?.Plan_ID && inventory.find(item => item.Inventory_Item_ID === inventoryItemID)?.Plan_Ingredient_ID) {
+            setPlansDataState(SyncState.Loading);
+        }    
+        return checkStartSync(result);
+    });
     const addInventoryItem = (inventoryItem: Inventory_Item) => addInventoryItemData(userId, inventory, setInventory, inventoryItem).then((result) => checkStartSync(result));
     const updateInventoryItem = (inventoryItem: Inventory_Item) => updateInventoryItemData(inventory, setInventory, inventoryItem).then((result) => checkStartSync(result));
 
@@ -104,6 +113,7 @@ export const InventoryDataProvider = ({children}:{children:React.ReactNode}) => 
      * @return {UpdateState} - The result of the match operation.
      */
     const matchInventoryItem = (inventoryItem: Inventory_Item, planIngredient: Plan_Ingredient, plan: Plan) => {
+        log(`Matching inventory item ID: ${inventoryItem.Inventory_Item_ID} with plan ingredient ID: ${planIngredient.Recipe_Ingredient_ID} and plan ID: ${plan.Plan_ID}`, "debug");
         if(userId === null) return UpdateState.Failed;
         const existingInventoryItem = inventory.find((item) => item.Inventory_Item_ID === inventoryItem.Inventory_Item_ID);
         if(existingInventoryItem){            
@@ -117,6 +127,7 @@ export const InventoryDataProvider = ({children}:{children:React.ReactNode}) => 
             
             if((existingInventoryItem.Inventory_Item_Quantity || 0) > (planIngredient.Recipe_Ingredient_Quantity || 0)){//if there's some initial inventory item left over
                 newInventoryItem.Inventory_Item_Quantity = planIngredient.Recipe_Ingredient_Quantity;
+                log(`Creating new Inventory Item: ${JSON.stringify(newInventoryItem)}`, "debug");
                 //create a new inventory item with the leftover quantity
                 const leftoverInventoryItem : Inventory_Item = {
                     ...existingInventoryItem,
@@ -132,13 +143,22 @@ export const InventoryDataProvider = ({children}:{children:React.ReactNode}) => 
                             return UpdateState.Failed;
                         }
                         else{
-                            updateInventoryItem(newInventoryItem);
+                            updateInventoryItemData(inventory, setInventory, newInventoryItem).then((result) => {
+                                if(result === UpdateState.Successful){
+                                    setPlansDataState(SyncState.Loading);
+                                }
+                                return checkStartSync(result);
+                            });
                         }
-                    }
-                );
+                });
             }
             else
-                updateInventoryItem(newInventoryItem);
+                updateInventoryItemData(inventory, setInventory, newInventoryItem).then((result) => {
+                    if(result === UpdateState.Successful){
+                        setPlansDataState(SyncState.Loading);
+                    }
+                    return checkStartSync(result);
+                });
         }
         else{
             return UpdateState.Failed;
