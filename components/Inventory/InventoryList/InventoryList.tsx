@@ -1,3 +1,4 @@
+//2026-08-11 : added handling for refresh
 //2026-07-16 : Added function description
 
 //2026-06-01 : Replaced ListView with ScrollableContainer
@@ -14,6 +15,8 @@ import { useState } from "react";
 import InventoryItemComponent from "./InventoryItemComponent/InventoryItemComponent";
 import InventoryItemForm from "../InventoryItemForm/InventoryItemForm";
 import { ScrollableContainer} from "@/ui/BestBeforeUI";
+import { SyncState } from "@/Types/DataLoadingState";
+import log from "@/utils/log";
 
 /**
  * InventoryList component
@@ -22,10 +25,14 @@ import { ScrollableContainer} from "@/ui/BestBeforeUI";
  */
 export default function InventoryList({onEdit}: {onEdit: () => void}) {
     const [editId, setEditId] = useState<number | undefined>(undefined);
-    const {inventory} = useInventory();
+    const {inventory, setInventoryDataState} = useInventory();
+
+    const onRefresh = () => {
+        setInventoryDataState(SyncState.Loading);
+    }
     
     return (
-        <ScrollableContainer >
+        <ScrollableContainer onRefresh={onRefresh}>
             {inventory.map((inventoryItem: Inventory_Item) => (
                 editId !== inventoryItem.Inventory_Item_ID ?
                     <InventoryItemComponent key={`inventory-item-${inventoryItem.Inventory_Item_ID}`} inventoryItem={inventoryItem} onEdit={(id) => {
