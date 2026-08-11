@@ -1,3 +1,4 @@
+//2026-08-11 : Removed import
 //2026-08-11 : Use plan id rather than plan object
 //2026-07-01 : Making top page component size consistent
 
@@ -22,7 +23,6 @@ import PlannerActiveDayRecipes from "./PlannerActiveDayRecipes/PlannerActiveDayR
 import PlannerIngredients from "./PlannerIngredients/PlannerIngredients";
 import { FadeComponent, LabelText, PressableComponent, RowContainer } from '@/ui/BestBeforeUI';
 import { BackIcon } from "@/ui/ReactIcon";
-import { usePlans } from "@/Contexts/Plans/PlansDataProvider";
 
 /**
  * React Component for displaying the active day view of the Recipe Planner
