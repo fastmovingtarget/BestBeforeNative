@@ -1,3 +1,4 @@
+//2026-08-12 : Filter expired items from planner ingredients
 //2026-08-11 : improvements to visuals and fixing sync bugs
 //2026-06-30 : Text Fix
 
@@ -76,7 +77,12 @@ export default function PlannerIngredients({recipePlanID}: {recipePlanID?: numbe
     }
 
     const onIngredientSearchChange = (text: string) => {
-        const filtered = inventory.filter(inventoryItem => inventoryItem?.Inventory_Item_Name?.toLowerCase().includes(text.toLowerCase()));
+        const filtered = inventory.filter(inventoryItem => {
+            if(inventoryItem?.Inventory_Item_Date && new Date(inventoryItem.Inventory_Item_Date) < new Date()) {
+                return false; // Exclude expired items
+            }
+            return inventoryItem?.Inventory_Item_Name?.toLowerCase().includes(text.toLowerCase());
+        });
         setFilteredInventory(filtered);
     }
 
