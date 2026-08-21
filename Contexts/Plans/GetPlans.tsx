@@ -1,3 +1,4 @@
+//2026-08-21 : Fixing API endpoint alterable outside of code
 //2026-08-11 : Log improvements
 //2026-08-04 : Updating api calls to use correct env variable
 //2026-07-10 : Changes to pick up env server props
@@ -37,7 +38,7 @@ export const getPlansData = async (
 
     const returnPromise = new Promise<SyncState>((resolve) => {
         fetch(
-            `${process.env.EXPO_PUBLIC_API_URL}/plans/${userID}`, 
+            `https://bestbeforeapi.fastmovingtarget.co.uk/plans/${userID}`, 
             {
                 method: "GET",
                 headers: {

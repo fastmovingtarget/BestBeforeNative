@@ -1,3 +1,4 @@
+//2026-08-21 : Fixing API endpoint alterable outside of code
 //2026-08-04 : Updating api calls to use correct env variable
 //2026-07-10 : Changes to pick up env server props
 
@@ -45,7 +46,7 @@ export const deletePlanData = async (
 
         
         fetch(
-            `${process.env.EXPO_PUBLIC_API_URL}/plans/${planID}`, 
+            `https://bestbeforeapi.fastmovingtarget.co.uk/plans/${planID}`, 
             {
                 method: "DELETE",
                 headers: {
