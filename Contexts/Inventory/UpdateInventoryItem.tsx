@@ -1,3 +1,4 @@
+//2026-08-21 : Fixing API endpoint alterable outside of code
 //2026-08-04 : Updating api calls to use correct env variable
 //2026-07-10 : Changes to pick up env server props
 
@@ -50,7 +51,7 @@ export const updateInventoryItemData = async (
     let returnPromise = new Promise<UpdateState>((resolve) => {
 
         fetch(
-            `${process.env.EXPO_PUBLIC_API_URL}/inventory/${inventoryItem.Inventory_Item_ID}`, 
+            `https://bestbeforeapi.fastmovingtarget.co.uk/inventory/${inventoryItem.Inventory_Item_ID}`, 
             {
                 method: "PUT",
                 headers: {
