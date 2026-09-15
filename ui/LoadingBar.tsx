@@ -1,8 +1,9 @@
+//2026-09-15 : Colours now sourced from ColourProvider
 //2026-08-11 : Created Loading Bar to indicate loads
 import {View} from "react-native";
 import { useEffect, useState, type PropsWithChildren } from "react";
 import type { ViewStyle } from "react-native";
-import {Colours} from "@/constants/Colors";
+import { useColourData } from "@/Contexts/Colours/ColourDataProvider";
 
 type LoadingBarProps = {
     style?: ViewStyle,
@@ -26,6 +27,19 @@ const LoadingBar = ({style, children, 'aria-label' : ariaLabel, isLoading} : Pro
     const [loadingBarLocation, setLoadingBarLocation] = useState<number>(0);
     const [animationReverse, setAnimationReverse] = useState<boolean>(false);
     const loadingBarWidth = 20;
+
+    const {colours} = useColourData();
+
+    const LoadingBarStyles = {
+        position: "absolute",
+        top: 15,
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        height: 10,
+        backgroundColor: colours.primary,
+    } as ViewStyle;
 
     useEffect(() => {
         if(isLoading){
@@ -58,17 +72,5 @@ const LoadingBar = ({style, children, 'aria-label' : ariaLabel, isLoading} : Pro
         </View>
     );
 }
-
-const LoadingBarStyles = {
-    position: "absolute",
-    top: 15,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 10,
-    backgroundColor: Colours.primary,
-} as ViewStyle;
-
 
 export default LoadingBar;

@@ -1,3 +1,4 @@
+//2026-09-15 : Colours now sourced from ColourProvider
 //2026-07-16 : Added function descriptions
 //2026-06-01 : UI Tweaking
 
@@ -6,7 +7,7 @@
 import {Text} from "react-native";
 import type { PropsWithChildren } from "react";
 import type { TextStyle } from "react-native";
-import { Colours } from "@/constants/Colors";
+import { useColourData } from "@/Contexts/Colours/ColourDataProvider";
 
 type LabelTextProps = {
     style?: TextStyle,
@@ -24,6 +25,23 @@ type LabelTextProps = {
  */
 
 const LabelText = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildren<LabelTextProps>) => {
+
+    const {colours} = useColourData();
+
+    const labelTextStyles = {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 5,
+        color: colours.text,
+        padding: 10,
+        margin:0,
+        textAlignVertical: "center",
+        verticalAlign: "middle",
+        fontSize: 16
+    } as TextStyle;
+
     return (
         <Text style={{ 
             ...labelTextStyles,
@@ -35,20 +53,5 @@ const LabelText = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildr
         </Text>
     );
 }
-
-const labelTextStyles = {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 5,
-    color: Colours.text,
-    padding: 10,
-    margin:0,
-    textAlignVertical: "center",
-    verticalAlign: "middle",
-    fontSize: 16
-} as TextStyle;
-
 
 export default LabelText;

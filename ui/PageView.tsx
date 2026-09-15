@@ -1,3 +1,4 @@
+//2026-09-15 : Colours now sourced from ColourProvider
 //2026-07-16 : Added function descriptions
 //2026-06-11 : Improved padding
 
@@ -8,7 +9,7 @@
 import {View} from "react-native";
 import type { PropsWithChildren } from "react";
 import type { ViewStyle } from "react-native";
-import { Colours } from "@/constants/Colors";
+import { useColourData } from "@/Contexts/Colours/ColourDataProvider";
 
 type PageViewProps = PropsWithChildren<{style? : ViewStyle}>
 
@@ -23,6 +24,20 @@ type PageViewProps = PropsWithChildren<{style? : ViewStyle}>
  * @returns {JSX.Element} A React component that renders a styled page view with the specified styles and children.
  */
 const PageView : React.FC<PageViewProps> = props => {
+
+    const {colours} = useColourData();
+
+    const pageViewStyles = {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        backgroundColor: colours.background,
+        flex:1,
+        width: "100%",
+        paddingTop: 30,
+        paddingHorizontal: 5,
+    } as ViewStyle;
+
     return (
         <View style={{ 
             ...pageViewStyles,
@@ -33,16 +48,5 @@ const PageView : React.FC<PageViewProps> = props => {
         </View>
     );
 }
-
-const pageViewStyles = {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    backgroundColor: Colours.background,
-    flex:1,
-    width: "100%",
-    paddingTop: 30,
-    paddingHorizontal: 5,
-} as ViewStyle;
 
 export default PageView;

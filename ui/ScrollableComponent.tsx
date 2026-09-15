@@ -1,3 +1,4 @@
+//2026-09-15 : Colours now sourced from ColourProvider
 //2026-07-16 : Added function descriptions
 //2026-06-01 : UI Tweaking
 
@@ -6,7 +7,7 @@
 import {ScrollView} from "react-native";
 import type { PropsWithChildren } from "react";
 import type { ViewStyle } from "react-native";
-import { Colours } from "@/constants/Colors";
+import { useColourData } from "@/Contexts/Colours/ColourDataProvider";
 
 type ScrollableComponentProps = {
     style?: ViewStyle,
@@ -24,6 +25,22 @@ type ScrollableComponentProps = {
  * @returns {JSX.Element} A React component that renders a styled scrollable container with the specified styles and children.
  */
 const ScrollableComponent = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildren<ScrollableComponentProps>) => {
+
+    const {colours} = useColourData();
+
+    const scrollableComponentStyles = {
+        display: "flex",
+        flexGrow: 1,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: colours.primary,
+        color: colours.text,
+        borderRadius: 10,
+        padding: 10,
+        margin: 5,
+    } as ViewStyle;
+
     return (
         <ScrollView 
             contentContainerStyle={{ 
@@ -35,18 +52,5 @@ const ScrollableComponent = ({style, children, 'aria-label' : ariaLabel} : Props
         </ScrollView>
     );
 }
-
-const scrollableComponentStyles = {
-    display: "flex",
-    flexGrow: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colours.primary,
-    color: Colours.text,
-    borderRadius: 10,
-    padding: 10,
-    margin: 5,
-} as ViewStyle;
 
 export default ScrollableComponent;

@@ -1,3 +1,4 @@
+//2026-09-15 : Colours now sourced from ColourProvider
 //2026-07-21 : Added aria-label to star and outline-star icons
 //2026-07-21 : Added stars and star outlines
 //2026-07-16 : Added function descriptions
@@ -11,7 +12,7 @@
 
 import {Ionicons} from '@react-native-vector-icons/ionicons';
 import {MaterialDesignIcons} from '@react-native-vector-icons/material-design-icons';
-import {Colours} from "@/constants/Colors";
+import { useColourData } from "@/Contexts/Colours/ColourDataProvider";
 import {RowContainer} from "@/ui/BestBeforeUI";
 
 const defaultSize = 30;
@@ -24,37 +25,50 @@ const defaultSize = 30;
  * @returns {JSX.Element} A React component that renders the specified icon with the given size and color.
  */
 
-export function BackIcon({size = defaultSize, color = Colours.text}: {size?: number, color?: string}) {
+export function BackIcon({size = defaultSize, color}: {size?: number, color?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
     return (
         <Ionicons name={"chevron-back"} size={size} color={color} style={{padding:5}} />
     );  
 }   
 
-export function EditIcon({size = defaultSize, color = Colours.text}: {size?: number, color?: string}) {
+export function EditIcon({size = defaultSize, color}: {size?: number, color?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
     return (
         <Ionicons name={"create-outline"} size={size} color={color} style={{padding:5}} />
     );  
 }
 
-export function DeleteIcon({size = defaultSize, color = Colours.text}: {size?: number, color?: string}) {
+export function DeleteIcon({size = defaultSize, color}: {size?: number, color?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
     return (
         <MaterialDesignIcons name={"trash-can-outline"} size={size} color={color} style={{padding:5}} />
     );  
 }
 
-export function ForwardIcon({size = defaultSize, color = Colours.text}: {size?: number, color?: string}) {
+export function ForwardIcon({size = defaultSize, color}: {size?: number, color?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
     return (
         <Ionicons name={"chevron-forward"} size={size} color={color} style={{padding:5}} />
     );  
 }
 
-export function WarningIcon({size = defaultSize, color = Colours.text}: {size?: number, color?: string}) {
+export function WarningIcon({size = defaultSize, color}: {size?: number, color?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
     return (
         <MaterialDesignIcons name={"alert-outline"} size={size} color={color} style={{padding:5}} />
     );  
 }
 
-export function AddInventoryIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
+export function AddInventoryIcon({size = defaultSize, color, background}: {size?: number, color?: string, background?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
+    background = background ?? colours.buttonBackground;
     return (
         <RowContainer style={{padding:0, margin:0, justifyContent:"center", alignItems:"center", position:"relative", width:"auto"}}>
             <MaterialDesignIcons name={"fridge-outline"} size={size} color={color} style={{padding:5}} />
@@ -65,7 +79,10 @@ export function AddInventoryIcon({size = defaultSize, color = Colours.text, back
     );  
 }
 
-export function AddShoppingListItemIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
+export function AddShoppingListItemIcon({size = defaultSize, color, background}: {size?: number, color?: string, background?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
+    background = background ?? colours.buttonBackground;
     return (
         <RowContainer style={{padding:0, margin:0, justifyContent:"center", alignItems:"center", position:"relative", width:"auto"}}>
             <MaterialDesignIcons name={"basket-outline"} size={size} color={color} style={{padding:5}} />
@@ -76,7 +93,10 @@ export function AddShoppingListItemIcon({size = defaultSize, color = Colours.tex
     );  
 }
 
-export function LinkInventoryItemIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
+export function LinkInventoryItemIcon({size = defaultSize, color, background}: {size?: number, color?: string, background?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
+    background = background ?? colours.buttonBackground;
     return (
         <RowContainer style={{padding:0, margin:0, justifyContent:"center", alignItems:"center", position:"relative", width:"auto"}}>
             <MaterialDesignIcons name={"fridge-outline"} size={size} color={color} style={{padding:5}} />
@@ -87,19 +107,26 @@ export function LinkInventoryItemIcon({size = defaultSize, color = Colours.text,
     );  
 }
 
-export function InventoryIcon({size = defaultSize, color = Colours.text}: {size?: number, color?: string}) {
+export function InventoryIcon({size = defaultSize, color}: {size?: number, color?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
     return (
         <MaterialDesignIcons name={"fridge-outline"} size={size} color={color} style={{padding:5}} />
     );  
 }
 
-export function ShoppingListIcon({size = defaultSize, color = Colours.text}: {size?: number, color?: string}) {
+export function ShoppingListIcon({size = defaultSize, color}: {size?: number, color?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
     return (
         <MaterialDesignIcons name={"basket-outline"} size={size} color={color} style={{padding:5}} />
     );  
 }
 
-export function EditShoppingListIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
+export function EditShoppingListIcon({size = defaultSize, color, background}: {size?: number, color?: string, background?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
+    background = background ?? colours.buttonBackground;
     return (
         <RowContainer style={{padding:0, margin:0, justifyContent:"center", alignItems:"center", position:"relative", width:"auto"}}>
             <MaterialDesignIcons name={"basket-outline"} size={size} color={color} style={{padding:5}} />
@@ -110,7 +137,10 @@ export function EditShoppingListIcon({size = defaultSize, color = Colours.text, 
     );    
 }
 
-export function EditInventoryItemIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
+export function EditInventoryItemIcon({size = defaultSize, color, background}: {size?: number, color?: string, background?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
+    background = background ?? colours.buttonBackground;
     return (
         <RowContainer style={{padding:0, margin:0, justifyContent:"center", alignItems:"center", position:"relative", width:"auto"}}>
             <MaterialDesignIcons name={"fridge-outline"} size={size} color={color} style={{padding:5}} />
@@ -121,7 +151,10 @@ export function EditInventoryItemIcon({size = defaultSize, color = Colours.text,
     );    
 }
 
-export function EditRecipeIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
+export function EditRecipeIcon({size = defaultSize, color, background}: {size?: number, color?: string, background?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
+    background = background ?? colours.buttonBackground;
     return (
         <RowContainer style={{padding:0, margin:0, justifyContent:"center", alignItems:"center", position:"relative", width:"auto"}}>
             <MaterialDesignIcons name={"pot-steam-outline"} size={size} color={color} style={{padding:5}} />
@@ -132,7 +165,10 @@ export function EditRecipeIcon({size = defaultSize, color = Colours.text, backgr
     );    
 }
 
-export function AddRecipeIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
+export function AddRecipeIcon({size = defaultSize, color, background}: {size?: number, color?: string, background?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
+    background = background ?? colours.buttonBackground;
     return (
         <RowContainer style={{padding:0, margin:0, justifyContent:"center", alignItems:"center", position:"relative", width:"auto"}}>
             <MaterialDesignIcons name={"pot-steam-outline"} size={size} color={color} style={{padding:5}} />
@@ -143,13 +179,18 @@ export function AddRecipeIcon({size = defaultSize, color = Colours.text, backgro
     );    
 }
 
-export function CancelIcon({size = defaultSize, color = Colours.text}: {size?: number, color?: string}) {
+export function CancelIcon({size = defaultSize, color}: {size?: number, color?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
     return (
         <MaterialDesignIcons name={"backspace-outline"} size={size} color={color} style={{padding:5}} />
     );  
 }
 
-export function SubmitInventoryIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
+export function SubmitInventoryIcon({size = defaultSize, color, background}: {size?: number, color?: string, background?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
+    background = background ?? colours.buttonBackground;
     return (
         <RowContainer style={{padding:0, margin:0, justifyContent:"center", alignItems:"center", position:"relative", width:"auto"}}>
             <MaterialDesignIcons name={"fridge-outline"} size={size} color={color} style={{padding:5}} />
@@ -160,7 +201,10 @@ export function SubmitInventoryIcon({size = defaultSize, color = Colours.text, b
     );  
 }
 
-export function SubmitRecipeIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
+export function SubmitRecipeIcon({size = defaultSize, color, background}: {size?: number, color?: string, background?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
+    background = background ?? colours.buttonBackground;
     return (
         <RowContainer style={{padding:0, margin:0, justifyContent:"center", alignItems:"center", position:"relative", width:"auto"}}>
             <MaterialDesignIcons name={"pot-steam-outline"} size={size} color={color} style={{padding:5}} />
@@ -171,7 +215,10 @@ export function SubmitRecipeIcon({size = defaultSize, color = Colours.text, back
     );  
 }
 
-export function SubmitShoppingListIcon({size = defaultSize, color = Colours.text, background = Colours.buttonBackground}: {size?: number, color?: string, background?: string}) {
+export function SubmitShoppingListIcon({size = defaultSize, color, background}: {size?: number, color?: string, background?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
+    background = background ?? colours.buttonBackground;
     return (
         <RowContainer style={{padding:0, margin:0, justifyContent:"center", alignItems:"center", position:"relative", width:"auto"}}>
             <MaterialDesignIcons name={"basket-outline"} size={size} color={color} style={{padding:5}} />
@@ -182,13 +229,17 @@ export function SubmitShoppingListIcon({size = defaultSize, color = Colours.text
     );  
 }
 
-export function StarOutlineIcon({size = defaultSize, color = Colours.text, "aria-label" : ariaLabel}: {size?: number, color?: string, "aria-label"?: string}) {
+export function StarOutlineIcon({size = defaultSize, color, "aria-label" : ariaLabel}: {size?: number, color?: string, "aria-label"?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
     return (
         <MaterialDesignIcons name={"star-outline"} size={size} color={color} style={{padding:5}} aria-label={ariaLabel} />
     );  
 }
 
-export function StarFilledIcon({size = defaultSize, color = Colours.text, "aria-label" : ariaLabel}: {size?: number, color?: string, "aria-label"?: string}) {
+export function StarFilledIcon({size = defaultSize, color, "aria-label" : ariaLabel}: {size?: number, color?: string, "aria-label"?: string}) {
+    const {colours} = useColourData();
+    color = color ?? colours.text;
     return (
         <MaterialDesignIcons name={"star"} size={size} color={color} style={{padding:5}} aria-label={ariaLabel} />
     );  

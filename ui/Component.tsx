@@ -1,3 +1,4 @@
+//2026-09-15 : Colours now sourced from ColourProvider
 //2026-06-01 : The most basic of components
 
 //2025-11-21 : Moving common UI elements into their own folder
@@ -5,7 +6,7 @@
 import {View} from "react-native";
 import type { PropsWithChildren } from "react";
 import type { ViewStyle } from "react-native";
-import { Colours } from "@/constants/Colors";
+import { useColourData } from "@/Contexts/Colours/ColourDataProvider";
 
 type ComponentProps = {
     style?: ViewStyle,
@@ -23,6 +24,22 @@ type ComponentProps = {
  */
 
 const Component = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildren<ComponentProps>) => {
+
+    const {colours} = useColourData();
+    
+    const componentStyles = {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: colours.primary,
+        color: colours.text,
+        width:"100%",
+        borderRadius: 10,
+        padding: 10,
+        marginVertical: 5,
+    } as ViewStyle;
+    
     return (
         <View 
             style={{ 
@@ -34,19 +51,5 @@ const Component = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildr
         </View>
     );
 }
-
-const componentStyles = {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colours.primary,
-    color: Colours.text,
-    width:"100%",
-    borderRadius: 10,
-    padding: 10,
-    marginVertical: 5,
-} as ViewStyle;
-
 
 export default Component;

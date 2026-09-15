@@ -1,3 +1,4 @@
+//2026-09-15 : Colours now sourced from ColourProvider
 //2026-08-04 : New component adding a wrapper label and border
 //2026-06-01 : The most basic of components
 
@@ -6,7 +7,7 @@
 import {View, Text} from "react-native";
 import type { PropsWithChildren } from "react";
 import type { ViewStyle, TextStyle } from "react-native";
-import { Colours } from "@/constants/Colors";
+import { useColourData } from "@/Contexts/Colours/ColourDataProvider";
 
 type ComponentProps = {
     style?: ViewStyle,
@@ -28,20 +29,47 @@ type ComponentProps = {
  */
 
 const LabelledComponent = ({style, children, 'aria-label' : ariaLabel, labelText, labelColour, borderColour} : PropsWithChildren<ComponentProps>) => {
+
+    const {colours} = useColourData();
+
+    const labelledComponentStyles = {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: colours.primary,
+        color: colours.text,
+        borderRadius: 10,
+        padding: 0,
+        marginVertical: 10,
+        borderWidth: 1,
+        borderColor: colours.text,
+    } as ViewStyle;
+
+    const labelStyles = {
+        position: "absolute",
+        top: -10,
+        left: 10,
+        paddingHorizontal: 5,
+        fontSize: 12,
+        borderRadius: 5,
+        borderWidth: 1,
+    } as TextStyle;
+
     return (
         <View 
             style={{ 
                 ...labelledComponentStyles,
-                borderColor: borderColour || Colours.text,
+                borderColor: borderColour || colours.text,
                 ...style,
             }}
             aria-label={ariaLabel}>
             {labelText && (
                 <Text style={{
-                    color: labelColour || Colours.text, 
-                    backgroundColor: Colours.primary, 
+                    color: labelColour || colours.text, 
+                    backgroundColor: colours.primary, 
                     ...labelStyles, 
-                    borderColor: borderColour || Colours.text
+                    borderColor: borderColour || colours.text
                 }}>
                     {labelText}
                 </Text>
@@ -50,30 +78,5 @@ const LabelledComponent = ({style, children, 'aria-label' : ariaLabel, labelText
         </View>
     );
 }
-
-const labelledComponentStyles = {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colours.primary,
-    color: Colours.text,
-    borderRadius: 10,
-    padding: 0,
-    marginVertical: 10,
-    borderWidth: 1,
-    borderColor: Colours.text,
-} as ViewStyle;
-
-const labelStyles = {
-    position: "absolute",
-    top: -10,
-    left: 10,
-    paddingHorizontal: 5,
-    fontSize: 12,
-    borderRadius: 5,
-    borderWidth: 1,
-} as TextStyle;
-
 
 export default LabelledComponent;

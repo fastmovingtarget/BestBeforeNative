@@ -1,3 +1,4 @@
+//2026-09-15 : Colours now sourced from ColourProvider
 //2026-07-16 : Added function descriptions
 //2026-06-01 : UI Tweaking
 
@@ -6,7 +7,7 @@
 import {Pressable} from "react-native";
 import type { PropsWithChildren } from "react";
 import type { ViewStyle, AccessibilityProps } from "react-native";
-import { Colours } from "@/constants/Colors";
+import { useColourData } from "@/Contexts/Colours/ColourDataProvider";
 
 type PressableViewProps = PropsWithChildren<{
     style? : ViewStyle, 
@@ -27,6 +28,23 @@ type PressableViewProps = PropsWithChildren<{
  */
 
 const PressableComponent : React.FC<PressableViewProps> = ({style, children, onPress, "aria-label" : ariaLabel, accessibilityRole} : PressableViewProps ) => {
+
+    const {colours} = useColourData();
+
+    const pressableViewStyles = {
+        display: "flex",
+        flexGrow: 1,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        backgroundColor: colours.primary,
+        color: colours.text,
+        borderRadius: 10,
+        padding: 10,
+        margin: 5,
+    } as ViewStyle;
+
     return (
         <Pressable 
             style={({pressed}) => {
@@ -34,7 +52,7 @@ const PressableComponent : React.FC<PressableViewProps> = ({style, children, onP
                     return {
                         ...pressableViewStyles,
                         ...style,
-                        backgroundColor: Colours.buttonBackgroundPressed,
+                        backgroundColor: colours.buttonBackgroundPressed,
                     }  
                 else 
                     return {    
@@ -50,20 +68,5 @@ const PressableComponent : React.FC<PressableViewProps> = ({style, children, onP
         </Pressable>
     );
 }
-
-const pressableViewStyles = {
-    display: "flex",
-    flexGrow: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    backgroundColor: Colours.primary,
-    color: Colours.text,
-    borderRadius: 10,
-    padding: 10,
-    margin: 5,
-} as ViewStyle;
-
 
 export default PressableComponent;
