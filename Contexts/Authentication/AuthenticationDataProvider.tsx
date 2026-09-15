@@ -1,3 +1,4 @@
+//2026-09-15 : Removed colour data handling
 //2026-07-16 : Added function descriptions
 //2026-07-13 : Saving and loading token in Secure Store
 
@@ -19,18 +20,6 @@ import Signup from "./Signup";
  */
 const AuthenticationDataContext = createContext({
     userId: 1 as number | null,
-    colours: {
-        primary: "#191f2b",
-        secondary: "#111111",
-        background: "#0d0d0d",
-        text: "#e6e0d4",
-    } as {
-        primary: string,
-        secondary: string,
-        background: string,
-        text: string,
-    },  
-    setColours: (colours: {primary: string, secondary: string, background: string, text: string}) => {},
     attemptLogin: (username: string, password: string) => {},
     logout: () => {},
     signup: (username: string, password: string) => {},
@@ -39,17 +28,6 @@ const AuthenticationDataContext = createContext({
 export const AuthenticationDataProvider = ({children}:{children:React.ReactNode}) => {   
 
     const [userId, setUserId] = useState<number | null>(null);
-    const [colours, setColours] = useState<{
-        primary: string,
-        secondary: string,
-        background: string,
-        text: string,
-    }>({
-        primary: "#191f2b",
-        secondary: "#111111",
-        background: "#0d0d0d",
-        text: "#e6e0d4",
-    });
 
     useEffect(() => {
         const fetchToken = async () => {
@@ -85,7 +63,7 @@ export const AuthenticationDataProvider = ({children}:{children:React.ReactNode}
 
     return (
         <AuthenticationDataContext.Provider 
-            value={{userId, colours, setColours, attemptLogin, logout, signup}}>
+            value={{userId, attemptLogin, logout, signup}}>
             {children}
         </AuthenticationDataContext.Provider>
     );
