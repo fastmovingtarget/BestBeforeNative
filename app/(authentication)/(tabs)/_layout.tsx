@@ -1,3 +1,4 @@
+//2026-09-16 : Updated compatability for expo 57
 //2026-09-15 : Colours now sourced from ColourProvider
 //2026-08-11 : Plan data used in other contexts
 //2026-07-16 : Adding function description
@@ -15,7 +16,6 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 
-import { HapticTab } from '@/components/HapticTab';
 import { MaterialDesignIcons} from '@react-native-vector-icons/material-design-icons';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { InventoryDataProvider } from '@/Contexts/Inventory/InventoryDataProvider';
@@ -47,7 +47,6 @@ export default function TabLayout() {
               screenOptions={{
                 tabBarActiveTintColor: colours.tint,
                 headerShown: false,
-                tabBarButton: HapticTab,
                 tabBarBackground: TabBarBackground,
                 tabBarStyle: Platform.select({
                   ios: {
