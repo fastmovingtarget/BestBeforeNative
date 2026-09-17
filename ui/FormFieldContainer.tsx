@@ -1,3 +1,4 @@
+//2026-09-15 : Colours now sourced from ColourProvider
 //2026-07-16 : Added function descriptions
 //2026-06-01 : UI Tweaking
 
@@ -6,7 +7,7 @@
 import {View} from "react-native";
 import type { PropsWithChildren } from "react";
 import type { ViewStyle } from "react-native";
-import {Colours} from "../constants/Colors";
+import { useColourData } from "@/Contexts/Colours/ColourDataProvider";
 
 type FormFieldProps = {
     style?: ViewStyle,
@@ -25,6 +26,21 @@ type FormFieldProps = {
  */
 
 const FormFieldContainer = ({style, children, 'aria-label' : ariaLabel} : PropsWithChildren<FormFieldProps>) => {
+
+    const {colours} = useColourData();
+
+    const formFieldContainerStyles = {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        textAlignVertical: "center",
+        textAlign: "center",
+        color: colours.text,
+        borderRadius: 5,
+        width: "100%",
+        padding: 5,
+    } as ViewStyle;
+
     return (
         <View 
             style={{ 
@@ -37,16 +53,5 @@ const FormFieldContainer = ({style, children, 'aria-label' : ariaLabel} : PropsW
     );
 }
 
-const formFieldContainerStyles = {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    textAlignVertical: "center",
-    textAlign: "center",
-    color: Colours.text,
-    borderRadius: 5,
-    width: "100%",
-    padding: 5,
-} as ViewStyle;
 
 export default FormFieldContainer;

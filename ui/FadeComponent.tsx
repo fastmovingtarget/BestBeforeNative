@@ -1,15 +1,14 @@
+//2026-09-15 : Colours now sourced from ColourProvider
 //2026-07-16 : Added function descriptions
 //2026-06-11 : Removing an extra console log
 
 //2026-06-01 : Animated fade in/out component
 
-//2025-11-21 : Moving common UI elements into their own folder
-
+import { useColourData } from "@/Contexts/Colours/ColourDataProvider";
 import {Animated} from "react-native";
 import { useEffect, type PropsWithChildren, useRef } from "react";
 import type { ViewStyle } from "react-native";
 import { MountState } from "@/ui/Types/MountState";
-import { Colours } from "@/constants/Colors";
 
 type ComponentProps = {
     style?: ViewStyle,
@@ -44,6 +43,21 @@ type ComponentProps = {
 
 const FadeComponent = ({style, children, 'aria-label' : ariaLabel, duration = 300, mountState = MountState.Mount, onUnmountAnimationEnd, onMountAnimationEnd, onUpdateUnmountAnimationEnd, onUpdateMountAnimationEnd} : PropsWithChildren<ComponentProps>) => {
     const fadeAnim = useRef(new Animated.Value(0)).current; // Initial opacity value: 0
+    
+    const {colours} = useColourData();
+
+    const fadeComponentStyles = {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: colours.primary,
+        color: colours.text,
+        width:"100%",
+        borderRadius: 10,
+        padding: 10,
+        marginVertical: 5,
+    } as ViewStyle;
 
     useEffect(() => {
         if(mountState === MountState.Unmount) {
@@ -83,19 +97,5 @@ const FadeComponent = ({style, children, 'aria-label' : ariaLabel, duration = 30
         </Animated.View>
     );
 }
-
-const fadeComponentStyles = {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colours.primary,
-    color: Colours.text,
-    width:"100%",
-    borderRadius: 10,
-    padding: 10,
-    marginVertical: 5,
-} as ViewStyle;
-
 
 export default FadeComponent;

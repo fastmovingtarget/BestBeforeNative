@@ -1,3 +1,4 @@
+//2026-09-15 : Colours now sourced from ColourProvider
 //2026-07-16 : Removing unnecessary imports
 
 //2026-06-29 : Improvements to pressable visuals
@@ -16,9 +17,10 @@
 
 import React from 'react';
 import { usePlans } from '@/Contexts/Plans/PlansDataProvider';
+import { useColourData } from '@/Contexts/Colours/ColourDataProvider';
 
 import {Component, LabelText, PressableComponent} from '@/ui/BestBeforeUI';
-import { Colours } from '@/constants/Colors';
+
 
 /**
  * React Component for displaying a single day in the Recipe Plan Calendar
@@ -32,6 +34,7 @@ import { Colours } from '@/constants/Colors';
 
 export default function PlannerCalendarDay({onPress, date, greyOut} : {onPress:(date : number) => void, date: Date, greyOut?: boolean}) {
 
+    const {colours} = useColourData();
     const {plans} = usePlans();
     const recipePlansForDate = plans.filter(plan => {
         const planDate = new Date(plan.Plan_Date);
@@ -43,7 +46,7 @@ export default function PlannerCalendarDay({onPress, date, greyOut} : {onPress:(
     return (
         <PressableComponent
             onPress={() => onPress(date.getDate())}
-            style={{flexDirection: "column", flex:1, margin: 1, padding: 0, justifyContent: "flex-start", alignItems: "center", height:"100%", overflow: "hidden", backgroundColor: Colours.buttonBackground }}
+            style={{flexDirection: "column", flex:1, margin: 1, padding: 0, justifyContent: "flex-start", alignItems: "center", height:"100%", overflow: "hidden", backgroundColor: colours.buttonBackground }}
             >
             <LabelText style={{textAlign: "center", fontSize: 14, fontWeight: "bold", verticalAlign: "top", marginVertical: 0, padding: 0}}>
                     {date.getDate()}

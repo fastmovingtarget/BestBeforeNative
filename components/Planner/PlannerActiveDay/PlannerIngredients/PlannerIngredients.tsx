@@ -1,3 +1,4 @@
+//2026-09-15 : Colours now sourced from ColourProvider
 //2026-08-12 : Filter expired items from planner ingredients
 //2026-08-11 : improvements to visuals and fixing sync bugs
 //2026-06-30 : Text Fix
@@ -25,7 +26,7 @@ import { FadeComponent, LabelText, PressableComponent, RowContainer, ScrollableC
 import { AddShoppingListItemIcon, InventoryIcon, LinkInventoryItemIcon, ShoppingListIcon, WarningIcon } from "@/ui/ReactIcon";
 import { SyncState } from "@/Types/DataLoadingState";
 import ResizeComponent from "@/ui/ResizeComponent";
-import { Colours } from "@/constants/Colors";
+import { useColourData } from "@/Contexts/Colours/ColourDataProvider";
 import { Keyboard } from "react-native";
 
 /**
@@ -53,6 +54,7 @@ export default function PlannerIngredients({recipePlanID}: {recipePlanID?: numbe
     const {updatePlan, setPlansDataState, plans} = usePlans();
     const [containerHeight, setContainerHeight] = useState<number>(0);
     const [keyboardVisible, setKeyboardVisible] = useState<boolean>(false);
+    const {colours} = useColourData();
     
     useEffect(() => {
         const showListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -139,7 +141,7 @@ export default function PlannerIngredients({recipePlanID}: {recipePlanID?: numbe
     return (
         <ColumnContainer style={{ flex: 1, width: "100%"}}>
             <ColumnContainer style={{flex:1, marginVertical:5, width:"100%", justifyContent: "flex-start", alignItems: "flex-start"}} onLayout={(event) => setContainerHeight(event.nativeEvent.layout.height || 0)}>
-                <ResizeComponent targetHeight={(containerHeight - 10)*(selectedPlanIngredientIndex === null ? 1 : keyboardVisible ? 0 : 0.4)} style={{ width: "100%", borderWidth: 1, borderColor: Colours.primary}} aria-label="planner-ingredients-container">
+                <ResizeComponent targetHeight={(containerHeight - 10)*(selectedPlanIngredientIndex === null ? 1 : keyboardVisible ? 0 : 0.4)} style={{ width: "100%", borderWidth: 1, borderColor: colours.primary}} aria-label="planner-ingredients-container">
                     <LabelText>Ingredients to make {plans.find(plan => plan.Plan_ID === recipePlanID)?.Recipe_Name}</LabelText>
                     {/* Implementation for displaying ingredients goes here */}
                         <ScrollableContainer style={{flexGrow:1, marginTop:10, width:"100%",}}>
@@ -180,7 +182,7 @@ export default function PlannerIngredients({recipePlanID}: {recipePlanID?: numbe
                     </ScrollableContainer>
                 </ResizeComponent>
             {selectedPlanIngredientIndex !== null && (
-                <ColumnContainer style={{flex:1, marginTop: 10, width:"100%", justifyContent: "flex-start", alignItems: "flex-start", borderWidth: 1, borderRadius: 10, borderColor: Colours.primary}} aria-label="available-ingredients-container">
+                <ColumnContainer style={{flex:1, marginTop: 10, width:"100%", justifyContent: "flex-start", alignItems: "flex-start", borderWidth: 1, borderRadius: 10, borderColor: colours.primary}} aria-label="available-ingredients-container">
                     <LabelText style={{width: "100%", textAlign: "center"}}>Linkable Ingredients:</LabelText>
                     <FadeComponent style={{width: "100%", marginTop: 10, padding: 5}}>
                         <RowContainer style={{width: "100%", justifyContent: "space-between", alignItems: "center"}}>
@@ -198,28 +200,29 @@ export default function PlannerIngredients({recipePlanID}: {recipePlanID?: numbe
                             {
 
                                 filteredInventory.map((inventoryItem, index) => {
-                                if(index % 2 === 1) return null;
-                                return (
-                                    <RowContainer key={`available-ingredient-row-${index}`} style={{flexDirection: 'row', justifyContent: 'space-between', width: "100%", padding: 0}}>
-                                        <PressableComponent 
-                                            key={`available-ingredient-${index}`} 
-                                            onPress={() => attachPlanIngredient(filteredInventory[index])} 
-                                            style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "49%", marginVertical: 5, borderWidth: 1, borderColor: "black", margin: 0, flexGrow: 0}}
-                                            aria-label={`available-ingredient-${index}`}>
-                                            <LabelText>{filteredInventory[index]?.Inventory_Item_Name}</LabelText>
-                                        </PressableComponent>
-                                        {index + 1 < filteredInventory.length && (
+                                    if (index % 2 === 1) return null;
+                                    return (
+                                        <RowContainer key={`available-ingredient-row-${index}`} style={{flexDirection: 'row', justifyContent: 'space-between', width: "100%", padding: 0}}>
                                             <PressableComponent 
-                                                key={`available-ingredient-${index + 1}`} 
-                                                onPress={() => attachPlanIngredient(filteredInventory[index + 1])} 
-                                                style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "49%", marginVertical: 5, borderWidth: 1, borderColor: "black", margin: 0, flexGrow: 0}} 
-                                                aria-label={`available-ingredient-${index + 1}`}>
-                                                <LabelText>{filteredInventory[index + 1]?.Inventory_Item_Name}</LabelText>
+                                                key={`available-ingredient-${index}`} 
+                                                onPress={() => attachPlanIngredient(filteredInventory[index])} 
+                                                style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "49%", marginVertical: 5, borderWidth: 1, borderColor: "black", margin: 0, flexGrow: 0}}
+                                                aria-label={`available-ingredient-${index}`}>
+                                                <LabelText>{filteredInventory[index]?.Inventory_Item_Name}</LabelText>
                                             </PressableComponent>
-                                        )}
-                                    </RowContainer>
-                                )}
-                            )}
+                                            {index + 1 < filteredInventory.length && (
+                                                <PressableComponent 
+                                                    key={`available-ingredient-${index + 1}`} 
+                                                    onPress={() => attachPlanIngredient(filteredInventory[index + 1])} 
+                                                    style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "49%", marginVertical: 5, borderWidth: 1, borderColor: "black", margin: 0, flexGrow: 0}} 
+                                                    aria-label={`available-ingredient-${index + 1}`}>
+                                                    <LabelText>{filteredInventory[index + 1]?.Inventory_Item_Name}</LabelText>
+                                                </PressableComponent>
+                                            )}
+                                        </RowContainer>
+                                    )
+                                })
+                            }
                         </ScrollableContainer>
                     <ButtonView style={{marginTop: 10, width: "100%"}} onPress={() => setSelectedPlanIngredientIndex(null)}>
                         <LabelText>Close</LabelText>

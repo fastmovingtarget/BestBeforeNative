@@ -1,9 +1,8 @@
+//2026-09-15 : Colours now sourced from ColourProvider
 //2026-07-16 : Added function descriptions
 //2026-07-10 : Adding handling for password input type
 
 //2026-07-01 : Adding ability to specify height
-
-//2026-06-18 : Removed require cycle
 
 //2026-06-17 : Incoming width applies to container
 
@@ -17,12 +16,11 @@
 
 //2025-11-21 : Moving common UI elements into their own folder
 
-import { TextInput, NativeSyntheticEvent, } from "react-native";
+import { TextInput, NativeSyntheticEvent, type TextInputChangeEventData, type TextStyle } from "react-native";
 import { useState, type PropsWithChildren } from "react";
-import type { TextInputChangeEventData, TextStyle} from "react-native";
-import { Colours } from "@/constants/Colors";
 import ColumnContainer from "./ColumnContainer";
 import LabelText from "./LabelText";
+import { useColourData } from "@/Contexts/Colours/ColourDataProvider";
 
 type InputTextProps = {
     style?: TextStyle,
@@ -60,6 +58,8 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onCha
 
     const [invalidMessage, setInvalidMessage] = useState<string | null>(initialMessage);
 
+    const {colours} = useColourData();
+
     const onChangeValidation = (event : NativeSyntheticEvent<TextInputChangeEventData>) => {
         if(validationFunction){
             const validationResult = validationFunction(event.nativeEvent.text);
@@ -76,6 +76,37 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onCha
         }
     }
 
+    const errorTextStyles = {
+        color: colours.errorText, 
+        position: "absolute", 
+        bottom: 1, 
+        left: 15, 
+        fontSize: 10, 
+        backgroundColor: colours.primary, 
+        paddingVertical: 0, 
+        paddingHorizontal: 5, 
+        borderWidth: 1, 
+        borderColor: colours.errorText
+    } as TextStyle;
+
+    const inputTextStyles = {
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            backgroundColor: colours.inputBackground,
+            color: colours.text,
+            borderRadius: 5,
+            textAlignVertical: "center",
+            lineHeight: 20,
+            fontSize: 16,
+            width:"100%",
+            marginVertical: 8,
+            padding:3,
+            paddingVertical: 8,
+            borderWidth: 1,
+    } as TextStyle;
+
     return (
         <ColumnContainer style={{alignItems: "flex-start", position: "relative", width: style?.width || "100%", height: style?.height || "auto", flexGrow: style?.flexGrow || 0,}}>
             <TextInput 
@@ -84,7 +115,7 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onCha
                     ...style,
                     width: "100%",
                     height: multiline ? 100 : 40,
-                    borderColor: invalidMessage ? Colours.errorText : "transparent",
+                    borderColor: invalidMessage ? colours.errorText : "transparent",
                     textAlignVertical: multiline ? "top" : "center",
                 }}
                 defaultValue={defaultValue}
@@ -94,7 +125,7 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onCha
                 onChangeText={onChangeText}
                 aria-label={ariaLabel}
                 placeholder={placeholder}
-                placeholderTextColor={Colours.placeholderText}
+                placeholderTextColor={colours.placeholderText}
                 multiline={multiline}
                 numberOfLines={numberOfLines}
             >
@@ -104,37 +135,6 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onCha
         </ColumnContainer>
     );
 }
-
-const errorTextStyles = {
-    color: Colours.errorText, 
-    position: "absolute", 
-    bottom: 1, 
-    left: 15, 
-    fontSize: 10, 
-    backgroundColor: Colours.primary, 
-    paddingVertical: 0, 
-    paddingHorizontal: 5, 
-    borderWidth: 1, 
-    borderColor: Colours.errorText
-} as TextStyle;
-
-const inputTextStyles = {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: Colours.inputBackground,
-        color: Colours.text,
-        borderRadius: 5,
-        textAlignVertical: "center",
-        lineHeight: 20,
-        fontSize: 16,
-        width:"100%",
-        marginVertical: 8,
-        padding:3,
-        paddingVertical: 8,
-        borderWidth: 1,
-} as TextStyle;
 
 
 export default FormTextInput;

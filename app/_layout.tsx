@@ -1,3 +1,4 @@
+//2026-09-15 : Wrapped all the components in a colour data provider
 //2026-07-10 : App tabs now require a user id to exist
 
 //2025-11-19 : Adjusting imports and calls to fit new naming convention
@@ -20,6 +21,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { AuthenticationDataProvider } from '@/Contexts/Authentication/AuthenticationDataProvider';
+import { ColourDataProvider } from '@/Contexts/Colours/ColourDataProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -42,13 +44,15 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AuthenticationDataProvider>
-        <Stack>
-          <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
-      </AuthenticationDataProvider>
+      <ColourDataProvider>
+        <AuthenticationDataProvider>
+          <Stack>
+            <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </AuthenticationDataProvider>
+      </ColourDataProvider>
     </ThemeProvider>
   );
 }

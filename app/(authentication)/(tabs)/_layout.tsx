@@ -1,3 +1,4 @@
+//2026-09-15 : Colours now sourced from ColourProvider
 //2026-08-11 : Plan data used in other contexts
 //2026-07-16 : Adding function description
 
@@ -6,7 +7,6 @@
 //2026-06-30 : Using tab icons from MDI library
 
 //2026-06-17 : Minor text fix
-
 //2025-11-19 : Adjusting imports and calls to fit new naming convention
 
 //2025-05-27 : Adding Shopping list tab in to the app
@@ -18,12 +18,11 @@ import { Platform } from 'react-native';
 import { HapticTab } from '@/components/HapticTab';
 import { MaterialDesignIcons} from '@react-native-vector-icons/material-design-icons';
 import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { InventoryDataProvider } from '@/Contexts/Inventory/InventoryDataProvider';
 import { RecipesDataProvider } from '@/Contexts/Recipes/RecipesDataProvider';
 import { ShoppingListDataProvider } from '@/Contexts/ShoppingList/ShoppingListDataProvider';
 import { PlansDataProvider } from '@/Contexts/Plans/PlansDataProvider';
+import { useColourData } from '@/Contexts/Colours/ColourDataProvider';
 
 
 /**
@@ -36,7 +35,8 @@ import { PlansDataProvider } from '@/Contexts/Plans/PlansDataProvider';
  * - Profile
  */
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const {colours } = useColourData();
+
 
   return (
     <PlansDataProvider>
@@ -45,7 +45,7 @@ export default function TabLayout() {
           <ShoppingListDataProvider>
             <Tabs
               screenOptions={{
-                tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+                tabBarActiveTintColor: colours.tint,
                 headerShown: false,
                 tabBarButton: HapticTab,
                 tabBarBackground: TabBarBackground,
