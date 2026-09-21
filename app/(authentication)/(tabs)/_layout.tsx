@@ -1,19 +1,15 @@
+//2026-09-21 : condensed whitespace
 //2026-09-16 : Updated compatability for expo 57
 //2026-09-15 : Colours now sourced from ColourProvider
 //2026-08-11 : Plan data used in other contexts
 //2026-07-16 : Adding function description
-
 //2026-07-10 : App tabs now require a user id to exist
-
 //2026-06-30 : Using tab icons from MDI library
-
 //2026-06-17 : Minor text fix
 //2025-11-19 : Adjusting imports and calls to fit new naming convention
-
 //2025-05-27 : Adding Shopping list tab in to the app
 
 import { Tabs } from 'expo-router';
-import React from 'react';
 import { Platform } from 'react-native';
 
 import { MaterialDesignIcons} from '@react-native-vector-icons/material-design-icons';
@@ -36,7 +32,6 @@ import { useColourData } from '@/Contexts/Colours/ColourDataProvider';
  */
 export default function TabLayout() {
   const {colours } = useColourData();
-
 
   return (
     <PlansDataProvider>
