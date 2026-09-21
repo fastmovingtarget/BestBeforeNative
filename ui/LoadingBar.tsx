@@ -1,3 +1,4 @@
+//2026-09-21 : changed to looping scroll rather than bouncing
 //2026-09-15 : Colours now sourced from ColourProvider
 //2026-08-11 : Created Loading Bar to indicate loads
 import {View} from "react-native";
@@ -25,40 +26,34 @@ type LoadingBarProps = {
 const LoadingBar = ({style, children, 'aria-label' : ariaLabel, isLoading} : PropsWithChildren<LoadingBarProps>) => {
 
     const [loadingBarLocation, setLoadingBarLocation] = useState<number>(0);
-    const [animationReverse, setAnimationReverse] = useState<boolean>(false);
     const loadingBarWidth = 20;
 
     const {colours} = useColourData();
 
     const LoadingBarStyles = {
         position: "absolute",
-        top: 15,
+        top: 12.5,
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        height: 10,
+        height: 5,
         backgroundColor: colours.primary,
     } as ViewStyle;
 
     useEffect(() => {
         if(isLoading){
             const interval = setTimeout(() => {
-                if(loadingBarLocation + loadingBarWidth >= 100) {
-                    setAnimationReverse(true);
-                }
-                if(loadingBarLocation <= 0) {
-                    setAnimationReverse(false);
-                }
-                setLoadingBarLocation(prevLocation => animationReverse ? prevLocation - 1 : (prevLocation + 1) % 100);
+                setLoadingBarLocation(prevLocation => (prevLocation + 1) % 100);
             }, 10); // Update every 10ms
             return () => clearTimeout(interval);
         }
-    }, [isLoading, loadingBarLocation, animationReverse]);
+    }, [isLoading, loadingBarLocation]);
 
     if(!isLoading) {
         return null;
     }
+
     return (
         <View 
             style={{ 
