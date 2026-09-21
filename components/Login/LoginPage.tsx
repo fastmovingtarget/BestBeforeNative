@@ -1,9 +1,12 @@
+//2026-09-21 : Added loading bar to login
 //2026-07-16 : Added function description
 //2026-07-10 : Basic user login page
 
 
 import { useAuthenticationData } from '@/Contexts/Authentication/AuthenticationDataProvider';
+import { UpdateState } from '@/Types/DataLoadingState';
 import { ButtonView, FadeComponent, FormTextInput, PageView, RowContainer } from '@/ui/BestBeforeUI';
+import LoadingBar from '@/ui/LoadingBar';
 import { useState } from 'react';
 import { Text } from 'react-native';
 
@@ -13,14 +16,15 @@ import { Text } from 'react-native';
  */
 export default function LoginPage(){
 
-    const {attemptLogin, signup} = useAuthenticationData();
+    const {attemptLogin, signup, loadingDataState} = useAuthenticationData();
 
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
 
     return (
-        <PageView style={{flex:1, justifyContent:"center", alignItems:"center"}}>
+        <PageView style={{flex:1, justifyContent:"center", alignItems:"center", borderColor:"black", borderWidth: 1, borderRadius: 10}} ariaLabel="Login Page">
+            <LoadingBar isLoading={loadingDataState === UpdateState.Loading} />
             <FadeComponent>
                 <RowContainer style={{justifyContent:"center", alignItems:"center", marginVertical:10}}>
                     <FormTextInput
