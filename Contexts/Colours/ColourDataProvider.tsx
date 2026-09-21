@@ -1,8 +1,9 @@
+//2026-09-21 : removed unnecessary useEffect
 //2026-09-15 : Colour data context provider created
 
-import { useState, createContext, useContext, useEffect  } from "react";
+import { createContext, useContext  } from "react";
 import {useColorScheme} from "react-native";
-import { LightColours, DarkColours, ColoursType } from "@/Contexts/Colours/Colors";
+import { LightColours, DarkColours } from "@/Contexts/Colours/Colors";
 
 /**
  * ColourDataContext
@@ -14,23 +15,11 @@ const ColourDataContext = createContext({
 });
 
 export const ColourDataProvider = ({children}:{children:React.ReactNode}) => {   
-
-    const [colours, setColours] = useState<ColoursType>({
-        ...LightColours,
-    });
-
     const colorScheme = useColorScheme();
-    useEffect(() => {
-        if(colorScheme === "dark") {
-            setColours(DarkColours);
-        } else {
-            setColours(LightColours);
-        }
-    }, [colorScheme]);
 
     return (
         <ColourDataContext.Provider 
-            value={{colours}}>
+            value={{colours: colorScheme === "dark" ? DarkColours : LightColours}}>
             {children}
         </ColourDataContext.Provider>
     );
