@@ -1,18 +1,12 @@
+//2026-09-21 : condensed whitespace
 //2026-08-11 : Added LoadingBar
 //2026-07-16 : Added function description
-
 //2026-07-16 : Using updated import names
-
 //2026-06-12 : Removed extra imports
-
 //2026-06-01 : help/back buttons moved into components
-
 //2025-11-21 : Moving common UI elements into their own folder
-
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
-
 //2025-11-17 : Addeed a help/navigation button for the calendar
-
 //2025-10-28 : Filling out some initial implementation and tests
 
 import React, { useState } from "react";
