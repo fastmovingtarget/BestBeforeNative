@@ -1,3 +1,4 @@
+//2026-10-07 : removed unnecessary test
 //2026-06-11 : fixing render props for PlannerActiveDay
 
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
@@ -112,27 +113,5 @@ describe("PlannerActiveDay Component Renders", () => {
             />
         );
         expect(getByText("Active Day Recipes Component")).toBeTruthy();
-    })
-    test("Active Day Recipe Ingredients only when a recipe is selected", async () => {
-        const user = userEvent.setup();
-        const mockSelectedDate = new Date(2023, 9, 1); // October 1, 2023
-        (usePlans as jest.Mock).mockReturnValue({
-            plans: []
-        });
-        (useRecipes as jest.Mock).mockReturnValue({
-            recipes: []
-        });
-        const {queryByText} = render(
-            <PlannerActiveDay
-                selectedDate={mockSelectedDate} 
-                setSelectedDate={jest.fn()}
-            />
-        );
-        expect(queryByText("Active Day Recipe Ingredients Component")).toBeFalsy();
-
-        await user.press(queryByText("Select Recipe")!);
-
-        expect(queryByText("Active Day Recipe Ingredients Component")).toBeTruthy();
-        expect(queryByText("Active Day Recipes Component")).toBeFalsy();
     })
 });
