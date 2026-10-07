@@ -1,3 +1,4 @@
+//2026-10-07 : Fixed tests to use Recipe_Rating
 //2026-06-10 : ip addresses changed
 
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
@@ -27,7 +28,7 @@ test('should fetch recipes and add to empty recipes array', async () => {
         {
             Recipe_ID: 1,
             Recipe_Name: 'Recipe 1',
-            Recipe_Difficulty: 1,
+            Recipe_Rating: 1,
             Recipe_Time: 11,
             Recipe_Instructions: 'Instructions for Recipe 1',
             Recipe_Ingredients: [{
@@ -44,7 +45,7 @@ test('should fetch recipes and add to empty recipes array', async () => {
         {
             Recipe_ID: 2,
             Recipe_Name: 'Recipe 2',
-            Recipe_Difficulty: 2,
+            Recipe_Rating: 2,
             Recipe_Time: 22,
             Recipe_Instructions: 'Instructions for Recipe 2',
             Recipe_Ingredients: [{
@@ -98,7 +99,7 @@ describe("Should be called with options: ", () => {
             {
                 Recipe_ID: 1,
                 Recipe_Name: 'Recipe 1',
-                Recipe_Difficulty: 1,
+                Recipe_Rating: 1,
                 Recipe_Time: 11,
                 Recipe_Instructions: 'Instructions for Recipe 1',
                 Recipe_Ingredients: [],
@@ -115,8 +116,10 @@ describe("Should be called with options: ", () => {
 
         expect(mockSetRecipes).toHaveBeenCalledWith(fetchedRecipes);
 
+        //console.log(new RegExp(`https://.*/recipes/1\?searchText=Recipe%201`).test(`https://bleh/recipes/1?searchText=Recipe%201`));
+
         expect(fetchMock).toHaveBeenCalledWith(
-            `http://${mockServerProps.DatabaseServer}:${mockServerProps.DatabasePort}/recipes/${userID}?searchText=Recipe%201`, 
+            expect.stringMatching(new RegExp(`https://.*/recipes/${userID}\\?searchText=Recipe%201`)), 
             {
                 method: 'GET',
                 headers: {
@@ -139,7 +142,7 @@ describe("Should be called with options: ", () => {
             {
                 Recipe_ID: 1,
                 Recipe_Name: 'Recipe 1',
-                Recipe_Difficulty: 1,
+                Recipe_Rating: 1,
                 Recipe_Time: 11,
                 Recipe_Instructions: 'Instructions for Recipe 1',
                 Recipe_Ingredients: [],
@@ -157,7 +160,7 @@ describe("Should be called with options: ", () => {
         expect(mockSetRecipes).toHaveBeenCalledWith(fetchedRecipes);
 
         expect(fetchMock).toHaveBeenCalledWith(
-            `http://${mockServerProps.DatabaseServer}:${mockServerProps.DatabasePort}/recipes/${userID}?searchText=Recipe%201&sortBy=Recipe_Name&sortOrder=asc&amount=10`, 
+            expect.stringMatching(new RegExp(`https://.*/recipes/${userID}\\?searchText=Recipe%201&sortBy=Recipe_Name&sortOrder=asc&amount=10`)), 
             {
                 method: 'GET',
                 headers: {

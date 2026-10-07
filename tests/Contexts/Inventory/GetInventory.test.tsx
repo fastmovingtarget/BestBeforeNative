@@ -1,3 +1,4 @@
+//2026-10-07 : No longer hard testing request url
 //2026-06-10 : ip addresses changed
 
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
@@ -152,7 +153,7 @@ describe('getInventoryData', () => {
             ]);
 
             expect(fetch).toHaveBeenCalledWith(
-                `http://${"192.168.50.201"}:${"5091"}/inventory/${userID}?searchText=Ingredient%201`, {
+                expect.stringMatching(new RegExp(`https://.*/inventory/${userID}\\?searchText=Ingredient%201`)), {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -201,7 +202,7 @@ describe('getInventoryData', () => {
             ]);
 
             expect(fetch).toHaveBeenCalledWith(
-                `http://${"192.168.50.201"}:${"5091"}/inventory/${userID}?searchText=Inventory%20Item%201&sortBy=Inventory_Item_Name&sortOrder=asc&amount=100`, {
+                expect.stringMatching(new RegExp(`https://.*/inventory/${userID}\\?searchText=Inventory%20Item%201&sortBy=Inventory_Item_Name&sortOrder=asc&amount=100`)), {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

@@ -1,3 +1,4 @@
+//2026-10-07 : Fixed tests to use Recipe_Rating
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
@@ -51,7 +52,7 @@ const mockRecipes : Recipe[] = [
         {
             Recipe_ID: 1,
             Recipe_Name: 'Recipe 1',
-            Recipe_Difficulty: 1,
+            Recipe_Rating: 1,
             Recipe_Time: 11,
             Recipe_Instructions: 'Instructions for Recipe 1',
             Recipe_Ingredients: [{
@@ -68,7 +69,7 @@ const mockRecipes : Recipe[] = [
         {
             Recipe_ID: 2,
             Recipe_Name: 'Recipe 2',
-            Recipe_Difficulty: 2,
+            Recipe_Rating: 2,
             Recipe_Time: 22,
             Recipe_Instructions: 'Instructions for Recipe 2',
             Recipe_Ingredients: [{
@@ -175,8 +176,8 @@ describe("Recipes Data Provider get", () => {
         expect(getByText(/"Recipe_Name":"Recipe 2"/i)).toBeTruthy();
         expect(getByText(/"Recipe_ID":1/i)).toBeTruthy();
         expect(getByText(/"Recipe_ID":2/i)).toBeTruthy();
-        expect(getByText(/"Recipe_Difficulty":1/i)).toBeTruthy();
-        expect(getByText(/"Recipe_Difficulty":2/i)).toBeTruthy();
+        expect(getByText(/"Recipe_Rating":1/i)).toBeTruthy();
+        expect(getByText(/"Recipe_Rating":2/i)).toBeTruthy();
         expect(getByText(/"Recipe_Time":11/i)).toBeTruthy();
         expect(getByText(/"Recipe_Time":22/i)).toBeTruthy();
         expect(getByText(/"Recipe_Ingredient_ID":11/i)).toBeTruthy();
@@ -240,7 +241,7 @@ describe("Recipes Data Provider add", () => {
         const newRecipe : Recipe = {
             Recipe_ID: 3,
             Recipe_Name: 'Recipe 3',
-            Recipe_Difficulty: 2,
+            Recipe_Rating: 2,
             Recipe_Time: 30,
             Recipe_Instructions: 'Instructions for Recipe 3',
             Recipe_Ingredients: [{
@@ -303,7 +304,7 @@ describe("Recipes Data Provider add", () => {
         const newRecipe : Recipe = {
             Recipe_ID: 3,
             Recipe_Name: 'Recipe 3',
-            Recipe_Difficulty: 2,
+            Recipe_Rating: 2,
             Recipe_Time: 30,
             Recipe_Instructions: 'Instructions for Recipe 3',
             Recipe_Ingredients: [{
@@ -389,7 +390,7 @@ describe("Recipes Data Provider update", () => {
         const updatedRecipe : Recipe = {
             Recipe_ID: 2,
             Recipe_Name: 'Updated Recipe 2',
-            Recipe_Difficulty: 3,
+            Recipe_Rating: 3,
             Recipe_Time: 25,
             Recipe_Instructions: 'Updated Instructions for Recipe 2',
             Recipe_Ingredients: [{
@@ -439,7 +440,7 @@ describe("Recipes Data Provider update", () => {
             expect(getByText("SyncSuccessful")).toBeTruthy();
         });
         expect(getByText(/"Recipe_Name":"Updated Recipe 2"/i)).toBeTruthy();
-        expect(getByText(/"Recipe_Difficulty":3/i)).toBeTruthy();
+        expect(getByText(/"Recipe_Rating":3/i)).toBeTruthy();
         expect(getByText(/"Recipe_Time":25/i)).toBeTruthy();
         expect(getByText(/"Recipe_Ingredient_Name":"Updated Recipe 2 Ingredient 1"/i)).toBeTruthy();
     });
@@ -449,7 +450,7 @@ describe("Recipes Data Provider update", () => {
         const updatedRecipe : Recipe = {
             Recipe_ID: 2,
             Recipe_Name: 'Updated Recipe 2',
-            Recipe_Difficulty: 3,
+            Recipe_Rating: 3,
             Recipe_Time: 25,
             Recipe_Instructions: 'Updated Instructions for Recipe 2',   
             Recipe_Ingredients: [{

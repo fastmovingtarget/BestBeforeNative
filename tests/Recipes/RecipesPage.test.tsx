@@ -1,3 +1,4 @@
+//2026-10-07 : Mocking Loading Bar with placeholder
 //2026-06-11 : Removing outdated tests
 
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
@@ -12,6 +13,7 @@ import RecipesList from '@/components/Recipes/RecipesList/RecipesList';
 import RecipeSelected from '@/components/Recipes/RecipeSelected/RecipeSelected';
 import Recipe from '@/Types/Recipe';
 import { View, Text, Pressable } from 'react-native';
+import LoadingBar from '@/ui/LoadingBar';
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -20,7 +22,7 @@ beforeEach(() => {
 const mockRecipe: Recipe = {
   Recipe_ID: 1,
     Recipe_Name: "Test Recipe",
-    Recipe_Difficulty: 1,
+    Recipe_Rating: 1,
     Recipe_Time: 30,
     Recipe_Ingredients: [],
     Recipe_Instructions: "Test Instructions",
@@ -48,6 +50,12 @@ jest.mock("@/components/Recipes/RecipeForm/RecipeForm", () => {
 });
 
 jest.mock("@/components/Recipes/RecipeSelected/RecipeSelected", () => {
+  return {
+    __esModule: true,
+    default: jest.fn()
+  }
+});
+jest.mock('@/ui/LoadingBar', () => {
   return {
     __esModule: true,
     default: jest.fn()

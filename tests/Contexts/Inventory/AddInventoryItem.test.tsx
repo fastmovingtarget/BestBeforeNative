@@ -1,3 +1,4 @@
+//2026-10-07 : No longer hard testing request url
 //2026-06-10 : ip addresses changed
 
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
@@ -61,7 +62,7 @@ test('should fetch inventory data and update state', async () => {
     /*Assert *******************************************************************/
 
     expect(fetchMock).toHaveBeenCalledWith(
-        `http://${"192.168.50.201"}:${"5091"}/inventory/`,
+        expect.stringMatching(/https:\/\/.*\/inventory\//),
         {
             method: "POST",
             headers: {

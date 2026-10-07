@@ -1,3 +1,4 @@
+//2026-10-07 : Fixed tests to use Recipe_Rating
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
@@ -13,7 +14,7 @@ const existingRecipes: Recipe[] = [
     {
         Recipe_ID: 1,
         Recipe_Name: 'Existing Recipe 1',
-        Recipe_Difficulty: 1,
+        Recipe_Rating: 1,
         Recipe_Time: 11,
         Recipe_Instructions: 'Instructions for Existing Recipe 1',
         Recipe_Ingredients: [{
@@ -30,7 +31,7 @@ const existingRecipes: Recipe[] = [
     {
         Recipe_ID: 2,
         Recipe_Name: 'Existing Recipe 2',
-        Recipe_Difficulty: 2,
+        Recipe_Rating: 2,
         Recipe_Time: 22,
         Recipe_Instructions: 'Instructions for Existing Recipe 2',
         Recipe_Ingredients: [{
@@ -48,7 +49,7 @@ const existingRecipes: Recipe[] = [
 const recipe_changed : Recipe = {
     Recipe_ID: 1,
     Recipe_Name: 'Updating Recipe 1',
-    Recipe_Difficulty: 1,
+    Recipe_Rating: 1,
     Recipe_Time: 11,
     Recipe_Instructions: 'Instructions for Updating Recipe 1',
     Recipe_Ingredients: [{
@@ -81,7 +82,7 @@ test('should fetch recipes data and update state', async () => {
         {
             Recipe_ID: 1,
             Recipe_Name: 'Updating Recipe 1',
-            Recipe_Difficulty: 1,
+            Recipe_Rating: 1,
             Recipe_Time: 11,
             Recipe_Instructions: 'Instructions for Updating Recipe 1',
             Recipe_Ingredients: [{
@@ -98,7 +99,7 @@ test('should fetch recipes data and update state', async () => {
         {
             Recipe_ID: 2,
             Recipe_Name: 'Existing Recipe 2',
-            Recipe_Difficulty: 2,
+            Recipe_Rating: 2,
             Recipe_Time: 22,
             Recipe_Instructions: 'Instructions for Existing Recipe 2',
             Recipe_Ingredients: [

@@ -1,3 +1,4 @@
+//2026-10-07 : Mocking Loading Bar with placeholder
 //2026-07-20 : update for add button moved
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
@@ -13,6 +14,7 @@ import ShoppingListPage from "@/components/ShoppingList/ShoppingListPage";
 import ShoppingListSearch from "@/components/ShoppingList/ShoppingListSearch/ShoppingListSearch";
 import ShoppingListList from "@/components/ShoppingList/ShoppingList/ShoppingList";
 import ShoppingListForm from "@/components/ShoppingList/ShoppingListForm/ShoppingListForm";
+import LoadingBar from '@/ui/LoadingBar';
 
 jest.mock("@/components/ShoppingList/ShoppingListSearch/ShoppingListSearch", () => {
     return {
@@ -27,6 +29,12 @@ jest.mock("@/components/ShoppingList/ShoppingListForm/ShoppingListForm", () => {
     };
 });
 jest.mock("@/components/ShoppingList/ShoppingList/ShoppingList", () => {
+    return {
+        __esModule: true,
+        default: jest.fn(),
+    };
+});
+jest.mock('@/ui/LoadingBar', () => {
     return {
         __esModule: true,
         default: jest.fn(),
