@@ -1,3 +1,4 @@
+//2026-10-07 : Updated for new React Native version
 //2026-07-16 : Added function descriptions
 //2026-06-12 : Resize component created
 
@@ -7,8 +8,8 @@
 
 //2025-11-21 : Moving common UI elements into their own folder
 
-import {Animated} from "react-native";
-import { useEffect, type PropsWithChildren, useRef} from "react";
+import {Animated, useAnimatedValue} from "react-native";
+import { useEffect, type PropsWithChildren} from "react";
 import type { ViewStyle } from "react-native";
 
 type ComponentProps = {
@@ -37,8 +38,7 @@ type ComponentProps = {
  */
 
 const ResizeComponent = ({style, children, 'aria-label' : ariaLabel, duration = 300, onResizeAnimationEnd, targetHeight } : PropsWithChildren<ComponentProps>) => {
-    const resizeAnim = useRef(new Animated.Value(0)).current; // Initial height value: 0
-
+    const resizeAnim = useAnimatedValue(0); // Initial height value: 0
 
     useEffect(() => {
         Animated.timing(resizeAnim, {
