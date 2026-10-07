@@ -1,3 +1,4 @@
+//2026-10-07 : Mocking Loading Bar with placeholder
 //2026-07-20 : Removed unnecessary import
 //2026-07-20 : Removing tests for adding inventory item
 //2026-06-10 : Test now works with FadeComponent
@@ -19,6 +20,7 @@ import InventorySearch from "../../components/Inventory/InventorySearch/Inventor
 import InventoryList from "../../components/Inventory/InventoryList/InventoryList";
 import InventoryItemForm from "../../components/Inventory/InventoryItemForm/InventoryItemForm";
 import { ButtonView } from "@/ui/BestBeforeUI";
+import LoadingBar from '@/ui/LoadingBar';
 
 jest.mock("../../components/Inventory/InventorySearch/InventorySearch", () => {
     return {
@@ -33,6 +35,12 @@ jest.mock("../../components/Inventory/InventoryItemForm/InventoryItemForm", () =
     };
 });
 jest.mock("../../components/Inventory/InventoryList/InventoryList", () => {
+    return {
+        __esModule: true,
+        default: jest.fn(),
+    };
+});
+jest.mock('@/ui/LoadingBar', () => {
     return {
         __esModule: true,
         default: jest.fn(),

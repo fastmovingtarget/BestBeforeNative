@@ -1,3 +1,4 @@
+//2026-10-07 : Mocking Loading Bar with placeholder
 //2026-06-11 : Accounting for new state change
 
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
@@ -14,6 +15,7 @@ import { Pressable, Text } from 'react-native';
 import PlannerPage from '@/components/Planner/PlannerPage';
 import PlannerCalendar from '@/components/Planner/PlannerCalendar/PlannerCalendar';
 import PlannerActiveDay from '@/components/Planner/PlannerActiveDay/PlannerActiveDay';
+import LoadingBar from '@/ui/LoadingBar';
 
 jest.mock("@/components/Planner/PlannerCalendar/PlannerCalendar", () => {
   return {
@@ -22,6 +24,12 @@ jest.mock("@/components/Planner/PlannerCalendar/PlannerCalendar", () => {
   }
 });
 jest.mock("@/components/Planner/PlannerActiveDay/PlannerActiveDay", () => {
+  return {
+    __esModule: true,
+    default: jest.fn()
+  };
+});
+jest.mock('@/ui/LoadingBar', () => {
   return {
     __esModule: true,
     default: jest.fn()
