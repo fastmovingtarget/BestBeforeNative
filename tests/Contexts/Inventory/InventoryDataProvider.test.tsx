@@ -1,3 +1,4 @@
+//2026-10-09 : Fixed Sync flow on search entry
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
 //2025-11-19 : Renamed Ingredients to Inventory
@@ -17,8 +18,9 @@ import { addInventoryItemData } from "@/Contexts/Inventory/AddInventoryItem";
 import { deleteInventoryItemData } from "@/Contexts/Inventory/DeleteInventoryItem";
 
 import fetchMock from 'jest-fetch-mock';
-import Inventory_Item from "@/Types/Inventory_Item";
-import { Pressable, Text, View } from "react-native";
+import Inventory_Item, { InventorySearchOptions } from "@/Types/Inventory_Item";
+import { TextInputChangeEventData } from "react-native";
+import { NativeSyntheticEvent, Pressable, Text, TextInput, View } from "react-native";
 import { SyncState, UpdateState } from "@/Types/DataLoadingState";
 import { Plan_Ingredient } from "@/Types/Plan";
 
@@ -233,6 +235,79 @@ describe("Inventory Data Provider", () => {
         expect(getInventoryData).toHaveBeenCalledTimes(2);
         jest.useRealTimers();
     })
+    test("On Search, should await sync completion before requesting resync", async () => {
+        jest.useFakeTimers();
+        /*Arrange *******************************************************************/
+        const user = userEvent.setup();
+
+        const MockChildComponent = () => {
+            const { inventoryDataState, setInventorySearchOptions, inventorySearchOptions } = useInventory();
+
+            const onChange = (event : NativeSyntheticEvent<TextInputChangeEventData>) => {
+                // Handle the change event for the TextInput
+                setInventorySearchOptions({searchText : event.nativeEvent.text} as InventorySearchOptions);
+            };
+
+            return ( 
+                <View>
+                    <TextInput 
+                        defaultValue=""
+                        onChange={onChange}
+                        aria-label="inventory-search-input"
+                    />
+                    <Text>{`${inventoryDataState}`}</Text>
+                    <Text>{`${inventorySearchOptions.searchText}`}</Text>
+                </View>
+            ); // This component does not render anything
+        }
+
+        let timer = 1000;
+        (getInventoryData as jest.Mock).mockImplementation(
+            async (
+                userID: number,
+                setInventory: (inventory: Inventory_Item[]) => void
+            ) => {
+                let returnPromise = new Promise<SyncState>((resolve) => {
+                    setTimeout(() => {
+                        setInventory(mockInventory);
+                        resolve(SyncState.Successful);
+                    }, timer -= 100);
+                });
+                return returnPromise;
+            }
+        );
+
+        /*Act **********************************************************************/
+        //wait for the next tick to allow useEffect to run
+        const { getByText, getByLabelText } = render(
+            <InventoryDataProvider>
+                <MockChildComponent />
+            </InventoryDataProvider>
+        );
+        
+        //ensure initial load has completed
+        await waitFor(() => {
+            //jest.runAllTimers();
+            expect(getByText(`${SyncState.Successful}`)).toBeTruthy();
+            expect(getInventoryData).toHaveBeenCalledTimes(1);
+        });
+
+        const inventorySearchBar = getByLabelText("inventory-search-input");
+        expect(inventorySearchBar).toBeTruthy();
+
+        await user.type(inventorySearchBar, "test");
+
+        /*Assert *******************************************************************/
+        await waitFor(() => {
+            jest.runAllTimers();
+            expect((getInventoryData as jest.Mock).mock.lastCall[2]).toEqual({searchText: "test"});
+        });
+
+        expect(getByText("test")).toBeTruthy();
+
+        jest.useRealTimers();
+    })
+
     describe("Add Inventory Item triggers state sync", () => {
         test("should trigger sync on successful add", async () => {
             /*Arrange *******************************************************************/

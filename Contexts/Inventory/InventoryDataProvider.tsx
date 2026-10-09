@@ -1,3 +1,4 @@
+//2026-10-09 : Fixed Sync flow on search entry
 //2026-08-11 : data state hook made available to facilitate refresh
 //2026-08-11 : force a plan data resync when an ingredient with a plan is deleted
 //2026-07-10 : Type guard for user === null
@@ -63,22 +64,35 @@ export const InventoryDataProvider = ({children}:{children:React.ReactNode}) => 
     const [inventory, setInventory] = useState<Inventory_Item[]>([]);
     const [inventorySearchOptions, setInventorySearchOptionsState] = useState<InventorySearchOptions>({})
     const [inventoryDataState, setInventoryDataState] = useState<SyncState | UpdateState>(SyncState.Loading)
+    const [resyncPending, setResyncPending] = useState<boolean>(false);
 
     const {userId} = useAuthenticationData();
     const {setPlansDataState} = usePlans();
 
     useEffect(() => {
-        if(inventoryDataState === SyncState.Loading && userId){
+        if(inventoryDataState === SyncState.Loading && userId && !resyncPending){// Don't bother with fetching inventory data if a resync is pending - as a sync load is already in progress - wait for the callback to set resync pending to false
             getInventoryData(userId, setInventory, inventorySearchOptions).then((result) => {
-                setInventoryDataState(result)
+                /* We need to check against the CURRENT value of resyncPending, not the value it had when the effect was triggered.
+                 * So we use the functional form of setResyncPending to get the current value of resyncPending.
+                 * We're always wanting to set the resyncPending state to false after handling it - as we're triggering the resync by setting the inventoryDataState back to loading.
+                 * But if we set the SyncState back to loading, it will trigger another getInventoryData call, which is what we want.
+                 */
+                setResyncPending((currentResyncPending) => {
+                    if(currentResyncPending === true){
+                        setInventoryDataState(SyncState.Loading);
+                    } else {
+                        setInventoryDataState(result)
+                    }
+                    return false;
+                });
             });
         }
-        if(inventoryDataState === SyncState.Failed && userId){
+        else if(inventoryDataState === SyncState.Failed && userId){
             setTimeout(() => {
                 setInventoryDataState(SyncState.Loading);
             }, 5000);
         }
-    }, [inventoryDataState, userId, inventorySearchOptions]);
+    }, [inventoryDataState, userId, inventorySearchOptions, resyncPending]);
 
     const checkStartSync = (updateState : UpdateState) => {
         if(updateState === UpdateState.Successful){
@@ -90,13 +104,28 @@ export const InventoryDataProvider = ({children}:{children:React.ReactNode}) => 
         return updateState;
     }
 
-    const setInventorySearchOptions = (options: InventorySearchOptions) => {setInventorySearchOptionsState((oldOptions) => {return {...oldOptions, ...options}}); checkStartSync(UpdateState.Successful);};
+    const setInventorySearchOptions = (options: InventorySearchOptions) => {
+        if(options === inventorySearchOptions){
+            return;
+        }
+        setInventorySearchOptionsState((oldOptions) => {return {...oldOptions, ...options}});
+        setInventoryDataState((currentSyncState) => {
+            if(currentSyncState === SyncState.Successful){
+                return SyncState.Loading;
+            } else if (!resyncPending){
+                setResyncPending(true);
+            }
+            return currentSyncState;
+        });
+    };
+
     const deleteInventoryItem = (inventoryItemID: number) => deleteInventoryItemData(inventory, setInventory, inventoryItemID).then((result) => {
         if(result === UpdateState.Successful && inventory.find(item => item.Inventory_Item_ID === inventoryItemID)?.Plan_ID && inventory.find(item => item.Inventory_Item_ID === inventoryItemID)?.Plan_Ingredient_ID) {
             setPlansDataState(SyncState.Loading);
         }    
         return checkStartSync(result);
     });
+
     const addInventoryItem = (inventoryItem: Inventory_Item) => addInventoryItemData(userId, inventory, setInventory, inventoryItem).then((result) => checkStartSync(result));
     const updateInventoryItem = (inventoryItem: Inventory_Item) => updateInventoryItemData(inventory, setInventory, inventoryItem).then((result) => checkStartSync(result));
 
