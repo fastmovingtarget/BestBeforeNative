@@ -1,23 +1,30 @@
+//2026-10-09 : Improvements made to avoid act error message
 //2026-06-12 : Resize component created
 
 import ResizeComponent from "@/ui/ResizeComponent";
 
-import React from "react";
+import { act } from "react";
 import { render } from '@testing-library/react-native';
 import { Text } from "react-native";
 
+beforeEach(() => {
+    jest.resetAllMocks();
+});
+
 describe("ResizeComponent", () => {
-    it("renders children correctly", () => {
-        const { getByText } = render(
-            <ResizeComponent targetHeight={100}>
+    it("renders children correctly", async () => {
+        const { getByText } = await render(
+            <ResizeComponent targetHeight={0}
+                duration={0}>
                 <Text>Test Child</Text>
             </ResizeComponent>
         );
         expect(getByText("Test Child")).toBeTruthy();
     });
-    it("applies custom styles", () => {
-        const { getByLabelText } = render(
-            <ResizeComponent targetHeight={100} style={{ backgroundColor: 'red' }} aria-label="resize-component">
+    it("applies custom styles", async () => {
+        const { getByLabelText } = await render(
+            <ResizeComponent targetHeight={0} 
+                duration={0} style={{ backgroundColor: 'red' }} aria-label="resize-component">
                 <Text>Styled Child</Text>
             </ResizeComponent>
         );
@@ -33,9 +40,9 @@ describe("ResizeComponent animations", () => {
     afterEach(() => {
         jest.useRealTimers();
     });
-    it("calls onResizeAnimationEnd after animation", () => {
+    it("calls onResizeAnimationEnd after animation", async () => {
         const onResizeAnimationEnd = jest.fn();
-        render(
+        await render(
             <ResizeComponent 
                 targetHeight={100}
                 onResizeAnimationEnd={onResizeAnimationEnd}
@@ -45,7 +52,9 @@ describe("ResizeComponent animations", () => {
                 <Text>Animation Test</Text>
             </ResizeComponent>
         );
-        jest.advanceTimersByTime(500);
+        act(async () => {
+            jest.advanceTimersByTime(500);
+        });
         expect(onResizeAnimationEnd).toHaveBeenCalled();
     });
 });
