@@ -1,3 +1,4 @@
+//2026-10-09 : Added aria label to validation text
 //2026-09-15 : Colours now sourced from ColourProvider
 //2026-07-16 : Added function descriptions
 //2026-07-10 : Adding handling for password input type
@@ -131,7 +132,7 @@ const FormTextInput = ({style, children, defaultValue, inputMode = "text", onCha
             >
                 {children}
             </TextInput>
-            {invalidMessage && <LabelText style={errorTextStyles}>{invalidMessage}</LabelText>}
+            {invalidMessage && <LabelText style={errorTextStyles} aria-label={`validation-text`}>{invalidMessage}</LabelText>}
         </ColumnContainer>
     );
 }
