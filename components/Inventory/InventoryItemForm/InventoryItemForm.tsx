@@ -1,27 +1,21 @@
+//2026-10-09 : More validation added for quantity and name inputs
+//2026-10-09 : Date picker is dismissed properly on cancel
 //2026-07-20 : Using aria-label to indicate role
 //2026-07-16 : Added function description
-
 //2026-07-01 : Adding Cancel and Submit Icons
-
 //2026-06-19 : allow submission of items on today's date
-
 //2026-06-18 : Added validation for form fields
-
 //2026-06-18 : Item quantity now starts undefined
-
 //2026-06-01 : feat: use FadeComponent, consolidate UI
-
 //2025-11-21 : Moving common UI elements into their own folder
-
 //2025-11-19 : Renamed "Ingredient(s)" to "Inventory(_Items)"
-
 //2025-10-20 : Updated to useIngredient context, simplified a terary operator
 
-import React, {useState} from 'react'
+import {useState} from 'react'
 import { StyleSheet } from "react-native";
-import DateTimePicker from '@react-native-community/datetimepicker';
 import Inventory_Item from "@/Types/Inventory_Item";
-import { ButtonView, LabelText, FormTextInput, RowContainer, FadeComponent } from '@/ui/BestBeforeUI';
+import { ButtonView, FormTextInput, RowContainer, FadeComponent } from '@/ui/BestBeforeUI';
+import InventoryItemFormDatePicker from './InventoryItemFormDatePicker';
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 import { MountState } from '@/ui/Types/MountState';
 import { CancelIcon, SubmitInventoryIcon } from '@/ui/ReactIcon';
@@ -42,7 +36,6 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
         Inventory_Item_Date: new Date(),
     }
     const [formInventoryItem, setFormInventoryItem] = useState<Inventory_Item>( inventoryItem || blankInventoryItem);
-    const [pickerVisible, setPickerVisible] = useState(false);
     const {addInventoryItem, updateInventoryItem} = useInventory();
     const [mountState, setMountState] = useState<MountState>(MountState.Mount);
 
@@ -87,17 +80,24 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
      */
     const validateName = (text: string) => {
         if(text.trim() === "") return "Item name cannot be empty";
+        if(text.length >= 45) return "Item name too long";
         return true;
     }
 
     const validateQuantity = (text: string) => {
         if(text.trim() === "") return "Quantity cannot be empty";
-        if(isNaN(parseInt(text))) return "Quantity must be a number";
-        return true;
+        else if(isNaN(parseInt(text))) return "Quantity must be a number";
+        else if(parseInt(text) < 0) return "Quantity cannot be negative";
+        else if(parseInt(text) === 0) return "Quantity cannot be zero";
+        else if(!Number.isInteger(parseFloat(text))) return "Quantity must be a whole number";
+        else if(parseInt(text) > 2147483647) return "Quantity cannot exceed integer limit";
+        else if(parseInt(text) > 10**27) return "Black hole breaks ToS";
+        else
+            return true;
     }
 
-    const validateDate = (date: Date | undefined) => {
-        if(!date) return "Date cannot be empty";
+    const validateDate = (date: Date | undefined | null) => {
+        if(!date) return "Please select a date";
         const today = new Date();
         if(date.getFullYear() < today.getFullYear() || 
             (date.getFullYear() === today.getFullYear() && date.getMonth() < today.getMonth()) ||
@@ -118,26 +118,14 @@ export default function InventoryItemForm({inventoryItem, onCancel, isFormVisibl
                     aria-label="name-input"
                 />
             </RowContainer>
-                
-            <RowContainer  >
-                <ButtonView
-                    onPress={() => setPickerVisible(!pickerVisible)}
-                    style={{width: "100%", padding:0}}
-                    aria-label="date-input-button"
-                >
-                    <LabelText aria-label="date-button-label">
-                        {`Use By: ${formInventoryItem.Inventory_Item_Date?.toLocaleDateString("en-UK", { year: "numeric", month: "2-digit", day: "2-digit" })}`}
-                    </LabelText>
-                </ButtonView>
-                {pickerVisible ? <DateTimePicker
-                    value={formInventoryItem.Inventory_Item_Date || new Date()}
-                    minimumDate={new Date()}
-                    mode="date"
-                    display="default"
-                    onChange={(event, date) => {setFormInventoryItem({...formInventoryItem, Inventory_Item_Date: date}); setPickerVisible(false)}}
-                    aria-label="date-input"
-                /> : null}
-            </RowContainer>
+            
+            <InventoryItemFormDatePicker
+                date={formInventoryItem.Inventory_Item_Date}
+                onDateChange={(date : Date) => setFormInventoryItem({...formInventoryItem, Inventory_Item_Date: date})}
+                aria-label="date-input"
+                validationFunction={validateDate}
+            />
+
             <RowContainer  >
                 <FormTextInput
                     validationFunction={validateQuantity}
