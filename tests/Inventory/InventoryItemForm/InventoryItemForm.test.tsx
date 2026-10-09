@@ -1,3 +1,4 @@
+//2026-10-09 : More validation added for quantity and name inputs
 //2026-07-20 : Amending to test iconified components
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
@@ -344,6 +345,170 @@ describe("Form Visibility is", () => {
 
         const form = queryByLabelText("formContainer");
         expect(form).toBeNull();
-        
     })
 })
+
+describe("Validation", () => {
+    describe("Name input validation", () => {
+        test("Name input shows validation message when empty", async() => {
+            const user = userEvent.setup();
+            const { queryByText, getByLabelText } = render(
+                <InventoryItemForm isFormVisible={true} />,
+            );
+
+            const nameInput = getByLabelText(/name-input/i);
+            
+            // nameInput will have an empty value initially
+            expect(queryByText(/Item name cannot be empty/i)).toBeTruthy();
+
+            await user.type(nameInput, 'TestName', {submitEditing: false});
+
+            expect(queryByText(/Item name cannot be empty/i)).toBeFalsy();
+        });
+        test("Name input shows validation message when too long", async() => {
+            const user = userEvent.setup();
+            const { queryByText, getByLabelText } = render(
+                <InventoryItemForm isFormVisible={true} />,
+            );
+
+            const nameInput = getByLabelText(/name-input/i);
+            
+            const longName = 'A'.repeat(49); // Assuming the max length is 45
+            await user.type(nameInput, longName, {submitEditing: false});
+
+            expect(queryByText(/Item name too long/i)).toBeTruthy(); 
+        });
+        test("Form does not submit when name input is invalid", async() => {
+            const user = userEvent.setup();
+            const { getByLabelText } = render(
+                <InventoryItemForm isFormVisible={true} />,
+            );
+
+            const nameInput = getByLabelText(/name-input/i);
+            const submitButton = getByLabelText(/submit-button/i);
+
+            await user.clear(nameInput);//name input is set to empty - failing validation
+            await user.press(submitButton);
+
+            expect(mockdataContext.addInventoryItem).toHaveBeenCalledTimes(0);
+            expect(mockdataContext.updateInventoryItem).toHaveBeenCalledTimes(0);//just for completeness
+        });
+    });
+    describe("Quantity input validation", () => {
+        test("Quantity input shows validation message when empty", async() => {
+            const user = userEvent.setup();
+            const { queryByText, getByLabelText } = render(
+                <InventoryItemForm isFormVisible={true} />,
+            );
+
+            const quantityInput = getByLabelText(/quantity-input/i);
+            
+            // quantityInput will have an empty value initially
+            expect(queryByText(/Quantity cannot be empty/i)).toBeTruthy();
+
+            await user.type(quantityInput, '10', {submitEditing: false});
+
+            expect(queryByText(/Quantity cannot be empty/i)).toBeFalsy();
+        });
+        test("Quantity input shows validation message when negative", async() => {
+            const user = userEvent.setup();
+            const { queryByText, getByLabelText } = render(
+                <InventoryItemForm isFormVisible={true} />,
+            );
+
+            const quantityInput = getByLabelText(/quantity-input/i);
+            
+            await user.type(quantityInput, '-5', {submitEditing: false});
+
+            expect(queryByText(/Quantity cannot be negative/i)).toBeTruthy();
+        });
+        test("Quantity input shows validation message when not a number", async() => {
+            const user = userEvent.setup();
+            const { queryByText, getByLabelText } = render(
+                <InventoryItemForm isFormVisible={true} />,
+            );
+
+            const quantityInput = getByLabelText(/quantity-input/i);
+            
+            await user.type(quantityInput, 'abc', {submitEditing: false});
+
+            expect(queryByText(/Quantity must be a number/i)).toBeTruthy();
+        });
+        test("Quantity input shows validation message when decimal", async() => {
+            const user = userEvent.setup();
+            const { queryByText, getByLabelText } = render(
+                <InventoryItemForm isFormVisible={true} />,
+            );
+
+            const quantityInput = getByLabelText(/quantity-input/i);
+            
+            await user.type(quantityInput, '5.5', {submitEditing: false});
+
+            expect(queryByText(/Quantity must be a whole number/i)).toBeTruthy();
+        });
+        test("Quantity input shows validation message when zero", async() => {
+            const user = userEvent.setup();
+            const { queryByText, getByLabelText } = render(
+                <InventoryItemForm isFormVisible={true} />,
+            );
+
+            const quantityInput = getByLabelText(/quantity-input/i);
+            
+            await user.type(quantityInput, '0', {submitEditing: false});
+
+            expect(queryByText(/Quantity cannot be zero/i)).toBeTruthy();
+        });
+        test("Quantity input shows validation message when exceeding integer limit", async() => {
+            const user = userEvent.setup();
+            const { queryByText, getByLabelText } = render(
+                <InventoryItemForm isFormVisible={true} />,
+            );
+
+            const quantityInput = getByLabelText(/quantity-input/i);
+            
+            await user.type(quantityInput, '2147483648', {submitEditing: false});
+
+            expect(queryByText(/Quantity cannot exceed integer limit/i)).toBeTruthy();
+        });
+    });
+    describe("Date input validation", () => {
+        test("Date input shows validation message when in the past", async() => {
+            const testInventoryItem : Inventory_Item = {
+                Inventory_Item_ID: 1,
+                Inventory_Item_Name: 'Test Ingredient 1',
+                Inventory_Item_Quantity: 1,
+                Inventory_Item_Date: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7), // 1 week ago
+            };
+            const { queryByText } = render(
+                <InventoryItemForm isFormVisible={true} inventoryItem={testInventoryItem} />,
+            );
+            
+            expect(queryByText(/Date cannot be in the past/i)).toBeTruthy();
+        });
+        test("Date input shows validation message when null", async() => {
+            const testInventoryItem : Inventory_Item = {
+                Inventory_Item_ID: 1,
+                Inventory_Item_Name: 'Test Ingredient 1',
+                Inventory_Item_Quantity: 1,
+                Inventory_Item_Date: null,
+            };
+            const { queryByText } = render(
+                <InventoryItemForm isFormVisible={true} inventoryItem={testInventoryItem} />,
+            );
+            
+            expect(queryByText(/Please select a date/i)).toBeTruthy();
+        });
+        test("Date input shows validation message when undefined", async() => {
+            const testInventoryItem : Inventory_Item = {
+                Inventory_Item_ID: 1,
+                Inventory_Item_Name: 'Test Ingredient 1',
+                Inventory_Item_Quantity: 1
+            };
+            const { queryByText } = render(
+                <InventoryItemForm isFormVisible={true} inventoryItem={testInventoryItem} />,
+            );
+            
+            expect(queryByText(/Please select a date/i)).toBeTruthy();
+        });
+    });
+});
