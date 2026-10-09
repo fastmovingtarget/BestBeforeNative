@@ -8,6 +8,7 @@ node_modules/
 dist/
 web-build/
 expo-env.d.ts
+.idea/
 
 # Native
 *.orig.*
@@ -81,3 +82,5 @@ android/gradle/wrapper/gradle-wrapper.jar
 android/gradle/wrapper/gradle-wrapper.properties
 
 *_old
+*.frag.*
+*.gitignore
