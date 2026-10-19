@@ -1,16 +1,12 @@
+//2026-10-19 : Use resync flag after alteration if sync is in progress
 //2026-10-09 : Fixed Sync flow on search entry
 //2026-08-11 : data state hook made available to facilitate refresh
 //2026-08-11 : force a plan data resync when an ingredient with a plan is deleted
 //2026-07-10 : Type guard for user === null
-
 //2026-06-19 : Logs for API calls
-
 //2025-11-19 : Renamed Ingredients to Inventory
-
 //2025-11-10 : Added matchIngredient, documentation
-
 //2025-10-22 : Failed sync triggers retry after a cooldown period
-
 //2025-10-20 : Separated ingredients data provider
 
 import { useState, createContext, useContext, useEffect  } from "react";
@@ -96,7 +92,15 @@ export const InventoryDataProvider = ({children}:{children:React.ReactNode}) => 
 
     const checkStartSync = (updateState : UpdateState) => {
         if(updateState === UpdateState.Successful){
-            setInventoryDataState(SyncState.Loading);
+            setInventoryDataState((currentSyncState) => {
+                if(currentSyncState === SyncState.Successful){
+                    return SyncState.Loading;
+                }
+                else if (!resyncPending){
+                    setResyncPending(true);
+                }
+                return currentSyncState;
+            });
         }
         else{
             setInventoryDataState(updateState);
