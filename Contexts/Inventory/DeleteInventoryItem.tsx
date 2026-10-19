@@ -1,22 +1,15 @@
+//2026-10-19 : Filter against current inventory items
 //2026-08-21 : Fixing API endpoint alterable outside of code
 //2026-08-11 : Log improvements
 //2026-08-04 : Updating api calls to use correct env variable
 //2026-07-10 : Changes to pick up env server props
-
 //2026-06-19 : Logs for API calls
-
 //2026-06-01 : updating local IP Address
-
 //2025-11-19 : Renamed Ingredients to Inventory
-
 //2025-11-10 : Added improved documentation
-
 //2025-10-24 : Adding catch for fetch errors
-
 //2025-10-23 : Standardised to update state on response to fetch
-
 //2025-10-22 : Corrected fail state resolution
-
 //2025-10-20 : Moved server properties into individual files, now return enum states
 
 import React from "react";
@@ -38,8 +31,6 @@ export const deleteInventoryItemData = async (
     inventoryItemID : number,
 ) => {
 
-    log(`Deleting inventory item with ID: ${inventoryItemID}`, "debug");
-
     let returnPromise = new Promise<UpdateState>((resolve) => {
         fetch(
             `https://bestbeforeapi.fastmovingtarget.co.uk/inventory/${inventoryItemID}`, 
@@ -51,7 +42,9 @@ export const deleteInventoryItemData = async (
             }
         ).then((rawData) => {
             if(rawData.ok) {
-                setInventoryItems(inventoryItems.filter((item) => item.Inventory_Item_ID !== inventoryItemID));//remove the deleted item from the list
+                setInventoryItems((curentItems) => {
+                    return curentItems.filter((item) => item.Inventory_Item_ID !== inventoryItemID);//remove the deleted item from the list
+                });
                 log(`Successfully deleted inventory item with ID: ${inventoryItemID}`, "debug");
                 resolve(UpdateState.Successful);
             }
