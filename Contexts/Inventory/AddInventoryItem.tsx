@@ -1,3 +1,4 @@
+//2026-10-19 : Use correct field names in cache data update
 //2026-08-21 : Fixing API endpoint alterable outside of code
 //2026-08-04 : Updating api calls to use correct env variable
 //2026-07-10 : Changes to pick up env server props
@@ -64,10 +65,11 @@ export const addInventoryItemData = async (
             else{
                 rawData.json().then((data) => {//the data returned should be the inventory item that was added including the id
                     setInventory([//we can't add the inventory item to the list until we get the id back from the server
-                        ...inventory,
                         {
-                            ...data,
-                            Inventory_Item_Date: new Date(data.Inventory_Item_Date),//date comes in as a string and doesn't get properly parsed within .json()
+                            Inventory_Item_ID: data.inventory_Item_ID,
+                            Inventory_Item_Name: data.inventory_Item_Name,
+                            Inventory_Item_Quantity: data.inventory_Item_Quantity,
+                            Inventory_Item_Date: new Date(data.inventory_Item_Date),//date comes in as a string and doesn't get properly parsed within .json()
                         }]);
                 })
                 log(`Successfully added inventory item: ${inventoryItem.Inventory_Item_Name}`, "debug");
