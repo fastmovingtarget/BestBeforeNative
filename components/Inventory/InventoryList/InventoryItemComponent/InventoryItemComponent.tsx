@@ -1,22 +1,20 @@
+//2026-10-19 : Test to ensure no extra unmount actions are called
 //2026-08-11 : minor refactor, removing imports
 //2026-07-20 : Using aria-label to indicate role
 //2026-07-16 : Added function description
-
 //2026-06-30 : Icons for Edit and Delete
-
 //2026-06-01 : use FadeComponent wrapper, improve containers
-
 //2025-11-21 : Moving common UI elements into their own folder
-
 //2025-11-19 : Renamed "Ingredient(s)" to "Inventory(_Items)"
-
 //2025-10-20 : Changed to use Ingredients Context
+
 import { useState } from "react";
 import Inventory_Item from "@/Types/Inventory_Item";
 import { useInventory } from "@/Contexts/Inventory/InventoryDataProvider";
 import {RowContainer, FadeComponent, ButtonView, LabelText} from "@/ui/BestBeforeUI";
 import { MountState } from "@/ui/Types/MountState"; 
 import { DeleteIcon, EditInventoryItemIcon } from "@/ui/ReactIcon";
+import { SyncState, UpdateState } from "@/Types/DataLoadingState";
 
 /**
  * InventoryItemComponent component
@@ -26,30 +24,39 @@ import { DeleteIcon, EditInventoryItemIcon } from "@/ui/ReactIcon";
  */
 
 export default function InventoryItemComponent({ inventoryItem, onEdit } : { inventoryItem: Inventory_Item, onEdit: (ingredientID: number) => void }) {
-    const { deleteInventoryItem } = useInventory();
+    const { deleteInventoryItem, inventoryDataState } = useInventory();
     const [mountState, setMountState] = useState<MountState>(MountState.Mount);
     const [unmountAction, setUnmountAction] = useState<"edit" | "delete" | null>(null);
+
+    const [unmountCompleted, setUnmountCompleted] = useState(false);
+
 
     /**
      * When the edit button is pressed, the unmount action is set to "edit" and the mount state is set to unmount. The onEdit callback will be called after the unmount animation ends.
      * When the delete button is pressed, the unmount action is set to "delete" and the mount state is set to unmount. The deleteInventoryItem function will be called after the unmount animation ends.
      */
     let onUnmountAnimationEnd: () => void = () => {
-        if(unmountAction === "edit") {
-            onEdit(inventoryItem.Inventory_Item_ID || -1);
-        }
-        else if(unmountAction === "delete") {
-            deleteInventoryItem(inventoryItem.Inventory_Item_ID || -1)     
-        }
+        setUnmountCompleted(currentUnmountCompleted => {// Test whether the unmount animation has already completed - unmounts called in quick succession can result in multiple calls to this function - and we can't delete an item more than once (and probably shouldn't edit an item so quickly either)
+            if(!currentUnmountCompleted){
+                if(unmountAction === "edit") {
+                    onEdit(inventoryItem.Inventory_Item_ID || -1);
+                }
+                else if(unmountAction === "delete") {
+                    deleteInventoryItem(inventoryItem.Inventory_Item_ID || -1)     
+                }
+            };
+            return true;
+        });
     };
 
     const onDelete = () => {
+        if(unmountAction !== null || inventoryDataState === UpdateState.Loading || inventoryDataState === SyncState.Loading) return;
+
         setUnmountAction("delete");
         setMountState(MountState.Unmount);
     }
-
     return (
-        <FadeComponent style={{marginHorizontal : 0, padding : 10, width: "100%"}} mountState={mountState} onUnmountAnimationEnd={() => onUnmountAnimationEnd()}>
+        <FadeComponent style={{marginHorizontal : 0, padding : 10, width: "100%"}} mountState={mountState} onUnmountAnimationEnd={() => onUnmountAnimationEnd()} duration={10} aria-label={`inventory-item-${inventoryItem.Inventory_Item_ID}`}>
             <LabelText>{inventoryItem.Inventory_Item_Name}</LabelText>
             
             <RowContainer style={{justifyContent: "space-between", width: "100%"}}>
