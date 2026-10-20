@@ -1,3 +1,4 @@
+//2026-10-20 : moving unmount complete logic to fadecomponent
 //2026-09-15 : Colours now sourced from ColourProvider
 //2026-07-16 : Added function descriptions
 //2026-06-11 : Removing an extra console log
@@ -6,7 +7,7 @@
 
 import { useColourData } from "@/Contexts/Colours/ColourDataProvider";
 import {Animated} from "react-native";
-import { useEffect, type PropsWithChildren, useRef } from "react";
+import { useEffect, type PropsWithChildren, useRef, useState } from "react";
 import type { ViewStyle } from "react-native";
 import { MountState } from "@/ui/Types/MountState";
 
@@ -44,6 +45,8 @@ type ComponentProps = {
 const FadeComponent = ({style, children, 'aria-label' : ariaLabel, duration = 300, mountState = MountState.Mount, onUnmountAnimationEnd, onMountAnimationEnd, onUpdateUnmountAnimationEnd, onUpdateMountAnimationEnd} : PropsWithChildren<ComponentProps>) => {
     const fadeAnim = useRef(new Animated.Value(0)).current; // Initial opacity value: 0
     
+    const [unmountCompleted, setUnmountCompleted] = useState(false);
+    
     const {colours} = useColourData();
 
     const fadeComponentStyles = {
@@ -66,9 +69,14 @@ const FadeComponent = ({style, children, 'aria-label' : ariaLabel, duration = 30
                 duration: duration, // Duration of the fade out effect
                 useNativeDriver: true,
             }).start(() => {
-                if (onUnmountAnimationEnd) {
-                    onUnmountAnimationEnd();
-                }
+                setUnmountCompleted(currentUnmountCompleted => {
+                    if(!currentUnmountCompleted){
+                        if (onUnmountAnimationEnd) {
+                            onUnmountAnimationEnd();
+                        }
+                    }
+                    return true;
+                });
             });
         } else if(mountState === MountState.Mount) {
             // Implement fade in effect on mount

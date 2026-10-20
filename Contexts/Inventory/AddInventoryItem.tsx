@@ -1,3 +1,4 @@
+//2026-10-20 : fixed adding new item to current inventory
 //2026-10-19 : Use correct field names in cache data update
 //2026-08-21 : Fixing API endpoint alterable outside of code
 //2026-08-04 : Updating api calls to use correct env variable
@@ -65,6 +66,7 @@ export const addInventoryItemData = async (
             else{
                 rawData.json().then((data) => {//the data returned should be the inventory item that was added including the id
                     setInventory([//we can't add the inventory item to the list until we get the id back from the server
+                        ...inventory, // Keep the existing inventory items in the list before adding the new one
                         {
                             Inventory_Item_ID: data.inventory_Item_ID,
                             Inventory_Item_Name: data.inventory_Item_Name,

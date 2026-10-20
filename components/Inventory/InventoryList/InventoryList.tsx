@@ -1,3 +1,4 @@
+//2026-10-20 : check to ensure edit id exists before showing form
 //2026-08-11 : added handling for refresh
 //2026-07-16 : Added function description
 
@@ -34,7 +35,7 @@ export default function InventoryList({onEdit}: {onEdit: () => void}) {
     return (
         <ScrollableContainer onRefresh={onRefresh}>
             {inventory.map((inventoryItem: Inventory_Item) => (
-                editId !== inventoryItem.Inventory_Item_ID ?
+                !editId || editId !== inventoryItem.Inventory_Item_ID ?
                     <InventoryItemComponent key={`inventory-item-${inventoryItem.Inventory_Item_ID}`} inventoryItem={inventoryItem} onEdit={(id) => {
                         setEditId(id);
                         onEdit();
