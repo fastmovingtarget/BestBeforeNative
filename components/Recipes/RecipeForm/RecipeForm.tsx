@@ -1,27 +1,19 @@
+//2026-10-23 : Adding more validation
 //2026-07-21 : Adding aria labels for the buttons and icons
 //2026-07-21 : Switch to Recipe_Rating, Using stars instead of numeric input
 //2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2026-07-20 : Adding aria-label for iconised buttons
 //2026-07-16 : Added function descriptions
 //2026-07-01 : Icons for Cancel, Submit and Remove Ingredient
-
 //2026-06-18 : Removed unused import
-
 //2026-06-18 : Allow use of blank number input, validation for ingredients
-
 //2026-06-17 : Added validation, tinkered with style
-
 //2026-06-10 : console.log removed
-
 //2026-06-01 : Using FadeComponent and RowContainer
-
 //2025-11-21 : Moving common UI elements into their own folder
-
 //2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
-
 //2025-10-20 : Switched to using Recipes Data Context
-
-//Wed, May 21, 2025 11:23:24 AM : Switching Cancel and Submit buttons for consistency
+//2026-05-21 : Switching Cancel and Submit buttons for consistency
 
 import React from 'react';
 import Recipe from '@/Types/Recipe';
@@ -127,7 +119,7 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
     const checkValidation = () => {
         if(validateRecipeName(currentRecipe.Recipe_Name) !== true 
             || validateRecipeTime(currentRecipe.Recipe_Time?.toString() || "") !== true 
-            || validateRecipeRating(currentRecipe.Recipe_Rating?.toString() || "") !== true){
+            || validateRecipeInstructions(currentRecipe.Recipe_Instructions || "") !== true){
             return false;
         }
         if(currentRecipe.Recipe_Ingredients) {
@@ -145,6 +137,9 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
         if(name.trim() === "") {
             return "Recipe Name cannot be empty";
         }
+        if(name.length > 70) {
+            return "Recipe Name cannot exceed 70 characters";
+        }
         return true;
     }
 
@@ -159,19 +154,15 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
         if(timeNumber < 0) {
             return "Cannot be negative";
         }
+        if(timeNumber > 2147483647) {
+            return "Cannot exceed integer limit";
+        }
         return true;
     }
 
-    const validateRecipeRating = (rating: string) => {
-        if(rating.trim() === "" || rating === null) {
-            return "Rating cannot be empty";
-        }
-        const ratingNumber = Number.parseInt(rating, 10);
-        if(isNaN(ratingNumber)) {
-            return "Must be a number";
-        }
-        if(ratingNumber < 0 || ratingNumber > 5) {
-            return "Must be between 0 and 5";
+    const validateRecipeInstructions = (instructions: string) => {
+        if(instructions.trim().length > 4095 ) {
+            return "Instructions cannot exceed 4095 characters";
         }
         return true;
     }
@@ -179,6 +170,9 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
     const validateRecipeIngredientName = (name: string) => {
         if(name.trim() === "") {
             return "Name cannot be empty";
+        }
+        if(name.trim().length > 45) {
+            return "Name cannot exceed 45 characters";
         }
         return true;
     }
@@ -194,8 +188,12 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
         if(quantityNumber < 0) {
             return "Cannot be negative";
         }
+        if(quantityNumber > 2147483647) {
+            return "Cannot exceed integer limit";
+        }
         return true;
     }
+
 
     return (
         <FadeComponent 
@@ -348,6 +346,7 @@ export default function RecipeForm({inputRecipe = emptyRecipe, exitForm} : {inpu
                             onChangeText={(text) => {setCurrentRecipe({...currentRecipe, Recipe_Instructions: text})}}
                             defaultValue={currentRecipe.Recipe_Instructions || ""}
                             style={{width: "100%", height: 100}}
+                            validationFunction={validateRecipeInstructions}
                             multiline={true}
                             numberOfLines={5}
                         />
