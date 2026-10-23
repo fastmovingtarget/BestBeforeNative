@@ -1,3 +1,4 @@
+//2026-10-23 : Added validation for form fields
 //2026-07-21 : Test recipe rating for iconised display
 //2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2026-07-20 : minor fix
@@ -316,3 +317,87 @@ describe("Recipe Rating buttons", () => {
         }));
     })
 })
+
+describe("Recipe Form Validation", () => {
+    it("Recipe Name empty", async () => {
+        const {getByText} = render(
+            <RecipeForm inputRecipe={{...mockRecipe, Recipe_Name: ""}} exitForm={mockExitForm}/>
+        );
+        
+        expect(getByText(/Recipe Name cannot be empty/i)).toBeTruthy();
+    });
+    it("Recipe Name over 70 characters", async () => {
+        const {getByText} = render(
+            <RecipeForm inputRecipe={{...mockRecipe, Recipe_Name: "A".repeat(71)}} exitForm={mockExitForm}/>
+        );
+        
+        expect(getByText(/Recipe Name cannot exceed 70 characters/i)).toBeTruthy();
+    });
+    it("Recipe Time empty", async () => {
+        const {getByText} = render(
+            <RecipeForm inputRecipe={{...mockRecipe, Recipe_Time: undefined}} exitForm={mockExitForm}/>
+        );
+        
+        expect(getByText(/Time cannot be empty/i)).toBeTruthy();
+    });
+    it("Recipe Time negative", async () => {
+        const {getByText} = render(
+            <RecipeForm inputRecipe={{...mockRecipe, Recipe_Time: -1}} exitForm={mockExitForm}/>
+        );
+        
+        expect(getByText(/Cannot be negative/i)).toBeTruthy();
+    });
+    it("Recipe Time exceeds integer limit", async () => {
+        const {getByText} = render(
+            <RecipeForm inputRecipe={{...mockRecipe, Recipe_Time: 2147483648}} exitForm={mockExitForm}/>
+        );
+        
+        expect(getByText(/Cannot exceed integer limit/i)).toBeTruthy();
+    });
+    it("Recipe Instructions over 4095 characters", async () => {
+        const {getByText} = render(
+            <RecipeForm inputRecipe={{...mockRecipe, Recipe_Instructions: "A".repeat(4096)}} exitForm={mockExitForm}/>
+        );
+        
+        expect(getByText(/Instructions cannot exceed 4095 characters/i)).toBeTruthy();
+    });
+    it("Recipe Ingredient Name and Quantity empty", async () => {
+        const user = userEvent.setup();
+        const {getByText} = render(
+            <RecipeForm inputRecipe={mockRecipe} exitForm={mockExitForm}/>
+        );
+        const addButton = getByText(/Add Ingredient/i);
+        await user.press(addButton);
+
+        expect(getByText(/Name cannot be empty/i)).toBeTruthy();
+        expect(getByText(/Quantity cannot be empty/i)).toBeTruthy();
+    });
+    it("Recipe Ingredient over 45 characters", async () => {
+        const user = userEvent.setup();
+        const {getByText, getByLabelText} = render(
+            <RecipeForm inputRecipe={mockRecipe} exitForm={mockExitForm}/>
+        );
+        const addButton = getByText(/Add Ingredient/i);
+        await user.press(addButton);
+
+        const nameInput = getByLabelText(/recipe-ingredient-name-1/i);
+
+        const longName = "A".repeat(46);
+        await user.type(nameInput, longName);
+
+        expect(getByText(/Name cannot exceed 45 characters/i)).toBeTruthy();
+    });
+    it("Recipe Ingredient quantity over integer limit", async () => {
+        const user = userEvent.setup();
+        const {getByText, getByLabelText} = render(
+            <RecipeForm inputRecipe={mockRecipe} exitForm={mockExitForm}/>
+        );
+        const addButton = getByText(/Add Ingredient/i);
+        await user.press(addButton);
+
+        const quantityInput = getByLabelText(/recipe-ingredient-quantity-1/i);
+        await user.type(quantityInput, "2147483648");
+
+        expect(getByText(/Cannot exceed integer limit/i)).toBeTruthy();
+    });
+});
