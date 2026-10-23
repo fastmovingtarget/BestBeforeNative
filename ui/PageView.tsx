@@ -1,14 +1,12 @@
+//2026-10-23 : Changed View to KeyboardAvoidingView
 //2026-09-21 : Added support for aria label, force 100% height
 //2026-09-15 : Colours now sourced from ColourProvider
 //2026-07-16 : Added function descriptions
 //2026-06-11 : Improved padding
-
 //2026-06-01 : UI Tweaking
-
 //2025-11-21 : Moving common UI elements into their own folder
 
-import { View } from "react-native";
-import { useRef } from "react";
+import { KeyboardAvoidingView } from "react-native";
 import type { PropsWithChildren } from "react";
 import type { ViewStyle } from "react-native";
 import { useColourData } from "@/Contexts/Colours/ColourDataProvider";
@@ -32,8 +30,6 @@ const PageView : React.FC<PageViewProps> = props => {
 
     const {colours} = useColourData();
 
-    const pageViewRef = useRef<View>(null);
-
     const pageViewStyles = {
         display: "flex",
         flexDirection: "column",
@@ -47,15 +43,15 @@ const PageView : React.FC<PageViewProps> = props => {
     } as ViewStyle;
 
     return (
-        <View 
-        ref={pageViewRef}
+        <KeyboardAvoidingView 
+        behavior="padding"
         accessibilityLabel={props.ariaLabel}
         style={{ 
             ...pageViewStyles,
             ...props.style,
         }}>
             {props.children}
-        </View>
+        </KeyboardAvoidingView>
     );
 }
 
