@@ -1,3 +1,4 @@
+//2026-10-29 : Adding resync functionality
 //2026-08-11 : data state hook made available to facilitate refresh
 //2026-08-11 : Async Add allows item to be added from planner correctly
 //2025-11-10 : Added improved documentation
@@ -49,12 +50,24 @@ export const ShoppingListDataProvider = ({children}:{children:React.ReactNode}) 
     const [shoppingList, setShoppingList] = useState<Shopping_List_Item[]>([])
     const [shoppingListSearchOptions, setShoppingListSearchOptionsState] = useState<ShoppingListSearchOptions>({})
     const [shoppingListDataState, setShoppingListDataState] = useState<UpdateState | SyncState>(SyncState.Loading)
+    const [resyncPending, setResyncPending] = useState<boolean>(false);
 
     const {userId} = useAuthenticationData();
     
     useEffect(() => {
         if(shoppingListDataState === SyncState.Loading && userId){
-            getShoppingListData(userId, setShoppingList, shoppingListSearchOptions).then((result) => setShoppingListDataState(result));
+            getShoppingListData(userId, setShoppingList, shoppingListSearchOptions).then(
+                (result) => {
+                    setResyncPending((currentResyncPending) => {
+                        if(currentResyncPending === true){
+                            setShoppingListDataState(SyncState.Loading);
+                        } else {
+                            setShoppingListDataState(result)
+                        }
+                        return false;
+                    });
+                }
+            );
         }
         if(shoppingListDataState === SyncState.Failed && userId){
             setTimeout(() => {
@@ -65,13 +78,29 @@ export const ShoppingListDataProvider = ({children}:{children:React.ReactNode}) 
 
     const checkStartSync = (updateState : UpdateState) => {
         if(updateState === UpdateState.Successful){
-            setShoppingListDataState(SyncState.Loading);
-        } else{
+            setShoppingListDataState((currentSyncState) => {
+                if(currentSyncState === SyncState.Successful){
+                    return SyncState.Loading;
+                }
+                else if (!resyncPending){
+                    setResyncPending(true);
+                }
+                return currentSyncState;
+            });
+        }
+        else{
             setShoppingListDataState(updateState);
         }
+        return updateState;
     }
 
-    const setShoppingListSearchOptions = (options: ShoppingListSearchOptions) => {setShoppingListSearchOptionsState((oldOptions) => {return {...oldOptions, ...options}}); checkStartSync(UpdateState.Successful);};
+    const setShoppingListSearchOptions = (options: ShoppingListSearchOptions) => {
+        if(options === shoppingListSearchOptions){
+            return;
+        }
+        setShoppingListSearchOptionsState((oldOptions) => {return {...oldOptions, ...options}}); 
+        checkStartSync(UpdateState.Successful);
+    };
     const deleteShoppingItem = (itemID: number) => deleteShoppingListItemData(shoppingList, setShoppingList, itemID).then((result) => checkStartSync(result));
     const addShoppingItem = (item: Shopping_List_Item) => addShoppingListItemData(userId || -1, shoppingList, setShoppingList, item).then((result) => checkStartSync(result));
     const addShoppingItemAsync = (item: Shopping_List_Item) => {

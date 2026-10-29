@@ -1,3 +1,4 @@
+//2026-10-29 : Adding resync functionality
 //2026-08-11 : data state hook made available to facilitate refresh
 //2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2025-11-20 : Cleanup of debug logs
@@ -52,12 +53,22 @@ export const RecipesDataProvider = ({children}:{children:React.ReactNode}) => {
     const [recipes, setRecipes] = useState<Recipe[]>([])
     const [recipesSearchOptions, setRecipesSearchOptionsState] = useState<RecipesSearchOptions>({})
     const [recipesDataState, setRecipesDataState] = useState<UpdateState | SyncState>(SyncState.Loading)
+    const [resyncPending, setResyncPending] = useState(false);
     
     const {userId} = useAuthenticationData();
     
     useEffect(() => {
         if(recipesDataState === SyncState.Loading && userId){
-            getRecipesData(userId, setRecipes, recipesSearchOptions).then((result) => setRecipesDataState(result));
+            getRecipesData(userId, setRecipes, recipesSearchOptions).then(
+                (result) => setResyncPending((currentResyncPending) => {
+                    if(currentResyncPending === true){
+                        setRecipesDataState(SyncState.Loading);
+                    } else {
+                        setRecipesDataState(result)
+                    }
+                    return false;
+                })
+            );
         }
         if(recipesDataState === SyncState.Failed && userId){
             setTimeout(() => {
@@ -68,7 +79,15 @@ export const RecipesDataProvider = ({children}:{children:React.ReactNode}) => {
 
     const checkStartSync = (updateState : UpdateState) => {
         if(updateState === UpdateState.Successful){
-            setRecipesDataState(SyncState.Loading);
+            setRecipesDataState((currentRecipeDataState) => {
+                if(currentRecipeDataState === UpdateState.Successful){
+                    return SyncState.Loading;
+                }
+                else if(currentRecipeDataState === UpdateState.Loading && !resyncPending){
+                    setResyncPending(true);
+                }
+                return currentRecipeDataState;
+            })
         }
         else{
             setRecipesDataState(updateState);
@@ -76,7 +95,12 @@ export const RecipesDataProvider = ({children}:{children:React.ReactNode}) => {
         return updateState;
     }
 
-    const setRecipesSearchOptions = (options: RecipesSearchOptions) => {setRecipesSearchOptionsState((oldOptions) => {return {...oldOptions, ...options}}); checkStartSync(UpdateState.Successful);};
+    const setRecipesSearchOptions = (options: RecipesSearchOptions) => {
+        setRecipesSearchOptionsState((oldOptions) => {
+            return {...oldOptions, ...options}
+        }); 
+        checkStartSync(UpdateState.Successful);
+    };
     const deleteRecipe = (recipeID: number) => deleteRecipeData(recipes, setRecipes, recipeID).then((result) => checkStartSync(result));
     const addRecipe = (recipe: Recipe) => addRecipeData(userId || 0,recipes, setRecipes, recipe).then((result) => checkStartSync(result));
     const updateRecipe = (recipe: Recipe) => updateRecipeData(recipes, setRecipes, recipe).then((result) => checkStartSync(result));

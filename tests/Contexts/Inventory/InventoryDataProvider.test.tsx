@@ -1,3 +1,4 @@
+//2026-10-29 : Adding resync functionality
 //2026-10-09 : Fixed Sync flow on search entry
 //2025-11-20 : Shifting test files into their own folder in the hierarchy
 
@@ -278,7 +279,6 @@ describe("Inventory Data Provider", () => {
         );
 
         /*Act **********************************************************************/
-        //wait for the next tick to allow useEffect to run
         const { getByText, getByLabelText } = render(
             <InventoryDataProvider>
                 <MockChildComponent />
