@@ -1,19 +1,13 @@
+//2026-11-12 : added validation for shopping list fields
 //2026-07-20 : Adding aria-labels to iconised components
 //2026-07-16 : Added function descriptions
 //2026-07-01 : Icons for Submit and Cancel
-
 //2026-06-18 : Quantity now starts undefined, adds validation
-
 //2026-06-15 : Correctly validating input forms
-
 //2026-06-01 : Using FadeComponent and RowContainer
-
 //2025-11-21 : Moving common UI elements into their own folder
-
 //2025-11-19 : Item_... fields now have Shopping_ as a prefix
-
 //2025-10-23 : Converted to use Shopping List Context
-
 //2025-05-22 : Initial implementation and basic tests using ingredients form as a template
 
 import { StyleSheet } from 'react-native';
@@ -46,12 +40,15 @@ export default function ShoppingListForm({item = blankItem, isFormVisible, onCan
 
     const itemNameValidation = (text: string) => {
         if(text.trim() === "") return "Item name cannot be empty";
+        if(text.length > 45) return "Item name cannot exceed 45 characters";
         return true;
     }
 
     const quantityValidation = (text: string) => {
         if(text.trim() === "") return "Quantity cannot be empty";
         if(isNaN(parseInt(text))) return "Quantity must be a number";
+        if(parseInt(text) <= 0) return "Quantity must be greater than zero";
+        if(parseInt(text) > 2147483647) return "Quantity cannot exceed integer limit";
         return true;
     }
 
