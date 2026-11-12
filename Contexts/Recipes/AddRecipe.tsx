@@ -1,3 +1,4 @@
+//2026-11-12 : Fixed incorrect importation from fetched data
 //2026-08-21 : Fixing API endpoint alterable outside of code
 //2026-08-04 : Updating api calls to use correct env variable
 //2026-07-10 : Changes to pick up env server props
@@ -47,8 +48,8 @@ export const addRecipeData = (
     log(`Adding recipe: ${recipe.Recipe_Name} for user ID: ${userId}`, "debug");
 
     let returnPromise = new Promise<UpdateState>((resolve) => {
-        fetch(
-            `https://bestbeforeapi.fastmovingtarget.co.uk/recipes/`, 
+        fetch( 
+            `${process.env.EXPO_PUBLIC_API_URL}/recipes/`, 
             {
                 method: "POST",
                 headers: {
@@ -65,7 +66,7 @@ export const addRecipeData = (
                 rawData.json().then((data) => {//the data returned should be the Recipe that was added including the id
                     setRecipes([
                         ...recipes,
-                        data,  
+                        { ...recipe, Recipe_ID: data.Recipe_ID },  
                     ]);
                     log(`Successfully added recipe: ${recipe.Recipe_Name} for user ID: ${userId}`, "debug");
                     resolve(UpdateState.Successful);

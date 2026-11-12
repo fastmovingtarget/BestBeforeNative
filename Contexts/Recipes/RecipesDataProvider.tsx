@@ -1,14 +1,11 @@
+//2026-11-12 : Fixed checkStartSync not triggering sync
 //2026-10-29 : Adding resync functionality
 //2026-08-11 : data state hook made available to facilitate refresh
 //2026-07-21 : Recipe_Difficulty changed to Recipe_Rating
 //2025-11-20 : Cleanup of debug logs
-
 //2025-11-19 : Ingredient_Name and Ingredient_Quantity now have Recipe_ prefix
-
 //2025-11-10 : Added improved documentation
-
 //2025-10-23 : Adding paths for sync and update failures
-
 //2025-10-20 : Recipes Data Context created
 
 import { createContext, useState, useContext, useEffect } from "react";
@@ -80,13 +77,13 @@ export const RecipesDataProvider = ({children}:{children:React.ReactNode}) => {
     const checkStartSync = (updateState : UpdateState) => {
         if(updateState === UpdateState.Successful){
             setRecipesDataState((currentRecipeDataState) => {
-                if(currentRecipeDataState === UpdateState.Successful){
+                if(currentRecipeDataState === SyncState.Successful){
                     return SyncState.Loading;
                 }
-                else if(currentRecipeDataState === UpdateState.Loading && !resyncPending){
+                else if(currentRecipeDataState === SyncState.Loading && !resyncPending){
                     setResyncPending(true);
                 }
-                return currentRecipeDataState;
+                return currentRecipeDataState; 
             })
         }
         else{
