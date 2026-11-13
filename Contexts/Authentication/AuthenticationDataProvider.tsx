@@ -1,3 +1,4 @@
+//2026-11-13 : Improved handling for token not present
 //2026-09-21 : added loading state support
 //2026-09-15 : Removed colour data handling
 //2026-07-16 : Added function descriptions
@@ -35,7 +36,13 @@ export const AuthenticationDataProvider = ({children}:{children:React.ReactNode}
     }
 
     const getToken = async () => {
-        return await SecureStore.getItemAsync("authToken");
+        const token = await SecureStore.getItemAsync("authToken");
+        if (!token) {
+            setLoadingDataState(UpdateState.Failed);
+            return null
+        };
+        setLoadingDataState(UpdateState.Successful);
+        return token;
     }
 
     const attemptLogin = (username: string, password: string) => {
