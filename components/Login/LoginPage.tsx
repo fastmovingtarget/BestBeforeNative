@@ -1,3 +1,4 @@
+//2026-11-27 : login page now shows error response from server
 //2026-09-21 : Added loading bar to login
 //2026-07-16 : Added function description
 //2026-07-10 : Basic user login page
@@ -16,10 +17,17 @@ import { Text } from 'react-native';
  */
 export default function LoginPage(){
 
-    const {attemptLogin, signup, loadingDataState} = useAuthenticationData();
+    const {attemptLogin, signup, loadingDataState, error} = useAuthenticationData();
 
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+
+    const validationFunction = () => {
+        if(error && error.length > 0) {
+            return error;
+        }
+        return true;
+    }
 
 
     return (
@@ -33,6 +41,7 @@ export default function LoginPage(){
                         inputMode="text"
                         aria-label="username-input"
                         defaultValue={""}
+                        validationFunction={validationFunction}
                         onChange={(event) => setUsername(event.nativeEvent.text)}
                     />
                 </RowContainer>
@@ -43,6 +52,7 @@ export default function LoginPage(){
                         inputMode="password"
                         aria-label="password-input"
                         defaultValue={""}
+                        validationFunction={validationFunction}
                         onChange={(event) => setPassword(event.nativeEvent.text)}
                     />
                 </RowContainer>
