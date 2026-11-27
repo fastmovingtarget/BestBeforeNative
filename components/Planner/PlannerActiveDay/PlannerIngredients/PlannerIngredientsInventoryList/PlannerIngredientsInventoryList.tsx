@@ -1,19 +1,14 @@
+//2026-11-27 : prevent already linked ingredients from showing in search
 //2026-10-07 : Pulling inventory list into seperate file
 //2026-09-15 : Colours now sourced from ColourProvider
 //2026-08-12 : Filter expired items from planner ingredients
 //2026-08-11 : improvements to visuals and fixing sync bugs
 //2026-06-30 : Text Fix
-
 //2026-06-30 : Improvements to formatting, adding React Icons
-
 //2026-06-01 : Using FadeComponent and ScrollableContainer
-
 //2025-11-21 : Moving common UI elements into their own folder
-
 //2025-11-19 : Renamed RecipePlan/nner to just Planner, Recipe_Plan to just Plan
-
 //2025-11-17 : Full initial implementation and documentation
-
 //2025-10-29 : Placeholder implementation
 
 import React, {useState} from "react";
@@ -47,7 +42,7 @@ export default function PlannerIngredientsInventoryList({
 
     const {inventory} = useInventory();
     const [filteredInventory, setFilteredInventory] = useState<Inventory_Item[]>(inventory.filter(inventoryItem => {
-        if(inventoryItem?.Inventory_Item_Date && new Date(inventoryItem.Inventory_Item_Date) < new Date()) {
+        if((inventoryItem?.Inventory_Item_Date && new Date(inventoryItem.Inventory_Item_Date) < new Date()) || inventoryItem?.Plan_ID) {
             return false; // Exclude expired items
         }
         return true;
