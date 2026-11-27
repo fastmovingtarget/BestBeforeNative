@@ -1,3 +1,4 @@
+//2026-11-27 : Implemented error state to store recent error
 //2026-11-13 : Improved handling for token not present
 //2026-09-21 : added loading state support
 //2026-09-15 : Removed colour data handling
@@ -24,12 +25,14 @@ const AuthenticationDataContext = createContext({
     attemptLogin: (username: string, password: string) => {},
     logout: () => {},
     signup: (username: string, password: string) => {},
+    error: null as string | null,
 });
 
 export const AuthenticationDataProvider = ({children}:{children:React.ReactNode}) => {   
 
     const [userId, setUserId] = useState<number | null>(null);
     const [loadingDataState, setLoadingDataState] = useState<UpdateState | SyncState>(UpdateState.Loading);
+    const [error, setError] = useState<string | null>(null);
 
     const saveToken = async (token: string, userId: number) => {
         await SecureStore.setItemAsync("authToken", JSON.stringify({token, userId}));
@@ -47,7 +50,7 @@ export const AuthenticationDataProvider = ({children}:{children:React.ReactNode}
 
     const attemptLogin = (username: string, password: string) => {
         setLoadingDataState(UpdateState.Loading);
-        Login(username, password, setUserId, saveToken).then(() => setLoadingDataState(UpdateState.Successful));
+        Login(username, password, setUserId, saveToken, setError).then(() => setLoadingDataState(UpdateState.Successful));
     }
 
     const logout = () => {
@@ -57,7 +60,7 @@ export const AuthenticationDataProvider = ({children}:{children:React.ReactNode}
     
     const signup = (username: string, password: string) => {
         setLoadingDataState(UpdateState.Loading);
-        Signup(username, password, setUserId, saveToken).then(() => setLoadingDataState(UpdateState.Successful));
+        Signup(username, password, setUserId, saveToken, setError).then(() => setLoadingDataState(UpdateState.Successful));
     }
 
     useEffect(() => {
@@ -73,7 +76,7 @@ export const AuthenticationDataProvider = ({children}:{children:React.ReactNode}
 
     return (
         <AuthenticationDataContext.Provider 
-            value={{userId, loadingDataState, attemptLogin, logout, signup}}>
+            value={{userId, loadingDataState, attemptLogin, logout, signup, error}}>
             {children}
         </AuthenticationDataContext.Provider>
     );
